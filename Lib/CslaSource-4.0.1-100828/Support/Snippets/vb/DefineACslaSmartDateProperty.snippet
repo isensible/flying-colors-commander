@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+      <Keywords />
+      <Title>Define a Csla SmartDate Property</Title>
+      <Author>Rockford Lhotka</Author>
+      <Description>Defines a Csla-style Property with a SmartDate backing field.</Description>
+      <HelpUrl>
+      </HelpUrl>
+      <Shortcut>csladtprop</Shortcut>
+    </Header>
+    <Snippet>
+      <References />
+      <Imports />
+      <Declarations>
+        <Literal Editable="true">
+          <ID>PropertyName</ID>
+          <ToolTip>Replace with property name.</ToolTip>
+          <Default>NewProperty</Default>
+          <Function>
+          </Function>
+        </Literal>
+        <Literal Editable="true">
+          <ID>FriendlyName</ID>
+          <ToolTip>Replace with friendly display name.</ToolTip>
+          <Default>NewProperty</Default>
+          <Function>
+          </Function>
+        </Literal>
+        <Literal Editable="true">
+          <ID>DeclaringType</ID>
+          <ToolTip>Replace with the type that is declaring this property.</ToolTip>
+          <Default>BusinessObject</Default>
+          <Function>
+          </Function>
+        </Literal>
+      </Declarations>
+      <Code Language="vb" Kind="method decl" Delimiter="$"><![CDATA[Public Shared ReadOnly $PropertyName$Property As PropertyInfo(Of SmartDate) = RegisterProperty(Of SmartDate)(Function(c) c.$PropertyName$, Nothing, New SmartDate())
+''' <Summary>
+''' Gets or sets the $PropertyName$ value.
+''' </Summary>
+Public Property $PropertyName$() As String
+    Get
+        Return GetPropertyConvert(Of SmartDate, String)($PropertyName$Property)
+    End Get
+    Set(ByVal value As String)
+        SetPropertyConvert(Of SmartDate, String)($PropertyName$Property, value)
+    End Set
+End Property]]></Code>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>
