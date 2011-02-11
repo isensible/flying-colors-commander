@@ -6,8 +6,9 @@ using System.Text;
 namespace FlyingColors
 {
 	[Serializable]
-	internal struct ShipData
+	internal struct ScenarioData
 	{
 		public string Name;
+		public int Year;
 	}
 }

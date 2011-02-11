@@ -7,12 +7,7 @@ using Csla;
 namespace FlyingColors
 {
 	[Serializable]
-	public class ShipCollection : BusinessListBase<ShipCollection, Ship>
+	public class Commander : BusinessBase<Commander>
 	{
-		#region Factory Methods
-
-		public static ShipCollection 
-
-		#endregion
 	}
 }

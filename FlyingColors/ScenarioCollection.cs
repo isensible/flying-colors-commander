@@ -12,12 +12,12 @@ namespace FlyingColors
 	{
 		#region Factory Methods
 
-		public static ScenarioCollection CreateScenarios()
+		public static ScenarioCollection NewScenariosCollection()
 		{
 			return DataPortal.Create<ScenarioCollection>();
 		}
 
-		public static ScenarioCollection GetScenarios()
+		public static ScenarioCollection GetScenariosCollection()
 		{
 			return DataPortal.Fetch<ScenarioCollection>();
 		}
@@ -26,19 +26,25 @@ namespace FlyingColors
 
 		#region Data Access
 
-		private string databaseFileName = "scenarios";
+		private string database = "scenarios";
 
 		private void DataPortal_Create()
 		{
-			using (var db = new PersistentDictionary<string, string>(databaseFileName))
+			if (PersistentDictionaryFile.Exists(database))
 			{
-
-			}
+				PersistentDictionaryFile.DeleteFiles(database);
+			}			
 		}
 
 		private void DataPortal_Fetch()
 		{
-			Add(Scenario.NewScenario("Cape Ortugal"));
+			using (var db = new PersistentDictionary<string, ScenarioData>(database))
+			{
+				foreach (var key in db.Keys)
+				{
+					Add(Scenario.GetScenario(db[key]));
+				}
+			}
 		}
 
 		#endregion
