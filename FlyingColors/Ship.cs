@@ -1,15 +1,24 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using Castle.ActiveRecord;
 using Csla;
+using FlyingColors.DataModel;
 
 namespace FlyingColors
 {
 	[Serializable]
-    public class Ship : BusinessBase<Ship>
+	public class Ship : BusinessBase<Ship>
 	{
-		#region Business Methods
+		private ShipData _ship = null;
+
+		public static readonly PropertyInfo<int> ShipIdProperty = RegisterProperty<int>(c => c.ShipId);
+		/// <Summary>
+		/// Gets or sets the ShipId value.
+		/// </Summary>
+		public int ShipId
+		{
+			get { return GetProperty(ShipIdProperty); }
+			set { SetProperty(ShipIdProperty, value); }
+		}
 
 		public static readonly PropertyInfo<string> NameProperty = RegisterProperty<string>(c => c.Name);
 		/// <Summary>
@@ -21,27 +30,36 @@ namespace FlyingColors
 			set { SetProperty(NameProperty, value); }
 		}
 
-		#endregion
-
-		#region Factory Methods
-
 		public static Ship NewShip(string name)
 		{
 			return DataPortal.Create<Ship>(name);
 		}
 
-		#endregion
-
-		#region Data Access
-
-		[RunLocal]
 		private void DataPortal_Create(string name)
 		{
+			_ship = new ShipData();
 			LoadProperty<string>(NameProperty, name);
 		}
 
-		#endregion
-	}
+		protected override void DataPortal_Insert()
+		{
+			ActiveRecordMediator.Create(ToData());
+		}
 
-	
+		protected override void DataPortal_Update()
+		{
+			ActiveRecordMediator<ShipData>.Update(ToData());
+		}
+
+		protected override void DataPortal_DeleteSelf()
+		{
+			ActiveRecordMediator<ShipData>.Delete(ToData());
+		}
+
+		internal ShipData ToData()
+		{
+			_ship.Name = ReadProperty<string>(NameProperty);
+			return _ship;
+		}
+	}	
 }

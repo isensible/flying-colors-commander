@@ -1,14 +1,25 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using Castle.ActiveRecord;
 using Csla;
+using FlyingColors.DataModel;
 
 namespace FlyingColors
 {
 	[Serializable]
 	public class Scenario : BusinessBase<Scenario>
 	{
+		private ScenarioData _scenario = null;
+
+		public static readonly PropertyInfo<long> ScenarioIdProperty = RegisterProperty<long>(c => c.ScenarioId);
+		/// <Summary>
+		/// Gets or sets the ScenarioId value.
+		/// </Summary>
+		public long ScenarioId
+		{
+			get { return GetProperty(ScenarioIdProperty); }
+			set { SetProperty(ScenarioIdProperty, value); }
+		}
+
 		public static readonly PropertyInfo<string> NameProperty = RegisterProperty<string>(c => c.Name);
 		/// <Summary>
 		/// Gets or sets the Name value.
@@ -17,17 +28,6 @@ namespace FlyingColors
 		{
 			get { return GetProperty(NameProperty); }
 			set { SetProperty(NameProperty, value); }
-		}
-
-		/// <summary>
-		/// Fluent interface for setting Name property.
-		/// </summary>
-		/// <param name="name"></param>
-		/// <returns></returns>
-		public Scenario SetName(string name)
-		{
-			this.Name = name;
-			return this;
 		}
 
 		public static readonly PropertyInfo<int> YearProperty = RegisterProperty<int>(c => c.Year);
@@ -40,23 +40,51 @@ namespace FlyingColors
 			set { SetProperty(YearProperty, value); }
 		}
 
-		/// <summary>
-		/// Fluent interface for setting Year property.
-		/// </summary>
-		/// <param name="year"></param>
-		/// <returns></returns>
-		public Scenario SetYear(int year)
+		public static readonly PropertyInfo<int> WindDirectionProperty = RegisterProperty<int>(c => c.WindDirection);
+		/// <Summary>
+		/// Gets or sets the WindDirection value.
+		/// </Summary>
+		public int WindDirection
 		{
-			this.Year = year;
-			return this;
+			get { return GetProperty(WindDirectionProperty); }
+			set { SetProperty(WindDirectionProperty, value); }
 		}
 
+		public static readonly PropertyInfo<Weather> WeatherEffectsProperty = RegisterProperty<Weather>(c => c.WeatherEffects);
+		/// <Summary>
+		/// Gets or sets the WeatherEffects value.
+		/// </Summary>
+		public Weather WeatherEffects
+		{
+			get { return GetProperty(WeatherEffectsProperty); }
+			set { SetProperty(WeatherEffectsProperty, value); }
+		}
 
-		public static readonly PropertyInfo<FleetCollection> FleetsProperty = RegisterProperty<FleetCollection>(c => c.Fleets);
+		public static readonly PropertyInfo<string> MapsProperty = RegisterProperty<string>(c => c.Maps);
+		/// <Summary>
+		/// Gets or sets the Maps value.
+		/// </Summary>
+		public string Maps
+		{
+			get { return GetProperty(MapsProperty); }
+			set { SetProperty(MapsProperty, value); }
+		}
+
+		public static readonly PropertyInfo<int> TurnsProperty = RegisterProperty<int>(c => c.Turns);
+		/// <Summary>
+		/// Gets or sets the Turns value.
+		/// </Summary>
+		public int Turns
+		{
+			get { return GetProperty(TurnsProperty); }
+			set { SetProperty(TurnsProperty, value); }
+		}
+
+		public static readonly PropertyInfo<FleetList> FleetsProperty = RegisterProperty<FleetList>(c => c.Fleets);
 		/// <Summary>
 		/// Gets or sets the Fleets value.
 		/// </Summary>
-		public FleetCollection Fleets
+		public FleetList Fleets
 		{
 			get { return GetProperty(FleetsProperty); }
 			set { SetProperty(FleetsProperty, value); }
@@ -64,24 +92,44 @@ namespace FlyingColors
 
 		public static Scenario NewScenario()
 		{
-			return DataPortal.CreateChild<Scenario>();
+			return DataPortal.Create<Scenario>();
 		}
 
-		internal static Scenario GetScenario(ScenarioData scenarioData)
+		protected override void DataPortal_Create()
 		{
-			return DataPortal.FetchChild<Scenario>(scenarioData);
-		}
-
-		private void Child_Create()
-		{
+			_scenario = new ScenarioData();
 			LoadProperty<string>(NameProperty, string.Empty);
 			LoadProperty<int>(YearProperty, 1800);
-			LoadProperty<FleetCollection>(FleetsProperty, FleetCollection.Empty());
+			LoadProperty<int>(WindDirectionProperty, 1);
+			LoadProperty<Weather>(WeatherEffectsProperty, Weather.Normal);
+			LoadProperty<string>(MapsProperty, "A");
+			LoadProperty<int>(TurnsProperty, 15);
+			LoadProperty<FleetList>(FleetsProperty, FleetList.NewFleetList(_scenario.Fleets));
 		}
 
-		private void Child_Fetch(ScenarioData data)
+		protected override void DataPortal_Insert()
 		{
-			LoadProperty<string>(NameProperty, data.Name);
+			ActiveRecordMediator<ScenarioData>.Create(this.ToData());
+			//FieldManager.UpdateChildren(this.ToData());
 		}
+
+		protected override void DataPortal_Update()
+		{
+			ActiveRecordMediator<ScenarioData>.Update(this.ToData());
+			//FieldManager.UpdateChildren(this.ToData());
+		}
+
+		private ScenarioData ToData()
+		{
+			_scenario.Maps = this.Maps;
+			_scenario.Name = this.Name;
+			_scenario.Turns = this.Turns;
+			_scenario.WeatherEffects = WeatherEffects;
+			_scenario.WindDirection = WindDirection;
+			_scenario.Year = Year;
+			_scenario.Fleets = Fleets.ToData(_scenario);
+			return _scenario;
+		}
+
 	}
 }
