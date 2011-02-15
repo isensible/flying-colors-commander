@@ -181,12 +181,15 @@ namespace FlyingColors
 
 		protected override void DataPortal_Insert()
 		{
-			ActiveRecordMediator.Create(ToData());
+			ToData();
+			ActiveRecordMediator.Create(_ship);
+			LoadProperty<long>(ShipIdProperty, _ship.ShipId);
 		}
 
 		protected override void DataPortal_Update()
 		{
-			ActiveRecordMediator<ShipData>.Update(ToData());
+			ToData();
+			ActiveRecordMediator<ShipData>.Update(_ship);
 		}
 
 		protected override void DataPortal_DeleteSelf()

@@ -95,6 +95,7 @@ namespace FlyingColors
 			ToData(scenarioData);
 			FieldManager.UpdateChildren(_fleet);
 			ActiveRecordMediator<FleetData>.Create(_fleet);
+			LoadProperty<long>(FleetIdProperty, _fleet.FleetId);
 		}
 
 		private void Child_Update(ScenarioData scenarioData)

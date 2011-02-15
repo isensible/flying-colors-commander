@@ -127,12 +127,15 @@ namespace FlyingColors
 
 		protected override void DataPortal_Insert()
 		{
-			ActiveRecordMediator<ScenarioData>.Create(this.ToData());
+			ToData();
+			ActiveRecordMediator<ScenarioData>.Create(_scenario);
+			LoadProperty<long>(ScenarioIdProperty, _scenario.ScenarioId);
 		}
 
 		protected override void DataPortal_Update()
 		{
-			ActiveRecordMediator<ScenarioData>.Update(this.ToData());
+			ToData();
+			ActiveRecordMediator<ScenarioData>.Update(_scenario);
 		}
 
 		protected override void DataPortal_DeleteSelf()

@@ -117,11 +117,19 @@ namespace FlyingColors.Test
 
 			capeOrtugal = capeOrtugal.Save();
 
+			ScenarioList list = ScenarioList.GetScenarios();
+			Assert.NotEmpty(list);
+
 			capeOrtugal.Name = "Cape Ortugal 2";
 			capeOrtugal = capeOrtugal.Save();
 
 			capeOrtugal.Delete();
 			capeOrtugal = capeOrtugal.Save();
+
+			ceasar.Delete();
+			ceasar = ceasar.Save();
+
+			
 		}
 	}
 }
