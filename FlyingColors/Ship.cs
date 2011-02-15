@@ -129,7 +129,12 @@ namespace FlyingColors
 		public static Ship NewShip(string name)
 		{
 			return DataPortal.Create<Ship>(name);
-		} 
+		}
+
+		internal static Ship GetShip(ShipData shipData)
+		{
+			return DataPortal.FetchChild<Ship>(shipData);
+		}
 
 		private Ship()
 		{
@@ -151,6 +156,27 @@ namespace FlyingColors
 			LoadProperty<int>(DamageCapacityDamagedProperty, 11);
 			LoadProperty<int>(MarinesProperty, 4);
 			LoadProperty<int>(MarinesDamagedProperty, 3);
+		}
+
+		private void Child_Fetch(ShipData shipData)
+		{
+			_ship = shipData;
+			LoadProperty<long>(ShipIdProperty, _ship.ShipId);
+			LoadProperty<string>(NameProperty, _ship.Name);
+			LoadProperty<Nationality>(NationalityProperty, (Nationality)Enum.Parse(typeof(Nationality), _ship.Nationality));
+			LoadProperty<int>(VictoryPointsProperty, _ship.VictoryPoints);
+			LoadProperty<RelativeRate>(RateProperty, RelativeRate.NewRate(
+				_ship.Rate,
+				(RelativeRateColor)Enum.Parse(typeof(RelativeRateColor), _ship.RateColor),
+				(RelativeRateShape)Enum.Parse(typeof(RelativeRateShape), _ship.RateShape)));
+			LoadProperty<RelativeRate>(RateDamagedProperty, RelativeRate.NewRate(
+				_ship.RateDamaged,
+				(RelativeRateColor)Enum.Parse(typeof(RelativeRateColor), _ship.RateColorDamaged),
+				(RelativeRateShape)Enum.Parse(typeof(RelativeRateShape), _ship.RateShapeDamaged)));
+			LoadProperty<int>(DamageCapacityProperty, _ship.DamageCapacity);
+			LoadProperty<int>(DamageCapacityDamagedProperty, _ship.DamageCapacityDamaged);
+			LoadProperty<int>(MarinesProperty, _ship.Marines);
+			LoadProperty<int>(MarinesDamagedProperty, _ship.MarinesDamaged);
 		}
 
 		protected override void DataPortal_Insert()
@@ -185,6 +211,6 @@ namespace FlyingColors
 			_ship.MarinesDamaged = ReadProperty<int>(MarinesDamagedProperty);
 			return _ship;
 		} 
-		#endregion
+		#endregion		
 	}	
 }

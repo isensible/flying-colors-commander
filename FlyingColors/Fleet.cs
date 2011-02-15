@@ -67,6 +67,11 @@ namespace FlyingColors
 			return DataPortal.CreateChild<Fleet>();
 		}
 
+		internal static Fleet GetFleet(FleetData fleet)
+		{
+			return DataPortal.FetchChild<Fleet>(fleet);
+		}
+
 		protected override void Child_Create()
 		{
 			_fleet = new FleetData();
@@ -74,6 +79,15 @@ namespace FlyingColors
 			LoadProperty<Nationality>(NationalityProperty, Nationality.British);
 			LoadProperty<int>(AudacityProperty, 1);
 			LoadProperty<FleetShipList>(ShipsProperty, FleetShipList.NewFleetShipList(_fleet.Ships));
+		}
+
+		private void Child_Fetch(FleetData fleet)
+		{
+			_fleet = fleet;
+			LoadProperty<Nationality>(TeamProperty, (Nationality)Enum.Parse(typeof(Nationality), _fleet.Team));
+			LoadProperty<Nationality>(NationalityProperty, (Nationality)Enum.Parse(typeof(Nationality), _fleet.Nationality));
+			LoadProperty<int>(AudacityProperty, _fleet.Audacity);
+			LoadProperty<FleetShipList>(ShipsProperty, FleetShipList.GetFleetShipList(_fleet.Ships));
 		}
 
 		private void Child_Insert(ScenarioData scenarioData)
@@ -106,5 +120,7 @@ namespace FlyingColors
 			_fleet.Ships = Ships.ToData(_fleet);
 			return _fleet;
 		}
+
+
 	}
 }

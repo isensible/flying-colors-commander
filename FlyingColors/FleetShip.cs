@@ -28,9 +28,20 @@ namespace FlyingColors
 			return DataPortal.CreateChild<FleetShip>(ship);
 		}
 
+		internal static FleetShip GetFleetShip(FleetShipData fleetShip)
+		{
+			return DataPortal.FetchChild<FleetShip>(fleetShip);
+		}
+
 		private void Child_Create(Ship ship)
 		{
 			LoadProperty<Ship>(ShipProperty, ship);
+		}
+
+		private void Child_Fetch(FleetShipData fleetShipData)
+		{
+			_fleetShipData = fleetShipData;
+			LoadProperty<Ship>(ShipProperty, Ship.GetShip(fleetShipData.Ship));
 		}
 
 		private void Child_Insert(FleetData fleetData)
@@ -58,5 +69,7 @@ namespace FlyingColors
 			_fleetShipData.Ship = ReadProperty<Ship>(ShipProperty).ToData();
 			return _fleetShipData;
 		}
+
+		
 	}
 }

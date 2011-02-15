@@ -95,6 +95,11 @@ namespace FlyingColors
 			return DataPortal.Create<Scenario>();
 		}
 
+		internal static Scenario GetScenario(ScenarioData scenario)
+		{
+			return DataPortal.Fetch<Scenario>(scenario);
+		}
+
 		protected override void DataPortal_Create()
 		{
 			_scenario = new ScenarioData();
@@ -107,14 +112,27 @@ namespace FlyingColors
 			LoadProperty<FleetList>(FleetsProperty, FleetList.NewFleetList(_scenario.Fleets));
 		}
 
+		private void DataPortal_Fetch(ScenarioData scenarioData)
+		{
+			_scenario = scenarioData;
+			LoadProperty<long>(ScenarioIdProperty, _scenario.ScenarioId);
+			LoadProperty<string>(NameProperty, _scenario.Name);
+			LoadProperty<int>(YearProperty, _scenario.Year);
+			LoadProperty<int>(WindDirectionProperty, _scenario.WindDirection);
+			LoadProperty<Weather>(WeatherEffectsProperty, _scenario.WeatherEffects);
+			LoadProperty<string>(MapsProperty, _scenario.Maps);
+			LoadProperty<int>(TurnsProperty, _scenario.Turns);
+			LoadProperty<FleetList>(FleetsProperty, FleetList.GetFleetList(_scenario.Fleets));
+		}
+
 		protected override void DataPortal_Insert()
 		{
-			ActiveRecordMediator<ScenarioData>.Create(this.ToData());			
+			ActiveRecordMediator<ScenarioData>.Create(this.ToData());
 		}
 
 		protected override void DataPortal_Update()
 		{
-			ActiveRecordMediator<ScenarioData>.Update(this.ToData());			
+			ActiveRecordMediator<ScenarioData>.Update(this.ToData());
 		}
 
 		protected override void DataPortal_DeleteSelf()
@@ -133,6 +151,8 @@ namespace FlyingColors
 			_scenario.Fleets = Fleets.ToData(_scenario);
 			return _scenario;
 		}
+
+
 
 	}
 }

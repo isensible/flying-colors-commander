@@ -20,6 +20,22 @@ namespace FlyingColors
 			return fleetShips;
 		}
 
+		internal static FleetShipList GetFleetShipList(IList<FleetShipData> fleetShips)
+		{
+			return DataPortal.FetchChild<FleetShipList>(fleetShips);
+		}
+
+		private void Child_Fetch(IList<FleetShipData> fleetShips)
+		{
+			RaiseListChangedEvents = false;
+			_fleetShipsDataList = fleetShips;
+			foreach (var fleetShip in _fleetShipsDataList)
+			{
+				Add(FleetShip.GetFleetShip(fleetShip));
+			}
+			RaiseListChangedEvents = true;
+		}
+
 		internal IList<FleetShipData> ToData(FleetData fleetData)
 		{
 			foreach (FleetShip deletedShip in DeletedList)
@@ -40,6 +56,6 @@ namespace FlyingColors
 				}
 			}
 			return _fleetShipsDataList;
-		}
+		}		
 	}
 }

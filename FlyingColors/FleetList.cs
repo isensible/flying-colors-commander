@@ -17,6 +17,22 @@ namespace FlyingColors
 			return fleetList;
 		}
 
+		internal static FleetList GetFleetList(IList<FleetData> fleets)
+		{
+			return DataPortal.FetchChild<FleetList>(fleets);
+		}
+
+		private void Child_Fetch(IList<FleetData> fleets)
+		{
+			RaiseListChangedEvents = false;
+			_fleets = fleets;
+			foreach (var fleet in _fleets)
+			{
+				Add(Fleet.GetFleet(fleet));
+			}
+			RaiseListChangedEvents = true;
+		}
+
 		internal IList<FleetData> ToData(ScenarioData scenarioData)
 		{
 			foreach (Fleet deletedFleet in DeletedList)
