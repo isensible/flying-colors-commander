@@ -15,5 +15,11 @@ namespace FlyingColors.DataModel
 
 		[BelongsTo(Type = typeof(ShipData), Column = "ShipId")]
 		public ShipData Ship { get; set; }
+
+		[Property]
+		public int HullHitsAtStart { get; set; }
+
+		[Property]
+		public int RiggingHitsAtStart { get; set; }
 	}
 }

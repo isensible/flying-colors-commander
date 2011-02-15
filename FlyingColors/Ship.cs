@@ -133,8 +133,8 @@ namespace FlyingColors
 
 		internal static Ship GetShip(ShipData shipData)
 		{
-			return DataPortal.FetchChild<Ship>(shipData);
-		}
+			return DataPortal.Fetch<Ship>(shipData);
+		}		
 
 		private Ship()
 		{
@@ -158,7 +158,7 @@ namespace FlyingColors
 			LoadProperty<int>(MarinesDamagedProperty, 3);
 		}
 
-		private void Child_Fetch(ShipData shipData)
+		private void DataPortal_Fetch(ShipData shipData)
 		{
 			_ship = shipData;
 			LoadProperty<long>(ShipIdProperty, _ship.ShipId);

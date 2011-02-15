@@ -110,7 +110,9 @@ namespace FlyingColors.Test
 			french.Nationality = Nationality.French;
 			french.Audacity = 1;
 			french.Ships.Add(FleetShip.NewFleetShip(dugay));
-			french.Ships.Add(FleetShip.NewFleetShip(formidable));
+			var formidableFleet = FleetShip.NewFleetShip(formidable);
+			formidableFleet.HullHitsAtStart = 6;
+			french.Ships.Add(formidableFleet);
 			french.Ships.Add(FleetShip.NewFleetShip(montBlanc));
 			french.Ships.Add(FleetShip.NewFleetShip(scipion));
 			capeOrtugal.Fleets.Add(french);
@@ -129,7 +131,7 @@ namespace FlyingColors.Test
 			ceasar.Delete();
 			ceasar = ceasar.Save();
 
-			
+			ShipList ships = ShipList.GetAllShips();
 		}
 	}
 }
