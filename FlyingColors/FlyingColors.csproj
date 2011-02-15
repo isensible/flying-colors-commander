@@ -73,7 +73,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BroadsideType.cs" />
+    <Compile Include="DataModel\CommanderData.cs" />
     <Compile Include="DataModel\FleetData.cs" />
+    <Compile Include="DataModel\FleetShipCommanderData.cs" />
     <Compile Include="DataModel\FleetShipData.cs" />
     <Compile Include="DataModel\ScenarioData.cs" />
     <Compile Include="DataModel\ShipData.cs" />
