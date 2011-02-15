@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Castle.ActiveRecord;
 
 namespace FlyingColors.DataModel
@@ -16,10 +17,21 @@ namespace FlyingColors.DataModel
 		[BelongsTo(Type = typeof(ShipData), Column = "ShipId")]
 		public ShipData Ship { get; set; }
 
+		[HasMany(typeof(FleetShipCommanderData),
+			Table = "FleetShipCommander",
+			ColumnKey = "FleetShipId",
+			Cascade = ManyRelationCascadeEnum.All)]
+		public IList<FleetShipCommanderData> Commanders { get; set; }
+
 		[Property]
 		public int HullHitsAtStart { get; set; }
 
 		[Property]
 		public int RiggingHitsAtStart { get; set; }
+
+		public FleetShipData()
+		{
+			Commanders = new List<FleetShipCommanderData>();
+		}
 	}
 }

@@ -84,6 +84,8 @@
     <Compile Include="Fleet.cs" />
     <Compile Include="FleetList.cs" />
     <Compile Include="FleetShip.cs" />
+    <Compile Include="FleetShipCommander.cs" />
+    <Compile Include="FleetShipCommanderList.cs" />
     <Compile Include="FleetShipList.cs" />
     <Compile Include="Nationality.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

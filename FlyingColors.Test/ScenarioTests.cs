@@ -22,6 +22,16 @@ namespace FlyingColors.Test
 			strachan.RangeWounded = 4;
 			strachan = strachan.Save();
 
+			Commander dumanoir = Commander.NewCommander("Dumanoir");
+			dumanoir.Nationality = Nationality.French;
+			dumanoir.VictoryPoints = 5;
+			dumanoir.Rank = 3;
+			dumanoir.Quality = 2;
+			dumanoir.Range = 6;
+			dumanoir.QualityWounded = 1;
+			dumanoir.RangeWounded = 4;
+			dumanoir = dumanoir.Save();
+
 			Ship ceasar = Ship.NewShip("Ceasar");
 			ceasar.Nationality = Nationality.British;
 			ceasar.VictoryPoints = 7;
@@ -110,7 +120,9 @@ namespace FlyingColors.Test
 			british.Team = Nationality.British;
 			british.Nationality = Nationality.British;
 			british.Audacity = 3;
-			british.Ships.Add(FleetShip.NewFleetShip(ceasar));
+			var ceasarFleetShip = FleetShip.NewFleetShip(ceasar);
+			ceasarFleetShip.Commanders.Add(FleetShipCommander.NewFleetShipCommander(strachan));
+			british.Ships.Add(ceasarFleetShip);
 			british.Ships.Add(FleetShip.NewFleetShip(hero));
 			british.Ships.Add(FleetShip.NewFleetShip(courageux));
 			capeOrtugal.Fleets.Add(british);
@@ -120,9 +132,10 @@ namespace FlyingColors.Test
 			french.Nationality = Nationality.French;
 			french.Audacity = 1;
 			french.Ships.Add(FleetShip.NewFleetShip(dugay));
-			var formidableFleet = FleetShip.NewFleetShip(formidable);
-			formidableFleet.HullHitsAtStart = 6;
-			french.Ships.Add(formidableFleet);
+			var formidableFleetShip = FleetShip.NewFleetShip(formidable);
+			formidableFleetShip.Commanders.Add(FleetShipCommander.NewFleetShipCommander(dumanoir));
+			formidableFleetShip.HullHitsAtStart = 6;
+			french.Ships.Add(formidableFleetShip);
 			french.Ships.Add(FleetShip.NewFleetShip(montBlanc));
 			french.Ships.Add(FleetShip.NewFleetShip(scipion));
 			capeOrtugal.Fleets.Add(french);

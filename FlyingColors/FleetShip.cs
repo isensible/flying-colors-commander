@@ -11,6 +11,18 @@ namespace FlyingColors
 	[Serializable]
 	public class FleetShip : BusinessBase<FleetShip>
 	{
+		#region ID
+		public static readonly PropertyInfo<long> FleetShipIdProperty = RegisterProperty<long>(c => c.FleetShipId);
+		/// <Summary>
+		/// Gets or sets the FleetShipId value.
+		/// </Summary>
+		public long FleetShipId
+		{
+			get { return GetProperty(FleetShipIdProperty); }
+			set { SetProperty(FleetShipIdProperty, value); }
+		}
+		#endregion
+
 		#region The Ship
 		public static readonly PropertyInfo<Ship> ShipProperty = RegisterProperty<Ship>(c => c.Ship);
 		/// <Summary>
@@ -20,6 +32,18 @@ namespace FlyingColors
 		{
 			get { return GetProperty(ShipProperty); }
 			set { SetProperty(ShipProperty, value); }
+		} 
+		#endregion
+
+		#region Ship Commanders
+		public static readonly PropertyInfo<FleetShipCommanderList> CommandersProperty = RegisterProperty<FleetShipCommanderList>(c => c.Commanders);
+		/// <Summary>
+		/// Gets or sets the Commanders value.
+		/// </Summary>
+		public FleetShipCommanderList Commanders
+		{
+			get { return GetProperty(CommandersProperty); }
+			set { SetProperty(CommandersProperty, value); }
 		} 
 		#endregion
 
@@ -67,6 +91,7 @@ namespace FlyingColors
 		private void Child_Create(Ship ship)
 		{
 			LoadProperty<Ship>(ShipProperty, ship);
+			LoadProperty<FleetShipCommanderList>(CommandersProperty, FleetShipCommanderList.NewFleetShipCommanderList());
 			LoadProperty<int>(HullHitsAtStartProperty, 0);
 			LoadProperty<int>(RiggingHitsAtStartProperty, 0);
 		}
@@ -74,24 +99,35 @@ namespace FlyingColors
 		private void Child_Fetch(FleetShipData fleetShipData)
 		{
 			_fleetShipData = fleetShipData;
-			LoadProperty<Ship>(ShipProperty, Ship.GetShip(fleetShipData.Ship));
+			LoadProperty<long>(FleetShipIdProperty, _fleetShipData.FleetShipId);
+			LoadProperty<Ship>(ShipProperty,
+				Ship.GetShip(fleetShipData.Ship));
+			LoadProperty<FleetShipCommanderList>(CommandersProperty, 
+				FleetShipCommanderList.GetFleetShipCommanderList(fleetShipData.Commanders));
 			LoadProperty<int>(HullHitsAtStartProperty, fleetShipData.HullHitsAtStart);
 			LoadProperty<int>(RiggingHitsAtStartProperty, fleetShipData.RiggingHitsAtStart);
 		}
 
 		private void Child_Insert(FleetData fleetData)
 		{
-			ActiveRecordMediator<FleetShipData>.Create(ToData(fleetData));
+			ToData(fleetData);
+			FieldManager.UpdateChildren(_fleetShipData);
+			ActiveRecordMediator<FleetShipData>.Create(_fleetShipData);
+			LoadProperty<long>(FleetShipIdProperty, _fleetShipData.FleetShipId);
 		}
 
 		private void Child_Update(FleetData fleetData)
 		{
-			ActiveRecordMediator<FleetShipData>.Update(ToData(fleetData));
+			ToData(fleetData);
+			FieldManager.UpdateChildren(_fleetShipData);
+			ActiveRecordMediator<FleetShipData>.Update(_fleetShipData);
 		}
 
 		private void Child_Delete(FleetData fleetData)
 		{
-			ActiveRecordMediator<FleetShipData>.Delete(ToData(fleetData));
+			ToData(fleetData);
+			FieldManager.UpdateChildren(_fleetShipData);
+			ActiveRecordMediator<FleetShipData>.Delete(_fleetShipData);
 		}
 
 		internal FleetShipData ToData(FleetData fleetData)
@@ -104,6 +140,7 @@ namespace FlyingColors
 			_fleetShipData.Ship = ReadProperty<Ship>(ShipProperty).ToData();
 			_fleetShipData.HullHitsAtStart = ReadProperty<int>(HullHitsAtStartProperty);
 			_fleetShipData.RiggingHitsAtStart = ReadProperty<int>(RiggingHitsAtStartProperty);
+			_fleetShipData.Commanders = ReadProperty<FleetShipCommanderList>(CommandersProperty).ToData(_fleetShipData);
 			return _fleetShipData;
 		} 
 		#endregion		
