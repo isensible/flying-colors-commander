@@ -9,8 +9,9 @@ namespace FlyingColors
 	{
 		British = 0,
 		French = 1,
-		Spanish = 3,
-		Dutch = 4,
-		American = 5  
-	}	
+		Spanish = 2,
+		Dutch = 3,
+		Danish = 4,
+		American = 5
+	}
 }

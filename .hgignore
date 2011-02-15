@@ -5,6 +5,9 @@ glob:*.cache
 glob:_ReSharper.*/
 relre:/obj/
 relre:/bin/
+relre:/Obj/
+relre:/Bin/
+
 
 # Subversion
 glob:.svn/

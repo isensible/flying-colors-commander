@@ -21,7 +21,7 @@ namespace FlyingColors
 		{
 			get { return GetProperty(SymbolProperty); }
 			private set { LoadProperty(SymbolProperty, value); }
-		} 
+		}
 		#endregion
 
 		#region Color
@@ -33,7 +33,7 @@ namespace FlyingColors
 		{
 			get { return GetProperty(ColorProperty); }
 			private set { LoadProperty(ColorProperty, value); }
-		} 
+		}
 		#endregion
 
 		#region Shape
@@ -45,7 +45,7 @@ namespace FlyingColors
 		{
 			get { return GetProperty(ShapeProperty); }
 			private set { LoadProperty(ShapeProperty, value); }
-		} 
+		}
 		#endregion
 
 		#region Factory Methods
@@ -58,15 +58,167 @@ namespace FlyingColors
 				new Tuple<char, RelativeRateColor, RelativeRateShape>(symbol, color, shape));
 		}
 
+		#region First Rate
 		public static RelativeRate FirstRate
 		{
 			get { return NewRate(RelativeRateSymbol.FirstRate, RelativeRateColor.NoColor, RelativeRateShape.NoShape); }
 		}
 
+		public static RelativeRate FirstRateBlackCircle
+		{
+			get { return NewRate(RelativeRateSymbol.FirstRate, RelativeRateColor.Black, RelativeRateShape.Circle); }
+		}
+
+		public static RelativeRate FirstRateWhiteCircle
+		{
+			get { return NewRate(RelativeRateSymbol.FirstRate, RelativeRateColor.White, RelativeRateShape.Circle); }
+		}
+
+		public static RelativeRate FirstRateYellowCircle
+		{
+			get { return NewRate(RelativeRateSymbol.FirstRate, RelativeRateColor.Yellow, RelativeRateShape.Circle); }
+		}
+
+		public static RelativeRate FirstRateRedHexagon
+		{
+			get { return NewRate(RelativeRateSymbol.FirstRate, RelativeRateColor.Red, RelativeRateShape.Hexagon); }
+		}
+		#endregion
+
+		#region Second Rate
 		public static RelativeRate SecondRate
 		{
 			get { return NewRate(RelativeRateSymbol.SecondRate, RelativeRateColor.NoColor, RelativeRateShape.NoShape); }
 		}
+
+		public static RelativeRate SecondRateBlackCircle
+		{
+			get { return NewRate(RelativeRateSymbol.SecondRate, RelativeRateColor.Black, RelativeRateShape.Circle); }
+		}
+
+		public static RelativeRate SecondRateWhiteCircle
+		{
+			get { return NewRate(RelativeRateSymbol.SecondRate, RelativeRateColor.White, RelativeRateShape.Circle); }
+		}
+
+		public static RelativeRate SecondRateYellowCircle
+		{
+			get { return NewRate(RelativeRateSymbol.SecondRate, RelativeRateColor.Yellow, RelativeRateShape.Circle); }
+		}
+
+		public static RelativeRate SecondRateRedHexagon
+		{
+			get { return NewRate(RelativeRateSymbol.SecondRate, RelativeRateColor.Red, RelativeRateShape.Hexagon); }
+		}
+		#endregion
+
+		#region Third Rate
+		public static RelativeRate ThirdRate
+		{
+			get { return NewRate(RelativeRateSymbol.ThirdRate, RelativeRateColor.NoColor, RelativeRateShape.NoShape); }
+		}
+
+		public static RelativeRate ThirdRateBlackCircle
+		{
+			get { return NewRate(RelativeRateSymbol.ThirdRate, RelativeRateColor.Black, RelativeRateShape.Circle); }
+		}
+
+		public static RelativeRate ThirdRateWhiteCircle
+		{
+			get { return NewRate(RelativeRateSymbol.ThirdRate, RelativeRateColor.White, RelativeRateShape.Circle); }
+		}
+
+		public static RelativeRate ThirdRateYellowCircle
+		{
+			get { return NewRate(RelativeRateSymbol.ThirdRate, RelativeRateColor.Yellow, RelativeRateShape.Circle); }
+		}
+
+		public static RelativeRate ThirdRateRedHexagon
+		{
+			get { return NewRate(RelativeRateSymbol.ThirdRate, RelativeRateColor.Red, RelativeRateShape.Hexagon); }
+		}
+		#endregion
+
+		#region Fourth Rate
+		public static RelativeRate FourthRate
+		{
+			get { return NewRate(RelativeRateSymbol.FourthRate, RelativeRateColor.NoColor, RelativeRateShape.NoShape); }
+		}
+
+		public static RelativeRate FourthRateBlackCircle
+		{
+			get { return NewRate(RelativeRateSymbol.FourthRate, RelativeRateColor.Black, RelativeRateShape.Circle); }
+		}
+
+		public static RelativeRate FourthRateWhiteCircle
+		{
+			get { return NewRate(RelativeRateSymbol.FourthRate, RelativeRateColor.White, RelativeRateShape.Circle); }
+		}
+
+		public static RelativeRate FourthRateYellowCircle
+		{
+			get { return NewRate(RelativeRateSymbol.FourthRate, RelativeRateColor.Yellow, RelativeRateShape.Circle); }
+		}
+
+		public static RelativeRate FourthRateRedHexagon
+		{
+			get { return NewRate(RelativeRateSymbol.FourthRate, RelativeRateColor.Red, RelativeRateShape.Hexagon); }
+		}
+		#endregion
+
+		#region Fifth Rate
+		public static RelativeRate FifthRate
+		{
+			get { return NewRate(RelativeRateSymbol.FifthRate, RelativeRateColor.NoColor, RelativeRateShape.NoShape); }
+		}
+
+		public static RelativeRate FifthRateBlackCircle
+		{
+			get { return NewRate(RelativeRateSymbol.FifthRate, RelativeRateColor.Black, RelativeRateShape.Circle); }
+		}
+
+		public static RelativeRate FifthRateWhiteCircle
+		{
+			get { return NewRate(RelativeRateSymbol.FifthRate, RelativeRateColor.White, RelativeRateShape.Circle); }
+		}
+
+		public static RelativeRate FifthRateYellowCircle
+		{
+			get { return NewRate(RelativeRateSymbol.FifthRate, RelativeRateColor.Yellow, RelativeRateShape.Circle); }
+		}
+
+		public static RelativeRate FifthRateRedHexagon
+		{
+			get { return NewRate(RelativeRateSymbol.FifthRate, RelativeRateColor.Red, RelativeRateShape.Hexagon); }
+		}
+		#endregion
+
+		#region Sixth Rate
+		public static RelativeRate SixthRate
+		{
+			get { return NewRate(RelativeRateSymbol.SixthRate, RelativeRateColor.NoColor, RelativeRateShape.NoShape); }
+		}
+
+		public static RelativeRate SixthRateBlackCircle
+		{
+			get { return NewRate(RelativeRateSymbol.SixthRate, RelativeRateColor.Black, RelativeRateShape.Circle); }
+		}
+
+		public static RelativeRate SixthRateWhiteCircle
+		{
+			get { return NewRate(RelativeRateSymbol.SixthRate, RelativeRateColor.White, RelativeRateShape.Circle); }
+		}
+
+		public static RelativeRate SixthRateYellowCircle
+		{
+			get { return NewRate(RelativeRateSymbol.SixthRate, RelativeRateColor.Yellow, RelativeRateShape.Circle); }
+		}
+
+		public static RelativeRate SixthRateRedHexagon
+		{
+			get { return NewRate(RelativeRateSymbol.SixthRate, RelativeRateColor.Red, RelativeRateShape.Hexagon); }
+		}
+		#endregion
 
 		/// <summary>
 		/// Relative Rate for Ship that cannot fire.
@@ -78,7 +230,7 @@ namespace FlyingColors
 
 		private RelativeRate()
 		{
-		} 
+		}
 		#endregion
 
 		#region Data Portal
@@ -87,7 +239,7 @@ namespace FlyingColors
 			Symbol = tuple.Item1;
 			Color = tuple.Item2;
 			Shape = tuple.Item3;
-		}		 
+		}
 		#endregion
 	}
 }
