@@ -13,6 +13,8 @@ namespace FlyingColors.Test
 		public void create_cape_ortugal_scenario()
 		{
 			Ship ceasar = Ship.NewShip("Ceasar");
+			ceasar.Nationality = Nationality.British;
+			ceasar.Rate = RelativeRate.SecondRate;
 			ceasar = ceasar.Save();
 			Ship hero = Ship.NewShip("Hero");
 			hero = hero.Save();
@@ -36,8 +38,8 @@ namespace FlyingColors.Test
 			capeOrtugal.Turns = 12;
 
 			Fleet british = Fleet.NewFleet();
-			british.Team = "British";
-			british.Nationality = "British";
+			british.Team = Nationality.British;
+			british.Nationality = Nationality.British;
 			british.Audacity = 3;
 			british.Ships.Add(FleetShip.NewFleetShip(ceasar));
 			british.Ships.Add(FleetShip.NewFleetShip(hero));
@@ -45,8 +47,8 @@ namespace FlyingColors.Test
 			capeOrtugal.Fleets.Add(british);
 
 			Fleet french = Fleet.NewFleet();
-			french.Team = "French";
-			french.Nationality = "French";
+			french.Team = Nationality.French;
+			french.Nationality = Nationality.French;
 			french.Audacity = 1;
 			french.Ships.Add(FleetShip.NewFleetShip(dugay));
 			french.Ships.Add(FleetShip.NewFleetShip(formidable));
@@ -54,7 +56,13 @@ namespace FlyingColors.Test
 			french.Ships.Add(FleetShip.NewFleetShip(scipion));
 			capeOrtugal.Fleets.Add(french);
 
-			capeOrtugal = capeOrtugal.Save();			
+			capeOrtugal = capeOrtugal.Save();
+
+			capeOrtugal.Name = "Cape Ortugal 2";
+			capeOrtugal = capeOrtugal.Save();
+
+			capeOrtugal.Delete();
+			capeOrtugal = capeOrtugal.Save();
 		}
 	}
 }

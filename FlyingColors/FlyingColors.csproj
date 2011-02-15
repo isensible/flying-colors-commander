@@ -49,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BroadsideType.cs" />
     <Compile Include="DataModel\FleetData.cs" />
     <Compile Include="DataModel\FleetShipData.cs" />
     <Compile Include="DataModel\ScenarioData.cs" />
@@ -57,7 +58,13 @@
     <Compile Include="FleetList.cs" />
     <Compile Include="FleetShip.cs" />
     <Compile Include="FleetShipList.cs" />
+    <Compile Include="Nationality.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RakeType.cs" />
+    <Compile Include="RelativeRate.cs" />
+    <Compile Include="RelativeRateColor.cs" />
+    <Compile Include="RelativeRateShape.cs" />
+    <Compile Include="RelativeRateSymbol.cs" />
     <Compile Include="Scenario.cs" />
     <Compile Include="Ship.cs" />
     <Compile Include="ShipList.cs" />
