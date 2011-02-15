@@ -23,9 +23,15 @@ namespace FlyingColors.DataModel
 		public int Rank { get; set; }
 
 		[Property]
-		public int CommandQuality { get; set; }
+		public int Quality { get; set; }
 
 		[Property]
-		public int CommandRange { get; set; }
+		public int QualityWounded { get; set; }
+
+		[Property]
+		public int Range { get; set; }
+
+		[Property]
+		public int RangeWounded { get; set; }
 	}
 }

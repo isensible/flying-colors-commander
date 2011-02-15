@@ -12,6 +12,16 @@ namespace FlyingColors.Test
 		[UseSqlite]
 		public void create_cape_ortugal_scenario()
 		{
+			Commander strachan = Commander.NewCommander("Strachan");
+			strachan.Nationality = Nationality.British;
+			strachan.VictoryPoints = 5;
+			strachan.Rank = 3;
+			strachan.Quality = 2;
+			strachan.Range = 6;
+			strachan.QualityWounded = 1;
+			strachan.RangeWounded = 4;
+			strachan = strachan.Save();
+
 			Ship ceasar = Ship.NewShip("Ceasar");
 			ceasar.Nationality = Nationality.British;
 			ceasar.VictoryPoints = 7;
@@ -132,6 +142,8 @@ namespace FlyingColors.Test
 			ceasar = ceasar.Save();
 
 			ShipList ships = ShipList.GetAllShips();
+
+			CommanderList commanders = CommanderList.GetAllCommanders();
 		}
 	}
 }
