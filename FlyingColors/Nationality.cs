@@ -7,11 +7,12 @@ namespace FlyingColors
 {
 	public enum Nationality
 	{
-		British = 0,
-		French = 1,
-		Spanish = 2,
-		Dutch = 3,
-		Danish = 4,
-		American = 5
+		Unknown = 0,
+		British = 1,
+		French = 2,
+		Spanish = 3,
+		Dutch = 4,
+		Danish = 5,
+		American = 6
 	}
 }

@@ -25,9 +25,16 @@ namespace FlyingColors.DataModel
 
 		[Property]
 		public int HullHitsAtStart { get; set; }
-
 		[Property]
 		public int RiggingHitsAtStart { get; set; }
+		[Property]
+		public int MarineHitsAtStart { get; set; }
+
+		[Property]
+		public bool AnchoredAtStart { get; set; }
+		[Property]
+		public bool FullSailsAtStart { get; set; }
+
 
 		public FleetShipData()
 		{

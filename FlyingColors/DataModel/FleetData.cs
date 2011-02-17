@@ -15,7 +15,7 @@ namespace FlyingColors.DataModel
 		public ScenarioData Scenario { get; set; }
 
 		[Property]
-		public string Team { get; set; }
+		public string BattleGroup { get; set; }
 
 		[Property]
 		public string Nationality { get; set; }

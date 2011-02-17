@@ -20,14 +20,14 @@ namespace FlyingColors
 			set { SetProperty(FleetIdProperty, value); }
 		}
 
-		public static readonly PropertyInfo<Nationality> TeamProperty = RegisterProperty<Nationality>(c => c.Team);
+		public static readonly PropertyInfo<Nationality> BattleGroupProperty = RegisterProperty<Nationality>(c => c.BattleGroup);
 		/// <Summary>
-		/// Gets or sets the Team value.
+		/// Gets or sets the BattleGroup value.
 		/// </Summary>
-		public Nationality Team
+		public Nationality BattleGroup
 		{
-			get { return GetProperty(TeamProperty); }
-			set { SetProperty(TeamProperty, value); }
+			get { return GetProperty(BattleGroupProperty); }
+			set { SetProperty(BattleGroupProperty, value); }
 		}
 
 		public static readonly PropertyInfo<Nationality> NationalityProperty = RegisterProperty<Nationality>(c => c.Nationality);
@@ -75,7 +75,7 @@ namespace FlyingColors
 		protected override void Child_Create()
 		{
 			_fleet = new FleetData();
-			LoadProperty<Nationality>(TeamProperty, Nationality.British);
+			LoadProperty<Nationality>(BattleGroupProperty, Nationality.British);
 			LoadProperty<Nationality>(NationalityProperty, Nationality.British);
 			LoadProperty<int>(AudacityProperty, 1);
 			LoadProperty<FleetShipList>(ShipsProperty, FleetShipList.NewFleetShipList(_fleet.Ships));
@@ -84,7 +84,7 @@ namespace FlyingColors
 		private void Child_Fetch(FleetData fleet)
 		{
 			_fleet = fleet;
-			LoadProperty<Nationality>(TeamProperty, (Nationality)Enum.Parse(typeof(Nationality), _fleet.Team));
+			LoadProperty<Nationality>(BattleGroupProperty, (Nationality)Enum.Parse(typeof(Nationality), _fleet.BattleGroup));
 			LoadProperty<Nationality>(NationalityProperty, (Nationality)Enum.Parse(typeof(Nationality), _fleet.Nationality));
 			LoadProperty<int>(AudacityProperty, _fleet.Audacity);
 			LoadProperty<FleetShipList>(ShipsProperty, FleetShipList.GetFleetShipList(_fleet.Ships));
@@ -115,7 +115,7 @@ namespace FlyingColors
 		internal FleetData ToData(ScenarioData scenarioData)
 		{
 			_fleet.Scenario = scenarioData;
-			_fleet.Team = ReadProperty<Nationality>(TeamProperty).ToString();
+			_fleet.BattleGroup = ReadProperty<Nationality>(BattleGroupProperty).ToString();
 			_fleet.Nationality = ReadProperty<Nationality>(NationalityProperty).ToString();
 			_fleet.Audacity = ReadProperty<int>(AudacityProperty);
 			_fleet.Ships = Ships.ToData(_fleet);

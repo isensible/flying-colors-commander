@@ -30,7 +30,7 @@ namespace FlyingColors
 		{
 			get { return GetProperty(NameProperty); }
 			set { SetProperty(NameProperty, value); }
-		} 
+		}
 		#endregion
 
 		#region Nationality and Victory Points
@@ -76,7 +76,7 @@ namespace FlyingColors
 		{
 			get { return GetProperty(RateDamagedProperty); }
 			set { SetProperty(RateDamagedProperty, value); }
-		} 
+		}
 		#endregion
 
 		#region Damage Capacity
@@ -122,7 +122,7 @@ namespace FlyingColors
 		{
 			get { return GetProperty(MarinesDamagedProperty); }
 			set { SetProperty(MarinesDamagedProperty, value); }
-		} 
+		}
 		#endregion
 
 		#region Factory Methods
@@ -134,7 +134,7 @@ namespace FlyingColors
 		internal static Ship GetShip(ShipData shipData)
 		{
 			return DataPortal.Fetch<Ship>(shipData);
-		}		
+		}
 
 		private Ship()
 		{
@@ -213,7 +213,7 @@ namespace FlyingColors
 			_ship.Marines = ReadProperty<int>(MarinesProperty);
 			_ship.MarinesDamaged = ReadProperty<int>(MarinesDamagedProperty);
 			return _ship;
-		} 
-		#endregion		
-	}	
+		}
+		#endregion
+	}
 }
