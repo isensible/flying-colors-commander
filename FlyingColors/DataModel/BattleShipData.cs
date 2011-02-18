@@ -55,5 +55,7 @@ namespace FlyingColors.DataModel
 		public bool Captured { get; set; }
 		[Property]
 		public bool Moved { get; set; }
+		[Property]
+		public bool Tacked { get; set; }
 	}
 }

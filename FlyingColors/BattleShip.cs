@@ -186,10 +186,9 @@ namespace FlyingColors
 			get { return DamageCapacity + DamageCapacityDamaged; }
 		}
 
-		private class DamagedRule : BusinessRule
+		private class HullHitsRule : BusinessRule
 		{
-			public DamagedRule()
-				: base(HullHitsProperty)
+			public HullHitsRule() : base(HullHitsProperty)
 			{
 				AffectedProperties.Add(DamagedProperty);
 				AffectedProperties.Add(CurrentRateProperty);
@@ -236,12 +235,13 @@ namespace FlyingColors
 			private set { LoadProperty(DismastedProperty, value); }
 		}
 
-		private class DismastedRule : BusinessRule
+		private class RiggingHitsRule : BusinessRule
 		{
-			public DismastedRule()
-				: base(RiggingHitsProperty)
+			public RiggingHitsRule() : base(RiggingHitsProperty)
 			{
 				AffectedProperties.Add(DismastedProperty);
+				AffectedProperties.Add(AdriftProperty);
+				AffectedProperties.Add(CanFullSailsProperty);
 			}
 
 			protected override void Execute(RuleContext context)
@@ -250,10 +250,13 @@ namespace FlyingColors
 				if (ship.RiggingHits >= 15)
 				{
 					context.AddOutValue(DismastedProperty, true);
+					context.AddOutValue(AdriftProperty, true);
+					context.AddOutValue(CanFullSailsProperty, false);
+					context.AddOutValue(FullSailsProperty, false);
 				}
 				else
 				{
-					context.AddOutValue(DismastedProperty, false);
+					context.AddOutValue(DismastedProperty, false);					
 				}
 			}
 		}
@@ -265,6 +268,28 @@ namespace FlyingColors
 		{
 			get { return GetProperty(MarineHitsProperty); }
 			set { SetProperty(MarineHitsProperty, value); }
+		}
+
+		public static readonly PropertyInfo<int> MarinesRemainingProperty = RegisterProperty<int>(c => c.MarinesRemaining);
+		public int MarinesRemaining
+		{
+			get { return GetProperty(MarinesRemainingProperty); }
+			private set { LoadProperty(MarinesRemainingProperty, value); }
+		}
+
+		private class MarineHitsRule : BusinessRule
+		{
+			public MarineHitsRule() : base(MarineHitsProperty)
+			{
+				AffectedProperties.Add(MarinesRemainingProperty);
+			}
+			protected override void Execute(RuleContext context)
+			{
+				var ship = (BattleShip)context.Target;
+				int marinesCount = ship.Marines - ship.MarineHits;
+				marinesCount = marinesCount > 1 ? marinesCount : 1;
+				context.AddOutValue(MarinesRemainingProperty, marinesCount);
+			}
 		}
 		#endregion
 
@@ -306,6 +331,13 @@ namespace FlyingColors
 		{
 			get { return GetProperty(AnchoredProperty); }
 			set { SetProperty(AnchoredProperty, value); }
+		}
+
+		public static readonly PropertyInfo<bool> CanFullSailsProperty = RegisterProperty<bool>(c => c.CanFullSails);
+		public bool CanFullSails
+		{
+			get { return GetProperty(CanFullSailsProperty); }
+			private set { LoadProperty(CanFullSailsProperty, value); }
 		}
 
 		public static PropertyInfo<bool> FullSailsProperty = RegisterProperty<bool>(c => c.FullSails);
@@ -351,6 +383,16 @@ namespace FlyingColors
 			get { return GetProperty(MovedProperty); }
 			set { SetProperty(MovedProperty, value); }
 		}
+
+		public static readonly PropertyInfo<bool> TackedProperty = RegisterProperty<bool>(c => c.Tacked);
+		/// <Summary>
+		/// Gets or sets the Tacked value.
+		/// </Summary>
+		public bool Tacked
+		{
+			get { return GetProperty(TackedProperty); }
+			set { SetProperty(TackedProperty, value); }
+		}
 		#endregion
 
 		#endregion
@@ -360,8 +402,9 @@ namespace FlyingColors
 		protected override void AddBusinessRules()
 		{
 			base.AddBusinessRules();
-			BusinessRules.AddRule(new DismastedRule());
-			BusinessRules.AddRule(new DamagedRule());
+			BusinessRules.AddRule(new RiggingHitsRule());
+			BusinessRules.AddRule(new HullHitsRule());
+			BusinessRules.AddRule(new MarineHitsRule());
 		}
 
 		#endregion
