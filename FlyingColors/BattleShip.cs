@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Csla;
 using Csla.Rules;
+using Csla.Core;
 
 namespace FlyingColors
 {
@@ -120,6 +121,9 @@ namespace FlyingColors
 
 		#region Rate
 		public static PropertyInfo<RelativeRate> CurrentRateProperty = RegisterProperty<RelativeRate>(c => c.CurrentRate);
+		/// <summary>
+		/// The current base Rate of the ship; equal to its Undamaged or Damaged Relative Rate.
+		/// </summary>
 		public RelativeRate CurrentRate
 		{
 			get { return GetProperty(CurrentRateProperty); }
@@ -188,7 +192,8 @@ namespace FlyingColors
 
 		private class HullHitsRule : BusinessRule
 		{
-			public HullHitsRule() : base(HullHitsProperty)
+			public HullHitsRule()
+				: base(HullHitsProperty)
 			{
 				AffectedProperties.Add(DamagedProperty);
 				AffectedProperties.Add(CurrentRateProperty);
@@ -235,13 +240,23 @@ namespace FlyingColors
 			private set { LoadProperty(DismastedProperty, value); }
 		}
 
+		public static PropertyInfo<int> MovementPenaltyProperty = RegisterProperty<int>(c => c.MovementPenalty);
+		public int MovementPenalty
+		{
+			get { return GetProperty(MovementPenaltyProperty); }
+			private set { LoadProperty(MovementPenaltyProperty, value); }
+		}
+
 		private class RiggingHitsRule : BusinessRule
 		{
-			public RiggingHitsRule() : base(RiggingHitsProperty)
+			public RiggingHitsRule()
+				: base(RiggingHitsProperty)
 			{
 				AffectedProperties.Add(DismastedProperty);
 				AffectedProperties.Add(AdriftProperty);
 				AffectedProperties.Add(CanFullSailsProperty);
+				AffectedProperties.Add(FullSailsProperty);
+				AffectedProperties.Add(MovementPenaltyProperty);
 			}
 
 			protected override void Execute(RuleContext context)
@@ -251,13 +266,19 @@ namespace FlyingColors
 				{
 					context.AddOutValue(DismastedProperty, true);
 					context.AddOutValue(AdriftProperty, true);
-					context.AddOutValue(CanFullSailsProperty, false);
-					context.AddOutValue(FullSailsProperty, false);
 				}
 				else
 				{
-					context.AddOutValue(DismastedProperty, false);					
+					context.AddOutValue(DismastedProperty, false);
 				}
+				if (ship.RiggingHits >= 6)
+				{
+					context.AddOutValue(CanFullSailsProperty, false);
+					context.AddOutValue(FullSailsProperty, false);
+				}
+				int remainder = 0;
+				context.AddOutValue(MovementPenaltyProperty,
+					Math.DivRem(ship.RiggingHits, 3, out remainder));
 			}
 		}
 		#endregion
@@ -279,7 +300,8 @@ namespace FlyingColors
 
 		private class MarineHitsRule : BusinessRule
 		{
-			public MarineHitsRule() : base(MarineHitsProperty)
+			public MarineHitsRule()
+				: base(MarineHitsProperty)
 			{
 				AffectedProperties.Add(MarinesRemainingProperty);
 			}
@@ -395,6 +417,29 @@ namespace FlyingColors
 		}
 		#endregion
 
+		#region Status Report
+		public static PropertyInfo<string> StatusProperty = RegisterProperty<string>(c => c.Status);
+		public string Status
+		{
+			get { return GetProperty(StatusProperty); }
+			private set { LoadProperty(StatusProperty, value); }
+		}
+
+		private class UpdateStatusRule : BusinessRule
+		{
+			public UpdateStatusRule(IPropertyInfo primaryProperty)
+				: base(primaryProperty)
+			{
+				AffectedProperties.Add(StatusProperty);
+			}
+
+			protected override void Execute(RuleContext context)
+			{
+
+			}
+		}
+		#endregion
+
 		#endregion
 
 		#region Business Rules
@@ -405,6 +450,31 @@ namespace FlyingColors
 			BusinessRules.AddRule(new RiggingHitsRule());
 			BusinessRules.AddRule(new HullHitsRule());
 			BusinessRules.AddRule(new MarineHitsRule());
+		}
+
+		#endregion
+
+		#region Object Overrides
+
+		public override bool Equals(object obj)
+		{
+			if (obj == null) return false;
+			if (obj is BattleShip)
+			{
+				var other = (BattleShip)obj;
+				return this.BattleShipId == other.BattleShipId;
+			}
+			return false;
+		}
+
+		public override int GetHashCode()
+		{
+			return BattleShipId.GetHashCode();
+		}
+
+		public override string ToString()
+		{
+			return Name;
 		}
 
 		#endregion

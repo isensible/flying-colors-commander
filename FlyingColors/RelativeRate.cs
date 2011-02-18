@@ -13,11 +13,11 @@ namespace FlyingColors
 	public class RelativeRate : ReadOnlyBase<RelativeRate>
 	{
 		#region Symbol
-		public static readonly PropertyInfo<char> SymbolProperty = RegisterProperty<char>(c => c.Symbol);
+		public static readonly PropertyInfo<string> SymbolProperty = RegisterProperty<string>(c => c.Symbol);
 		/// <summary>
 		/// Gets the Symbol value.
 		/// </summary>
-		public char Symbol
+		public string Symbol
 		{
 			get { return GetProperty(SymbolProperty); }
 			private set { LoadProperty(SymbolProperty, value); }
@@ -52,10 +52,10 @@ namespace FlyingColors
 		/// <summary>
 		/// Returns a new Relative Rate.
 		/// </summary>
-		public static RelativeRate NewRate(char symbol, RelativeRateColor color, RelativeRateShape shape)
+		public static RelativeRate NewRate(string symbol, RelativeRateColor color, RelativeRateShape shape)
 		{
 			return DataPortal.CreateChild<RelativeRate>(
-				new Tuple<char, RelativeRateColor, RelativeRateShape>(symbol, color, shape));
+				new Tuple<string, RelativeRateColor, RelativeRateShape>(symbol, color, shape));
 		}
 
 		#region First Rate
@@ -234,7 +234,7 @@ namespace FlyingColors
 		#endregion
 
 		#region Data Portal
-		private void Child_Create(Tuple<char, RelativeRateColor, RelativeRateShape> tuple)
+		private void Child_Create(Tuple<string, RelativeRateColor, RelativeRateShape> tuple)
 		{
 			Symbol = tuple.Item1;
 			Color = tuple.Item2;

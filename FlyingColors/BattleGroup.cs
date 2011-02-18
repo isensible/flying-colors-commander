@@ -7,20 +7,26 @@ using Csla;
 namespace FlyingColors
 {
 	[Serializable]
-	public class BattleGroup : BusinessBase<BattleGroup>
+	public class BattleGroup : BusinessListBase<BattleGroup, BattleShip>
 	{
-		public static PropertyInfo<Nationality> NationalityProperty = RegisterProperty<Nationality>(c => c.Nationality);
-		public Nationality Nationality
+		public Nationality Nationality { get; private set; }
+
+		internal static BattleGroup NewBattleGroup(Nationality nationality)
 		{
-			get { return GetProperty(NationalityProperty); }
-			private set { LoadProperty(NationalityProperty, value); }
+			return DataPortal.CreateChild<BattleGroup>(nationality);
 		}
 
-		public static PropertyInfo<BattleShipList> ShipsProperty = RegisterProperty<BattleShipList>(c => c.Ships);
-		public BattleShipList Ships
+		private void Child_Create(Nationality nationality)
 		{
-			get { return GetProperty(ShipsProperty); }
-			set { SetProperty(ShipsProperty, value); }
+			Nationality = nationality;
+		}
+
+		internal void AddFleet(Fleet fleet)
+		{
+			foreach (var ship in fleet.Ships)
+			{
+				Add(BattleShip.NewBattleShip(ship));
+			}
 		}
 	}
 }

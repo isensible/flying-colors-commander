@@ -90,6 +90,7 @@
     <Compile Include="DataModel\FleetShipData.cs" />
     <Compile Include="DataModel\ScenarioData.cs" />
     <Compile Include="DataModel\ShipData.cs" />
+    <Compile Include="FireAttack.cs" />
     <Compile Include="Fleet.cs" />
     <Compile Include="FleetList.cs" />
     <Compile Include="FleetShip.cs" />

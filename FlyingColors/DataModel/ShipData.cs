@@ -20,7 +20,7 @@ namespace FlyingColors.DataModel
 		public int VictoryPoints { get; set; }
 
 		[Property]
-		public char Rate { get; set; }
+		public string Rate { get; set; }
 
 		[Property]
 		public string RateColor { get; set; }
@@ -29,7 +29,7 @@ namespace FlyingColors.DataModel
 		public string RateShape { get; set; }
 
 		[Property]
-		public char RateDamaged { get; set; }
+		public string RateDamaged { get; set; }
 
 		[Property]
 		public string RateColorDamaged { get; set; }
@@ -47,6 +47,6 @@ namespace FlyingColors.DataModel
 		public int Marines { get; set; }
 
 		[Property]
-		public int MarinesDamaged { get; set; }		
+		public int MarinesDamaged { get; set; }
 	}
 }

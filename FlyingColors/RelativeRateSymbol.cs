@@ -7,17 +7,61 @@ namespace FlyingColors
 {
 	public static class RelativeRateSymbol
 	{
-		public static readonly char[] Symbols = new char[9]
-		{ '0', 'T', 'G', '6', '5', '4', '3', '2', '1' };
+		public static readonly string NoRate = "-";
+		public static readonly string Gunboat = "T";
+		public static readonly string GunBrig = "G";
+		public static readonly string SixthRate = "6";
+		public static readonly string FifthRate = "5";
+		public static readonly string FourthRate = "4";
+		public static readonly string ThirdRate = "3";
+		public static readonly string SecondRate = "2";
+		public static readonly string FirstRate = "1";
+		public static readonly string FirstRateHeavy = "(1)";
 
-		public static readonly char NoRate = Symbols[0];
-		public static readonly char Gunboat = Symbols[1];
-		public static readonly char GunBrig = Symbols[2];
-		public static readonly char SixthRate = Symbols[3];
-		public static readonly char FifthRate = Symbols[4];
-		public static readonly char FourthRate = Symbols[5];
-		public static readonly char ThirdRate = Symbols[6];
-		public static readonly char SecondRate = Symbols[7];
-		public static readonly char FirstRate = Symbols[8];
+		public static readonly LinkedList<string> Symbols;
+
+		static RelativeRateSymbol()
+		{
+			var list = new LinkedList<string>();
+			var node = list.AddFirst(FirstRateHeavy);
+			node = list.AddAfter(node, FirstRate);
+			node = list.AddAfter(node, SecondRate);
+			node = list.AddAfter(node, ThirdRate);
+			node = list.AddAfter(node, FourthRate);
+			node = list.AddAfter(node, FifthRate);
+			node = list.AddAfter(node, SixthRate);
+			node = list.AddAfter(node, GunBrig);
+			node = list.AddAfter(node, Gunboat);
+			node = list.AddAfter(node, NoRate);
+			Symbols = list;
+		}
+
+		public static string ShiftUp(string symbol)
+		{
+			var symbolNode = Symbols.Find(symbol);
+			if (symbolNode == null)
+			{
+				return symbol;
+			}
+			if (symbolNode.Next == null)
+			{
+				return symbol;
+			}
+			return symbolNode.Next.Value;
+		}
+
+		public static string ShiftDown(string symbol)
+		{
+			var symbolNode = Symbols.Find(symbol);
+			if (symbolNode == null)
+			{
+				return symbol;
+			}
+			if (symbolNode.Previous == null)
+			{
+				return symbol;
+			}
+			return symbolNode.Previous.Value;
+		}
 	}
 }

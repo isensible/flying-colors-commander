@@ -8,5 +8,6 @@ namespace FlyingColors
 {
 	public class BattleShipList : BusinessListBase<BattleShipList, BattleShip>
 	{
+		public Nationality Nationality { get; set; }
 	}
 }
