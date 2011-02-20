@@ -154,29 +154,11 @@ namespace FlyingColors
 			var battleGroups = from fleet in scenario.Fleets
 							   group fleet by fleet.BattleGroup into g
 							   select new { Nationality = g.Key, Fleets = g };
-			foreach (var group in battleGroups)
-			{
-				if (BattleGroupA == null)
-				{
-					LoadProperty<BattleGroup>(BattleGroupAProperty, BattleGroup.NewBattleGroup(group.Nationality));
-					foreach (var fleet in group.Fleets)
-					{
-						BattleGroupA.AddFleet(fleet);
-					}
-					continue;
-				}
-				if (BattleGroupB == null)
-				{
-					LoadProperty<BattleGroup>(BattleGroupAProperty, BattleGroup.NewBattleGroup(group.Nationality));
-					foreach (var fleet in group.Fleets)
-					{
-						BattleGroupA.AddFleet(fleet);
-					}
-					continue;
-				}
-			}
-			//LoadProperty<BattleGroup>(BattleGroupAProperty, BattleShipList.New());
-			//LoadProperty<BattleGroup>(BattleGroupBProperty, BattleShipList.New());
+			var enumerator = battleGroups.GetEnumerator();
+			enumerator.MoveNext();
+			LoadProperty<BattleGroup>(BattleGroupAProperty, BattleGroup.NewBattleGroup(enumerator.Current.Fleets));
+			enumerator.MoveNext();
+			LoadProperty<BattleGroup>(BattleGroupBProperty, BattleGroup.NewBattleGroup(enumerator.Current.Fleets));			
 		}
 
 		#endregion

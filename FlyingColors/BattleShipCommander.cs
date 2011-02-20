@@ -155,5 +155,36 @@ namespace FlyingColors
 
 		#endregion
 
+		#region Factory Methods
+		internal static BattleShipCommander NewCommander(FleetShipCommander commander)
+		{
+			return DataPortal.CreateChild<BattleShipCommander>(commander);
+		}
+
+		private BattleShipCommander()
+		{
+		}
+		#endregion
+
+		#region Data Portal
+
+		private void Child_Create(FleetShipCommander commander)
+		{
+			LoadProperty<bool>(WoundedProperty, false);
+			LoadProperty<bool>(KilledProperty, false);
+			LoadProperty<bool>(CapturedProperty, false);
+			LoadProperty<int>(QualityProperty, commander.Commander.Quality);
+			LoadProperty<int>(QualityWoundedProperty, commander.Commander.QualityWounded);
+			LoadProperty<int>(CurrentQualityProperty, Quality);
+			LoadProperty<int>(RangeProperty, commander.Commander.Range);
+			LoadProperty<int>(RangeWoundedProperty, commander.Commander.RangeWounded);
+			LoadProperty<int>(CurrentRangeProperty, Range);
+			LoadProperty<string>(NameProperty, commander.Commander.Name);
+			LoadProperty<Nationality>(NationalityProperty, commander.Commander.Nationality);
+			LoadProperty<int>(VictoryPointsProperty, commander.Commander.VictoryPoints);
+			LoadProperty<int>(RankProperty, commander.Commander.Rank);
+		}
+
+		#endregion
 	}
 }

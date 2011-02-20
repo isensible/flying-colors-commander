@@ -11,22 +11,33 @@ namespace FlyingColors
 	{
 		public Nationality Nationality { get; private set; }
 
-		internal static BattleGroup NewBattleGroup(Nationality nationality)
+		internal static BattleGroup NewBattleGroup(IGrouping<Nationality, Fleet> fleets)
 		{
-			return DataPortal.CreateChild<BattleGroup>(nationality);
+			return DataPortal.CreateChild<BattleGroup>(fleets);
 		}
 
-		private void Child_Create(Nationality nationality)
+		private void Child_Create(IGrouping<Nationality, Fleet> fleets)
 		{
-			Nationality = nationality;
+			RaiseListChangedEvents = false;
+			this.Nationality = fleets.Key;
+			foreach (var fleet in fleets)
+			{
+				foreach (var ship in fleet.Ships)
+				{
+					Add(BattleShip.NewBattleShip(fleet, ship));
+				}
+			}
+			RaiseListChangedEvents = true;
 		}
 
 		internal void AddFleet(Fleet fleet)
 		{
+			RaiseListChangedEvents = false;
 			foreach (var ship in fleet.Ships)
 			{
-				Add(BattleShip.NewBattleShip(ship));
+				Add(BattleShip.NewBattleShip(fleet, ship));
 			}
+			RaiseListChangedEvents = true;
 		}
 	}
 }

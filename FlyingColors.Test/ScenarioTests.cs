@@ -142,6 +142,9 @@ namespace FlyingColors.Test
 
 			capeOrtugal = capeOrtugal.Save();
 
+			Battle battleOfCapeOrtugal = Battle.NewBattle(capeOrtugal);
+			Assert.NotNull(battleOfCapeOrtugal);
+
 			ScenarioList list = ScenarioList.GetScenarios();
 			Assert.NotEmpty(list);
 

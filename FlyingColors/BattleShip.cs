@@ -478,5 +478,77 @@ namespace FlyingColors
 		}
 
 		#endregion
+
+		#region Factory Methods
+		internal static BattleShip NewBattleShip(Fleet fleet, FleetShip ship)
+		{
+			return DataPortal.CreateChild<BattleShip>(new Tuple<Fleet, FleetShip>(fleet, ship));
+		}
+		#endregion
+
+		#region Data Portal
+
+		[RunLocal]
+		private void Child_Create(Tuple<Fleet, FleetShip> battleShipTuple)
+		{
+			// Fleet
+			LoadProperty<int>(AudacityProperty, battleShipTuple.Item1.Audacity);
+
+			// Commanders
+			LoadProperty<BattleShipCommanderList>(CommandersProperty,
+				BattleShipCommanderList.New(battleShipTuple.Item2.Commanders));
+
+			// Ship
+			LoadProperty<string>(NameProperty, battleShipTuple.Item2.Ship.Name);
+			LoadProperty<Nationality>(NationalityProperty, battleShipTuple.Item2.Ship.Nationality);
+			LoadProperty<int>(VictoryPointsProperty, battleShipTuple.Item2.Ship.VictoryPoints);
+			LoadProperty<RelativeRate>(RateProperty, battleShipTuple.Item2.Ship.Rate);
+			LoadProperty<RelativeRate>(RateDamagedProperty, battleShipTuple.Item2.Ship.RateDamaged);
+			LoadProperty<int>(DamageCapacityProperty, battleShipTuple.Item2.Ship.DamageCapacity);
+			LoadProperty<int>(DamageCapacityDamagedProperty, battleShipTuple.Item2.Ship.DamageCapacityDamaged);
+			LoadProperty<int>(MarinesProperty, battleShipTuple.Item2.Ship.Marines);
+			LoadProperty<int>(MarinesDamagedProperty, battleShipTuple.Item2.Ship.MarinesDamaged);
+
+			// Battle Ship
+			LoadProperty<RelativeRate>(CurrentRateProperty, Rate);
+			// Fired
+			LoadProperty<bool>(FirstPortFiredProperty, false);
+			LoadProperty<bool>(FiredPortProperty, false);
+			LoadProperty<bool>(FirstStarboardFiredProperty, false);
+			LoadProperty<bool>(FiredStarboardProperty, false);
+			// Hull Hits
+			LoadProperty<int>(HullHitsProperty, battleShipTuple.Item2.HullHitsAtStart);
+			LoadProperty<bool>(DamagedProperty, false);
+			LoadProperty<bool>(VunerableProperty, false);
+			// Rigging Hits
+			LoadProperty<int>(RiggingHitsProperty, battleShipTuple.Item2.RiggingHitsAtStart);
+			LoadProperty<bool>(DismastedProperty, false);
+			LoadProperty<int>(MovementPenaltyProperty, 0);
+			// Marine Hits
+			LoadProperty<int>(MarineHitsProperty, 0);
+			LoadProperty<int>(MarinesRemainingProperty, Marines);
+			// Command
+			LoadProperty<bool>(OutOfCommandProperty, false);
+			LoadProperty<int>(CommandGroupProperty, 0);
+			// Status
+			LoadProperty<bool>(InIronsProperty, false);
+			LoadProperty<bool>(AdriftProperty, false);
+			LoadProperty<bool>(AnchoredProperty, false);
+			LoadProperty<bool>(CanFullSailsProperty, true);
+			LoadProperty<bool>(FullSailsProperty, false);
+			LoadProperty<bool>(AgroundProperty, false);
+			LoadProperty<bool>(OnFireProperty, false);
+			LoadProperty<bool>(StruckProperty, false);
+			LoadProperty<bool>(CapturedProperty, false);
+			// Activation
+			LoadProperty<bool>(MovedProperty, false);
+			LoadProperty<bool>(TackedProperty, false);
+			// Report
+			LoadProperty<string>(StatusProperty, string.Empty);
+
+			BusinessRules.CheckRules();
+		}
+
+		#endregion		
 	}
 }
