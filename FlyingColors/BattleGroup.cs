@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Csla;
+using FlyingColors.DataModel;
 
 namespace FlyingColors
 {
@@ -11,15 +12,15 @@ namespace FlyingColors
 	{
 		public Nationality Nationality { get; private set; }
 
-		internal static BattleGroup NewBattleGroup(IGrouping<Nationality, Fleet> fleets)
+		internal static BattleGroup NewBattleGroup(IGrouping<string, FleetData> fleets)
 		{
 			return DataPortal.CreateChild<BattleGroup>(fleets);
 		}
 
-		private void Child_Create(IGrouping<Nationality, Fleet> fleets)
+		private void Child_Create(IGrouping<string, FleetData> fleets)
 		{
 			RaiseListChangedEvents = false;
-			this.Nationality = fleets.Key;
+			this.Nationality = (Nationality)Enum.Parse(typeof(Nationality), fleets.Key);
 			foreach (var fleet in fleets)
 			{
 				foreach (var ship in fleet.Ships)
@@ -28,16 +29,6 @@ namespace FlyingColors
 				}
 			}
 			RaiseListChangedEvents = true;
-		}
-
-		internal void AddFleet(Fleet fleet)
-		{
-			RaiseListChangedEvents = false;
-			foreach (var ship in fleet.Ships)
-			{
-				Add(BattleShip.NewBattleShip(fleet, ship));
-			}
-			RaiseListChangedEvents = true;
-		}
+		}		
 	}
 }

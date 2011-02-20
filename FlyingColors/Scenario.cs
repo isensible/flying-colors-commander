@@ -143,7 +143,7 @@ namespace FlyingColors
 			ActiveRecordMediator<ScenarioData>.Delete(ToData());
 		}
 
-		private ScenarioData ToData()
+		internal ScenarioData ToData()
 		{
 			_scenario.Maps = this.Maps;
 			_scenario.Name = this.Name;

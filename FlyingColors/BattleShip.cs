@@ -5,6 +5,8 @@ using System.Text;
 using Csla;
 using Csla.Rules;
 using Csla.Core;
+using FlyingColors.DataModel;
+using Castle.ActiveRecord;
 
 namespace FlyingColors
 {
@@ -480,17 +482,21 @@ namespace FlyingColors
 		#endregion
 
 		#region Factory Methods
-		internal static BattleShip NewBattleShip(Fleet fleet, FleetShip ship)
+		internal static BattleShip NewBattleShip(FleetData fleet, FleetShipData ship)
 		{
-			return DataPortal.CreateChild<BattleShip>(new Tuple<Fleet, FleetShip>(fleet, ship));
+			return DataPortal.CreateChild<BattleShip>(new Tuple<FleetData, FleetShipData>(fleet, ship));
 		}
 		#endregion
 
 		#region Data Portal
 
+		private BattleShipData _ship = null;
+
 		[RunLocal]
-		private void Child_Create(Tuple<Fleet, FleetShip> battleShipTuple)
+		private void Child_Create(Tuple<FleetData, FleetShipData> battleShipTuple)
 		{
+			_ship = new BattleShipData();
+			_ship.FleetShip = battleShipTuple.Item2;
 			// Fleet
 			LoadProperty<int>(AudacityProperty, battleShipTuple.Item1.Audacity);
 
@@ -500,10 +506,16 @@ namespace FlyingColors
 
 			// Ship
 			LoadProperty<string>(NameProperty, battleShipTuple.Item2.Ship.Name);
-			LoadProperty<Nationality>(NationalityProperty, battleShipTuple.Item2.Ship.Nationality);
+			LoadProperty<Nationality>(NationalityProperty, (Nationality)Enum.Parse(typeof(Nationality), battleShipTuple.Item2.Ship.Nationality));
 			LoadProperty<int>(VictoryPointsProperty, battleShipTuple.Item2.Ship.VictoryPoints);
-			LoadProperty<RelativeRate>(RateProperty, battleShipTuple.Item2.Ship.Rate);
-			LoadProperty<RelativeRate>(RateDamagedProperty, battleShipTuple.Item2.Ship.RateDamaged);
+			LoadProperty<RelativeRate>(RateProperty, RelativeRate.NewRate(
+				_ship.FleetShip.Ship.Rate,
+				(RelativeRateColor)Enum.Parse(typeof(RelativeRateColor), _ship.FleetShip.Ship.RateColor),
+				(RelativeRateShape)Enum.Parse(typeof(RelativeRateShape), _ship.FleetShip.Ship.RateShape)));
+			LoadProperty<RelativeRate>(RateDamagedProperty, RelativeRate.NewRate(
+				_ship.FleetShip.Ship.RateDamaged,
+				(RelativeRateColor)Enum.Parse(typeof(RelativeRateColor), _ship.FleetShip.Ship.RateColorDamaged),
+				(RelativeRateShape)Enum.Parse(typeof(RelativeRateShape), _ship.FleetShip.Ship.RateShapeDamaged)));
 			LoadProperty<int>(DamageCapacityProperty, battleShipTuple.Item2.Ship.DamageCapacity);
 			LoadProperty<int>(DamageCapacityDamagedProperty, battleShipTuple.Item2.Ship.DamageCapacityDamaged);
 			LoadProperty<int>(MarinesProperty, battleShipTuple.Item2.Ship.Marines);
@@ -547,6 +559,52 @@ namespace FlyingColors
 			LoadProperty<string>(StatusProperty, string.Empty);
 
 			BusinessRules.CheckRules();
+		}
+
+		private void Child_Insert(BattleData battle)
+		{
+			ToData(battle);
+			FieldManager.UpdateChildren(_ship);
+			ActiveRecordMediator<BattleShipData>.Create(_ship);
+			LoadProperty<long>(BattleShipIdProperty, _ship.BattleShipId);
+		}
+
+		private void Child_Update(BattleData battle)
+		{
+			ToData(battle);
+			FieldManager.UpdateChildren(_ship);
+			ActiveRecordMediator<BattleShipData>.Update(_ship);			
+		}
+
+		private void Child_Delete(BattleData battle)
+		{
+			ToData(battle);
+			FieldManager.UpdateChildren(_ship);
+			ActiveRecordMediator<BattleShipData>.Delete(_ship);			
+		}
+
+		internal BattleShipData ToData(BattleData battle)
+		{
+			_ship.Battle = battle;
+			_ship.Adrift = ReadProperty<bool>(AdriftProperty);
+			_ship.Aground = ReadProperty<bool>(AgroundProperty);
+			_ship.Anchored = ReadProperty<bool>(AnchoredProperty);			
+			_ship.Captured = ReadProperty<bool>(CapturedProperty);
+			_ship.CommandGroup = ReadProperty<int>(CommandGroupProperty);
+			_ship.FiredPort = ReadProperty<bool>(FiredPortProperty);
+			_ship.FirstPortFired = ReadProperty<bool>(FirstPortFiredProperty);
+			_ship.FirstStarboardFired = ReadProperty<bool>(FirstStarboardFiredProperty);
+			_ship.FullSails = ReadProperty<bool>(FullSailsProperty);
+			_ship.HullHits = ReadProperty<int>(HullHitsProperty);
+			_ship.InIrons = ReadProperty<bool>(InIronsProperty);
+			_ship.MarineHits = ReadProperty<int>(MarineHitsProperty);
+			_ship.Moved = ReadProperty<bool>(MovedProperty);
+			_ship.OnFire = ReadProperty<bool>(OnFireProperty);
+			_ship.OutOfCommand = ReadProperty<bool>(OutOfCommandProperty);
+			_ship.RiggingHits = ReadProperty<int>(RiggingHitsProperty);
+			_ship.Struck = ReadProperty<bool>(StruckProperty);
+			_ship.Tacked = ReadProperty<bool>(TackedProperty);
+			return _ship;
 		}
 
 		#endregion		

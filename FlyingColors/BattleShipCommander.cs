@@ -5,6 +5,8 @@ using System.Text;
 using Csla;
 using Csla.Rules;
 using Csla.Core;
+using FlyingColors.DataModel;
+using Castle.ActiveRecord;
 
 namespace FlyingColors
 {
@@ -156,7 +158,7 @@ namespace FlyingColors
 		#endregion
 
 		#region Factory Methods
-		internal static BattleShipCommander NewCommander(FleetShipCommander commander)
+		internal static BattleShipCommander NewCommander(FleetShipCommanderData commander)
 		{
 			return DataPortal.CreateChild<BattleShipCommander>(commander);
 		}
@@ -168,8 +170,13 @@ namespace FlyingColors
 
 		#region Data Portal
 
-		private void Child_Create(FleetShipCommander commander)
+		private BattleShipCommanderData _commander = null;
+
+		private void Child_Create(FleetShipCommanderData commander)
 		{
+			_commander = new BattleShipCommanderData();
+			_commander.Commander = commander.Commander;
+			
 			LoadProperty<bool>(WoundedProperty, false);
 			LoadProperty<bool>(KilledProperty, false);
 			LoadProperty<bool>(CapturedProperty, false);
@@ -180,9 +187,36 @@ namespace FlyingColors
 			LoadProperty<int>(RangeWoundedProperty, commander.Commander.RangeWounded);
 			LoadProperty<int>(CurrentRangeProperty, Range);
 			LoadProperty<string>(NameProperty, commander.Commander.Name);
-			LoadProperty<Nationality>(NationalityProperty, commander.Commander.Nationality);
+			LoadProperty<Nationality>(NationalityProperty, (Nationality)Enum.Parse(typeof(Nationality), commander.Commander.Nationality));
 			LoadProperty<int>(VictoryPointsProperty, commander.Commander.VictoryPoints);
 			LoadProperty<int>(RankProperty, commander.Commander.Rank);
+		}
+
+		private void Child_Insert(BattleShipData ship)
+		{
+			ToData(ship);
+			ActiveRecordMediator<BattleShipCommanderData>.Create(_commander);
+		}
+
+		private void Child_Update(BattleShipData ship)
+		{
+			ToData(ship);
+			ActiveRecordMediator<BattleShipCommanderData>.Update(_commander);
+		}
+
+		private void Child_Delete(BattleShipData ship)
+		{
+			ToData(ship);
+			ActiveRecordMediator<BattleShipCommanderData>.Delete(_commander);
+		}
+
+		internal BattleShipCommanderData ToData(BattleShipData ship)
+		{
+			_commander.Ship = ship;
+			_commander.Captured = ReadProperty<bool>(CapturedProperty);
+			_commander.Killed = ReadProperty<bool>(KilledProperty);
+			_commander.Wounded = ReadProperty<bool>(WoundedProperty);
+			return _commander;
 		}
 
 		#endregion

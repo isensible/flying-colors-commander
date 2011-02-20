@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Csla;
+using FlyingColors.DataModel;
+using Castle.ActiveRecord;
 
 namespace FlyingColors
 {
@@ -129,13 +131,18 @@ namespace FlyingColors
 			return DataPortal.Create<Battle>(scenario);
 		}
 
+		
+
 		#endregion
 
 		#region Data Portal
+		private BattleData _battle = null;
 
 		[RunLocal]
 		private void DataPortal_Create(Scenario scenario)
 		{
+			_battle = new BattleData();
+			_battle.Scenario = scenario.ToData();
 			// Battle properties
 			LoadProperty<string>(SummaryProperty, scenario.Name);
 			LoadProperty<SmartDate>(StartedProperty, DateTime.Now);
@@ -151,7 +158,7 @@ namespace FlyingColors
 			LoadProperty<string>(MapsProperty, scenario.Maps);
 			LoadProperty<int>(TurnsProperty, scenario.Turns);
 			// Create the two battle groups
-			var battleGroups = from fleet in scenario.Fleets
+			var battleGroups = from fleet in _battle.Scenario.Fleets
 							   group fleet by fleet.BattleGroup into g
 							   select new { Nationality = g.Key, Fleets = g };
 			var enumerator = battleGroups.GetEnumerator();
@@ -159,6 +166,42 @@ namespace FlyingColors
 			LoadProperty<BattleGroup>(BattleGroupAProperty, BattleGroup.NewBattleGroup(enumerator.Current.Fleets));
 			enumerator.MoveNext();
 			LoadProperty<BattleGroup>(BattleGroupBProperty, BattleGroup.NewBattleGroup(enumerator.Current.Fleets));			
+		}
+
+		
+
+		protected override void DataPortal_Insert()
+		{
+			ToData();
+			//FieldManager.UpdateChildren(_battle);
+			ActiveRecordMediator<BattleData>.Create(_battle);
+		}
+
+		protected override void DataPortal_Update()
+		{
+			ToData();
+			//FieldManager.UpdateChildren(_battle);
+			ActiveRecordMediator<BattleData>.Update(_battle);
+		}
+
+		protected override void DataPortal_DeleteSelf()
+		{
+			ToData();
+			//FieldManager.UpdateChildren(_battle);
+			ActiveRecordMediator<BattleData>.Create(_battle);
+		}
+
+		internal BattleData ToData()
+		{
+			_battle.Summary = ReadProperty<string>(SummaryProperty);
+			_battle.Started = ReadProperty<SmartDate>(StartedProperty);
+			_battle.Finished = ReadProperty<SmartDate>(FinishedProperty);
+			_battle.Turn = ReadProperty<int>(TurnProperty);
+			_battle.Victor = ReadProperty<Nationality>(VictorProperty).ToString();
+			_battle.Weather = ReadProperty<Weather>(WeatherProperty);
+			_battle.WindDirection = ReadProperty<int>(WindDirectionProperty);		
+			
+			return _battle;
 		}
 
 		#endregion

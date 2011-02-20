@@ -74,6 +74,7 @@
   <ItemGroup>
     <Compile Include="Battle.cs" />
     <Compile Include="BattleGroup.cs" />
+    <Compile Include="BattleList.cs" />
     <Compile Include="BattleShip.cs" />
     <Compile Include="BattleShipCommander.cs" />
     <Compile Include="BattleShipCommanderList.cs" />
