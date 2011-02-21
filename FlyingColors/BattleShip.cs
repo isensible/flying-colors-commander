@@ -502,7 +502,7 @@ namespace FlyingColors
 
 			// Commanders
 			LoadProperty<BattleShipCommanderList>(CommandersProperty,
-				BattleShipCommanderList.New(battleShipTuple.Item2.Commanders));
+				BattleShipCommanderList.New(_ship, battleShipTuple.Item2.Commanders));
 
 			// Ship
 			LoadProperty<string>(NameProperty, battleShipTuple.Item2.Ship.Name);
@@ -563,24 +563,24 @@ namespace FlyingColors
 
 		private void Child_Insert(BattleGroupData battleGroup)
 		{
-			ToData(battleGroup);
-			FieldManager.UpdateChildren(_ship);
-			ActiveRecordMediator<BattleShipData>.Create(_ship);
-			LoadProperty<long>(BattleShipIdProperty, _ship.BattleShipId);
+			//ToData(battleGroup);
+			//FieldManager.UpdateChildren(_ship);
+			//ActiveRecordMediator<BattleShipData>.Create(_ship);
+			//LoadProperty<long>(BattleShipIdProperty, _ship.BattleShipId);
 		}
 
 		private void Child_Update(BattleGroupData battleGroup)
 		{
-			ToData(battleGroup);
-			FieldManager.UpdateChildren(_ship);
-			ActiveRecordMediator<BattleShipData>.Update(_ship);			
+			//ToData(battleGroup);
+			//FieldManager.UpdateChildren(_ship);
+			//ActiveRecordMediator<BattleShipData>.Update(_ship);			
 		}
 
 		private void Child_Delete(BattleGroupData battleGroup)
 		{
-			ToData(battleGroup);
-			FieldManager.UpdateChildren(_ship);
-			ActiveRecordMediator<BattleShipData>.Delete(_ship);			
+			//ToData(battleGroup);
+			//FieldManager.UpdateChildren(_ship);
+			//ActiveRecordMediator<BattleShipData>.Delete(_ship);			
 		}
 
 		internal BattleShipData ToData(BattleGroupData battleGroup)

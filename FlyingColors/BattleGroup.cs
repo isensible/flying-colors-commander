@@ -37,42 +37,50 @@ namespace FlyingColors
 		/// </summary>
 		/// <param name="fleets">A grouping of fleets keyed by thier Battle Group Nationality.</param>
 		/// <returns>The new BattleGroup populated with Battle Ships from each grouped fleet.</returns>
-		internal static BattleGroup NewBattleGroup(IGrouping<string, FleetData> fleets)
+		internal static BattleGroup NewBattleGroup(BattleData battle, IGrouping<string, FleetData> fleets)
 		{
-			return DataPortal.CreateChild<BattleGroup>(fleets);
+			return DataPortal.CreateChild<BattleGroup>(new Tuple<BattleData, IGrouping<string,FleetData>>(battle, fleets));
 		}
 
 		#region Data Portal
 
+		private IList<BattleGroupData> _groups = null;
+		private int _groupIndex = -1;
 		private BattleGroupData _group = null;
 
-		private void Child_Create(IGrouping<string, FleetData> fleets)
+		private void Child_Create(Tuple<BattleData, IGrouping<string, FleetData>> tuple)
 		{
+			_groups = tuple.Item1.BattleGroups;
 			_group = new BattleGroupData();
-			LoadProperty<Nationality>(NationalityProperty, (Nationality)Enum.Parse(typeof(Nationality), fleets.Key));
-			LoadProperty<BattleShipList>(ShipsProperty, BattleShipList.New(fleets));				
+			_group.Battle = tuple.Item1;
+			_groups.Add(_group);
+			_groupIndex = _groups.IndexOf(_group); 
+			LoadProperty<Nationality>(NationalityProperty, (Nationality)Enum.Parse(typeof(Nationality), tuple.Item2.Key));
+			LoadProperty<BattleShipList>(ShipsProperty, BattleShipList.New(_group, tuple.Item2));				
 		}
 
 		private void Child_Insert(BattleData battle)
 		{
-			ToData(battle);
-			FieldManager.UpdateChildren(_group);
-			ActiveRecordMediator<BattleGroupData>.Create(_group);
-			LoadProperty<long>(BattleGroupIdProperty, _group.BattleGroupId);
+			//ToData(battle);
+			//FieldManager.UpdateChildren(_group);
+			//<BattleGroupData>.Create(_group);
+			//LoadProperty<long>(BattleGroupIdProperty, battle.BattleGroups_group.BattleGroupId);
+
+			// TODO: load BattleGroupId from 
 		}
 
 		private void Child_Update(BattleData battle)
 		{
-			ToData(battle);
-			FieldManager.UpdateChildren(_group);
-			ActiveRecordMediator<BattleGroupData>.Update(_group);
+			//ToData(battle);
+			//FieldManager.UpdateChildren(_group);
+			//ActiveRecordMediator<BattleGroupData>.Update(_group);
 		}
 
 		private void Child_Delete(BattleData battle)
 		{
-			ToData(battle);
-			FieldManager.UpdateChildren(_group);
-			ActiveRecordMediator<BattleGroupData>.Delete(_group);
+			//ToData(battle);
+			//FieldManager.UpdateChildren(_group);
+			//ActiveRecordMediator<BattleGroupData>.Delete(_group);
 		}
 
 		internal BattleGroupData ToData(BattleData battle)

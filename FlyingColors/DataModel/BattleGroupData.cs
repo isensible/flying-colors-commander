@@ -21,8 +21,8 @@ namespace FlyingColors.DataModel
 
 		[HasMany(typeof(BattleShipData),
 			Table = "BattleShip",
-			ColumnKey = "BattleShipId",
-			Cascade = ManyRelationCascadeEnum.All)]
+			ColumnKey = "BattleGroupId",
+			Cascade = ManyRelationCascadeEnum.All, Inverse = true)]
 		public IList<BattleShipData> Ships { get; set; }
 
 		public BattleGroupData()

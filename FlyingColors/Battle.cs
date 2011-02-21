@@ -161,9 +161,11 @@ namespace FlyingColors
 							   select new { Nationality = g.Key, Fleets = g };
 			var enumerator = battleGroups.GetEnumerator();
 			enumerator.MoveNext();
-			LoadProperty<BattleGroup>(BattleGroupAProperty, BattleGroup.NewBattleGroup(enumerator.Current.Fleets));
+			LoadProperty<BattleGroup>(BattleGroupAProperty,
+				BattleGroup.NewBattleGroup(_battle, enumerator.Current.Fleets));
 			enumerator.MoveNext();
-			LoadProperty<BattleGroup>(BattleGroupBProperty, BattleGroup.NewBattleGroup(enumerator.Current.Fleets));
+			LoadProperty<BattleGroup>(BattleGroupBProperty,
+				BattleGroup.NewBattleGroup(_battle, enumerator.Current.Fleets));
 		}
 
 

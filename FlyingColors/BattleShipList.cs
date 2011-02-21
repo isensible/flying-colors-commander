@@ -10,9 +10,9 @@ namespace FlyingColors
 	[Serializable]
 	public class BattleShipList : BusinessListBase<BattleShipList, BattleShip>
 	{
-		internal static BattleShipList New(IEnumerable<FleetData> fleets)
+		internal static BattleShipList New(BattleGroupData group, IEnumerable<FleetData> fleets)
 		{
-			return DataPortal.CreateChild<BattleShipList>(fleets);
+			return DataPortal.CreateChild<BattleShipList>(new Tuple<BattleGroupData, IEnumerable<FleetData>>(group, fleets));
 		}
 
 		private BattleShipList()
@@ -23,10 +23,11 @@ namespace FlyingColors
 
 		private IList<BattleShipData> _ships = null;
 
-		private void Child_Create(IEnumerable<FleetData> fleets)
+		private void Child_Create(Tuple<BattleGroupData, IEnumerable<FleetData>> tuple)
 		{
 			RaiseListChangedEvents = false;
-			foreach (var fleet in fleets)
+			_ships = tuple.Item1.Ships;
+			foreach (var fleet in tuple.Item2)
 			{
 				foreach (var ship in fleet.Ships)
 				{
