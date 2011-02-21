@@ -561,31 +561,31 @@ namespace FlyingColors
 			BusinessRules.CheckRules();
 		}
 
-		private void Child_Insert(BattleData battle)
+		private void Child_Insert(BattleGroupData battleGroup)
 		{
-			ToData(battle);
+			ToData(battleGroup);
 			FieldManager.UpdateChildren(_ship);
 			ActiveRecordMediator<BattleShipData>.Create(_ship);
 			LoadProperty<long>(BattleShipIdProperty, _ship.BattleShipId);
 		}
 
-		private void Child_Update(BattleData battle)
+		private void Child_Update(BattleGroupData battleGroup)
 		{
-			ToData(battle);
+			ToData(battleGroup);
 			FieldManager.UpdateChildren(_ship);
 			ActiveRecordMediator<BattleShipData>.Update(_ship);			
 		}
 
-		private void Child_Delete(BattleData battle)
+		private void Child_Delete(BattleGroupData battleGroup)
 		{
-			ToData(battle);
+			ToData(battleGroup);
 			FieldManager.UpdateChildren(_ship);
 			ActiveRecordMediator<BattleShipData>.Delete(_ship);			
 		}
 
-		internal BattleShipData ToData(BattleData battle)
+		internal BattleShipData ToData(BattleGroupData battleGroup)
 		{
-			_ship.Battle = battle;
+			_ship.BattleGroup = battleGroup;
 			_ship.Adrift = ReadProperty<bool>(AdriftProperty);
 			_ship.Aground = ReadProperty<bool>(AgroundProperty);
 			_ship.Anchored = ReadProperty<bool>(AnchoredProperty);			
@@ -604,6 +604,7 @@ namespace FlyingColors
 			_ship.RiggingHits = ReadProperty<int>(RiggingHitsProperty);
 			_ship.Struck = ReadProperty<bool>(StruckProperty);
 			_ship.Tacked = ReadProperty<bool>(TackedProperty);
+			_ship.Commanders = ReadProperty<BattleShipCommanderList>(CommandersProperty).ToData(_ship);
 			return _ship;
 		}
 

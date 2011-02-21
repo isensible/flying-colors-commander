@@ -1,5 +1,6 @@
 ﻿using System;
 using Castle.ActiveRecord;
+using System.Collections.Generic;
 
 namespace FlyingColors.DataModel
 {
@@ -34,8 +35,15 @@ namespace FlyingColors.DataModel
 		[BelongsTo(Type = typeof(ScenarioData), Column = "ScenarioId")]
 		public ScenarioData Scenario { get; set; }
 
+		[HasMany(typeof(BattleGroupData),
+			Table = "BattleGroup",
+			ColumnKey = "BattleId",
+			Cascade = ManyRelationCascadeEnum.All)]
+		public IList<BattleGroupData> BattleGroups { get; set; }
+
 		public BattleData()
 		{
+			BattleGroups = new List<BattleGroupData>(2);
 		}
 	}
 }

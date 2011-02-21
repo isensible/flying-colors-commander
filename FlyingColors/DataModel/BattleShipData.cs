@@ -13,11 +13,17 @@ namespace FlyingColors.DataModel
 		[PrimaryKey]
 		public long BattleShipId { get; set; }
 
-		[BelongsTo(Type = typeof(BattleData), Column = "BattleId")]
-		public BattleData Battle { get; set; }
+		[BelongsTo(Type = typeof(BattleGroupData), Column = "BattleGroupId")]
+		public BattleGroupData BattleGroup { get; set; }
 
 		[BelongsTo(Type = typeof(FleetShipData), Column = "FleetShipId")]
 		public FleetShipData FleetShip { get; set; }
+
+		[HasMany(typeof(BattleShipCommanderData),
+			Table = "BattleShipCommander",
+			ColumnKey = "BattleShipCommanderId",
+			Cascade = ManyRelationCascadeEnum.All)]
+		public IList<BattleShipCommanderData> Commanders { get; set; }
 
 		[Property]
 		public bool FiredPort { get; set; }
@@ -57,5 +63,31 @@ namespace FlyingColors.DataModel
 		public bool Moved { get; set; }
 		[Property]
 		public bool Tacked { get; set; }
+
+		public BattleShipData()
+		{
+			Commanders = new List<BattleShipCommanderData>();
+		}
+
+		public override bool Equals(object obj)
+		{
+			if (obj == null) return false;
+			if (obj is BattleShipData)
+			{
+				var other = (BattleShipData)obj;
+				return (this.FleetShip.FleetShipId == other.FleetShip.FleetShipId);
+			}
+			return false;
+		}
+
+		public override int GetHashCode()
+		{
+			return FleetShip.FleetShipId.GetHashCode();
+		}
+
+		public override string ToString()
+		{
+			return FleetShip.Ship.Name;
+		}
 	}
 }

@@ -83,6 +83,7 @@
     <Compile Include="Commander.cs" />
     <Compile Include="CommanderList.cs" />
     <Compile Include="DataModel\BattleData.cs" />
+    <Compile Include="DataModel\BattleGroupData.cs" />
     <Compile Include="DataModel\BattleShipCommanderData.cs" />
     <Compile Include="DataModel\BattleShipData.cs" />
     <Compile Include="DataModel\CommanderData.cs" />

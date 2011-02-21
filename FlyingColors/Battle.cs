@@ -131,8 +131,6 @@ namespace FlyingColors
 			return DataPortal.Create<Battle>(scenario);
 		}
 
-		
-
 		#endregion
 
 		#region Data Portal
@@ -165,10 +163,10 @@ namespace FlyingColors
 			enumerator.MoveNext();
 			LoadProperty<BattleGroup>(BattleGroupAProperty, BattleGroup.NewBattleGroup(enumerator.Current.Fleets));
 			enumerator.MoveNext();
-			LoadProperty<BattleGroup>(BattleGroupBProperty, BattleGroup.NewBattleGroup(enumerator.Current.Fleets));			
+			LoadProperty<BattleGroup>(BattleGroupBProperty, BattleGroup.NewBattleGroup(enumerator.Current.Fleets));
 		}
 
-		
+
 
 		protected override void DataPortal_Insert()
 		{
@@ -199,8 +197,9 @@ namespace FlyingColors
 			_battle.Turn = ReadProperty<int>(TurnProperty);
 			_battle.Victor = ReadProperty<Nationality>(VictorProperty).ToString();
 			_battle.Weather = ReadProperty<Weather>(WeatherProperty);
-			_battle.WindDirection = ReadProperty<int>(WindDirectionProperty);		
-			
+			_battle.WindDirection = ReadProperty<int>(WindDirectionProperty);
+			_battle.BattleGroups.Add(ReadProperty<BattleGroup>(BattleGroupAProperty).ToData(_battle));
+			_battle.BattleGroups.Add(ReadProperty<BattleGroup>(BattleGroupBProperty).ToData(_battle));
 			return _battle;
 		}
 
