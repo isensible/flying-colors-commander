@@ -7,6 +7,8 @@ using Csla.Rules;
 using Csla.Core;
 using FlyingColors.DataModel;
 using Castle.ActiveRecord;
+using System.ComponentModel;
+using System.Reflection;
 
 namespace FlyingColors
 {
@@ -588,7 +590,7 @@ namespace FlyingColors
 			_ship.BattleGroup = battleGroup;
 			_ship.Adrift = ReadProperty<bool>(AdriftProperty);
 			_ship.Aground = ReadProperty<bool>(AgroundProperty);
-			_ship.Anchored = ReadProperty<bool>(AnchoredProperty);			
+			_ship.Anchored = ReadProperty<bool>(AnchoredProperty);
 			_ship.Captured = ReadProperty<bool>(CapturedProperty);
 			_ship.CommandGroup = ReadProperty<int>(CommandGroupProperty);
 			_ship.FiredPort = ReadProperty<bool>(FiredPortProperty);
@@ -608,6 +610,53 @@ namespace FlyingColors
 			return _ship;
 		}
 
-		#endregion		
+		[Flags]
+		private enum BattleShipStates
+		{
+			[Description("")]
+			None = 0,
+			[Description("Fired Port")]
+			FiredPort = 1,
+			[Description("Fired Starboard")]
+			FiredStarboard = 2,
+			[Description("Fired Both")]
+			FiredBoth = FiredPort | FiredStarboard,
+			[Description("Adrift")]
+			Adrift = 4,
+			Aground = 8,
+			FullSails = 16,
+			Anchored = 32,
+			InIrons = 64,
+			OnFire = 128,
+			Struck = 256,
+			OutOfCommand = 512,
+			Dismasted = 1024,
+			Captured = 2048,
+			Sunk = 4096,
+			Moved = 8192,
+			Tacked = 16384
+		}
+
+		static class ExtensionMethods
+		{
+			public static string ToDescription(this Enum en) //ext method
+			{
+				Type type = en.GetType();
+				MemberInfo[] memInfo = type.GetMember(en.ToString());
+				if (memInfo != null && memInfo.Length > 0)
+				{
+					object[] attrs =
+						memInfo[0].GetCustomAttributes(typeof(DescriptionAttribute), false);
+					if (attrs != null && attrs.Length > 0)
+					{
+						return ((DescriptionAttribute)attrs[0]).Description;
+					}
+				}
+				return en.ToString();
+
+			}
+		}
+
+		#endregion
 	}
 }
