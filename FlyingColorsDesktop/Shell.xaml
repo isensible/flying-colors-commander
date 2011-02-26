@@ -1,0 +1,11 @@
+﻿<Window x:Class="FlyingColorsDesktop.Shell"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:prism="http://www.codeplex.com/prism"
+        Title="Flying Colors: Commander" Height="600" Width="800">
+	
+	<ItemsControl Name="MainRegion" prism:RegionManager.RegionName="MainRegion">
+		
+	</ItemsControl>
+	
+</Window>
