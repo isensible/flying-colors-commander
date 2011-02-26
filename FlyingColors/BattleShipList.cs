@@ -15,6 +15,11 @@ namespace FlyingColors
 			return DataPortal.CreateChild<BattleShipList>(new Tuple<BattleGroupData, IEnumerable<FleetData>>(group, fleets));
 		}
 
+		internal static BattleShipList GetShips(BattleGroupData group, IGrouping<string, FleetData> fleets)
+		{
+			return DataPortal.FetchChild<BattleShipList>(new Tuple<BattleGroupData, IEnumerable<FleetData>>(group, fleets));
+		}
+
 		private BattleShipList()
 		{
 		}
@@ -33,6 +38,17 @@ namespace FlyingColors
 				{
 					Add(BattleShip.NewBattleShip(fleet, ship));
 				}
+			}
+			RaiseListChangedEvents = true;
+		}
+
+		private void Child_Fetch(Tuple<BattleGroupData, IEnumerable<FleetData>> tuple)
+		{
+			RaiseListChangedEvents = false;
+			_ships = tuple.Item1.Ships;
+			foreach (var ship in _ships)
+			{
+				Add(BattleShip.GetShip(ship));
 			}
 			RaiseListChangedEvents = true;
 		}
@@ -64,5 +80,7 @@ namespace FlyingColors
 		}
 
 		#endregion
+
+		
 	}
 }

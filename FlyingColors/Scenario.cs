@@ -130,12 +130,14 @@ namespace FlyingColors
 			ToData();
 			ActiveRecordMediator<ScenarioData>.Create(_scenario);
 			LoadProperty<long>(ScenarioIdProperty, _scenario.ScenarioId);
+			FieldManager.UpdateChildren(_scenario);
 		}
 
 		protected override void DataPortal_Update()
 		{
 			ToData();
 			ActiveRecordMediator<ScenarioData>.Update(_scenario);
+			
 		}
 
 		protected override void DataPortal_DeleteSelf()

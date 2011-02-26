@@ -5,6 +5,7 @@ using System.Text;
 using Csla;
 using FlyingColors.DataModel;
 using Castle.ActiveRecord;
+using System.Diagnostics;
 
 namespace FlyingColors
 {
@@ -42,6 +43,11 @@ namespace FlyingColors
 			return DataPortal.CreateChild<BattleGroup>(new Tuple<BattleData, IGrouping<string,FleetData>>(battle, fleets));
 		}
 
+		internal static BattleGroup GetBattleGroup(BattleData battle, IGrouping<string, FleetData> fleets)
+		{
+			return DataPortal.FetchChild<BattleGroup>(new Tuple<BattleData, IGrouping<string, FleetData>>(battle, fleets));
+		}
+
 		#region Data Portal
 
 		private IList<BattleGroupData> _groups = null;
@@ -59,28 +65,31 @@ namespace FlyingColors
 			LoadProperty<BattleShipList>(ShipsProperty, BattleShipList.New(_group, tuple.Item2));				
 		}
 
+		private void Child_Fetch(Tuple<BattleData, IGrouping<string, FleetData>> tuple)
+		{			
+			_groups = tuple.Item1.BattleGroups;
+			_group = _groups.FirstOrDefault<BattleGroupData>(g => g.Nationality == tuple.Item2.Key);
+			Debug.Assert(_group != null);
+			_groupIndex = _groups.IndexOf(_group);
+			LoadProperty<long>(BattleGroupIdProperty, _group.BattleGroupId);
+			LoadProperty<Nationality>(NationalityProperty, (Nationality)Enum.Parse(typeof(Nationality), tuple.Item2.Key));
+			LoadProperty<BattleShipList>(ShipsProperty, BattleShipList.GetShips(_group, tuple.Item2));							
+		}
+
 		private void Child_Insert(BattleData battle)
 		{
-			//ToData(battle);
-			//FieldManager.UpdateChildren(_group);
-			//<BattleGroupData>.Create(_group);
-			//LoadProperty<long>(BattleGroupIdProperty, battle.BattleGroups_group.BattleGroupId);
-
-			// TODO: load BattleGroupId from 
+			LoadProperty<long>(BattleGroupIdProperty, _group.BattleGroupId);
+			FieldManager.UpdateChildren(_group);
 		}
 
 		private void Child_Update(BattleData battle)
 		{
-			//ToData(battle);
-			//FieldManager.UpdateChildren(_group);
-			//ActiveRecordMediator<BattleGroupData>.Update(_group);
+			FieldManager.UpdateChildren(_group);
 		}
 
 		private void Child_Delete(BattleData battle)
 		{
-			//ToData(battle);
-			//FieldManager.UpdateChildren(_group);
-			//ActiveRecordMediator<BattleGroupData>.Delete(_group);
+			FieldManager.UpdateChildren(_group);
 		}
 
 		internal BattleGroupData ToData(BattleData battle)
@@ -92,5 +101,7 @@ namespace FlyingColors
 		}
 
 		#endregion
+
+		
 	}
 }

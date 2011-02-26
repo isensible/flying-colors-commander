@@ -92,24 +92,25 @@ namespace FlyingColors
 
 		private void Child_Insert(ScenarioData scenarioData)
 		{
-			ToData(scenarioData);
-			FieldManager.UpdateChildren(_fleet);
-			ActiveRecordMediator<FleetData>.Create(_fleet);
 			LoadProperty<long>(FleetIdProperty, _fleet.FleetId);
+			//ToData(scenarioData);
+			FieldManager.UpdateChildren(_fleet);
+			//ActiveRecordMediator<FleetData>.Create(_fleet);
+			
 		}
 
 		private void Child_Update(ScenarioData scenarioData)
 		{
-			ToData(scenarioData);
+			//ToData(scenarioData);
 			FieldManager.UpdateChildren(_fleet);
-			ActiveRecordMediator<FleetData>.Update(_fleet);
+			//ActiveRecordMediator<FleetData>.Update(_fleet);
 		}
 
 		private void Child_Delete(ScenarioData scenarioData)
 		{
-			ToData(scenarioData);
+			//ToData(scenarioData);
 			FieldManager.UpdateChildren(_fleet);
-			ActiveRecordMediator<FleetData>.Delete(_fleet);
+			//ActiveRecordMediator<FleetData>.Delete(_fleet);
 		}
 
 		internal FleetData ToData(ScenarioData scenarioData)

@@ -488,6 +488,11 @@ namespace FlyingColors
 		{
 			return DataPortal.CreateChild<BattleShip>(new Tuple<FleetData, FleetShipData>(fleet, ship));
 		}
+
+		internal static BattleShip GetShip(BattleShipData ship)
+		{
+			return DataPortal.FetchChild<BattleShip>(ship);
+		}
 		#endregion
 
 		#region Data Portal
@@ -563,26 +568,87 @@ namespace FlyingColors
 			BusinessRules.CheckRules();
 		}
 
+		private void Child_Fetch(BattleShipData ship)
+		{
+			_ship = ship;
+			// Fleet
+			LoadProperty<int>(AudacityProperty, _ship.FleetShip.Fleet.Audacity);
+
+			// Commanders
+			LoadProperty<BattleShipCommanderList>(CommandersProperty,
+				BattleShipCommanderList.GetCommanders(_ship.Commanders));
+
+			// Ship
+			LoadProperty<string>(NameProperty, _ship.FleetShip.Ship.Name);
+			LoadProperty<Nationality>(NationalityProperty, (Nationality)Enum.Parse(typeof(Nationality), _ship.FleetShip.Ship.Nationality));
+			LoadProperty<int>(VictoryPointsProperty, _ship.FleetShip.Ship.VictoryPoints);
+			LoadProperty<RelativeRate>(RateProperty, RelativeRate.NewRate(
+				_ship.FleetShip.Ship.Rate,
+				(RelativeRateColor)Enum.Parse(typeof(RelativeRateColor), _ship.FleetShip.Ship.RateColor),
+				(RelativeRateShape)Enum.Parse(typeof(RelativeRateShape), _ship.FleetShip.Ship.RateShape)));
+			LoadProperty<RelativeRate>(RateDamagedProperty, RelativeRate.NewRate(
+				_ship.FleetShip.Ship.RateDamaged,
+				(RelativeRateColor)Enum.Parse(typeof(RelativeRateColor), _ship.FleetShip.Ship.RateColorDamaged),
+				(RelativeRateShape)Enum.Parse(typeof(RelativeRateShape), _ship.FleetShip.Ship.RateShapeDamaged)));
+			LoadProperty<int>(DamageCapacityProperty, _ship.FleetShip.Ship.DamageCapacity);
+			LoadProperty<int>(DamageCapacityDamagedProperty, _ship.FleetShip.Ship.DamageCapacityDamaged);
+			LoadProperty<int>(MarinesProperty, _ship.FleetShip.Ship.Marines);
+			LoadProperty<int>(MarinesDamagedProperty, _ship.FleetShip.Ship.MarinesDamaged);
+
+			// Battle Ship
+			LoadProperty<RelativeRate>(CurrentRateProperty, Rate);
+			// Fired
+			LoadProperty<bool>(FirstPortFiredProperty, _ship.FirstPortFired);
+			LoadProperty<bool>(FiredPortProperty, _ship.FiredPort);
+			LoadProperty<bool>(FirstStarboardFiredProperty, _ship.FirstStarboardFired);
+			LoadProperty<bool>(FiredStarboardProperty, _ship.FiredStarboard);
+			// Hull Hits
+			LoadProperty<int>(HullHitsProperty, _ship.HullHits);
+			LoadProperty<bool>(DamagedProperty, false);
+			LoadProperty<bool>(VunerableProperty, false);
+			// Rigging Hits
+			LoadProperty<int>(RiggingHitsProperty, _ship.RiggingHits);
+			LoadProperty<bool>(DismastedProperty, false);
+			LoadProperty<int>(MovementPenaltyProperty, 0);
+			// Marine Hits
+			LoadProperty<int>(MarineHitsProperty, _ship.MarineHits);
+			LoadProperty<int>(MarinesRemainingProperty, Marines - MarineHits);
+			// Command
+			LoadProperty<bool>(OutOfCommandProperty, _ship.OutOfCommand);
+			LoadProperty<int>(CommandGroupProperty, _ship.CommandGroup);
+			// Status
+			LoadProperty<bool>(InIronsProperty, _ship.InIrons);
+			LoadProperty<bool>(AdriftProperty, _ship.Adrift);
+			LoadProperty<bool>(AnchoredProperty, _ship.Anchored);
+			LoadProperty<bool>(CanFullSailsProperty, true);
+			LoadProperty<bool>(FullSailsProperty, _ship.FullSails);
+			LoadProperty<bool>(AgroundProperty, _ship.Aground);
+			LoadProperty<bool>(OnFireProperty, _ship.OnFire);
+			LoadProperty<bool>(StruckProperty, _ship.Struck);
+			LoadProperty<bool>(CapturedProperty, _ship.Captured);
+			// Activation
+			LoadProperty<bool>(MovedProperty, _ship.Moved);
+			LoadProperty<bool>(TackedProperty, _ship.Tacked);
+			// Report
+			LoadProperty<string>(StatusProperty, string.Empty);
+
+			BusinessRules.CheckRules();
+		}
+
 		private void Child_Insert(BattleGroupData battleGroup)
 		{
-			//ToData(battleGroup);
-			//FieldManager.UpdateChildren(_ship);
-			//ActiveRecordMediator<BattleShipData>.Create(_ship);
-			//LoadProperty<long>(BattleShipIdProperty, _ship.BattleShipId);
+			LoadProperty<long>(BattleShipIdProperty, _ship.BattleShipId);
+			FieldManager.UpdateChildren(_ship);
 		}
 
 		private void Child_Update(BattleGroupData battleGroup)
 		{
-			//ToData(battleGroup);
-			//FieldManager.UpdateChildren(_ship);
-			//ActiveRecordMediator<BattleShipData>.Update(_ship);			
+			FieldManager.UpdateChildren(_ship);
 		}
 
 		private void Child_Delete(BattleGroupData battleGroup)
 		{
-			//ToData(battleGroup);
-			//FieldManager.UpdateChildren(_ship);
-			//ActiveRecordMediator<BattleShipData>.Delete(_ship);			
+			FieldManager.UpdateChildren(_ship);
 		}
 
 		internal BattleShipData ToData(BattleGroupData battleGroup)
@@ -610,53 +676,55 @@ namespace FlyingColors
 			return _ship;
 		}
 
-		[Flags]
-		private enum BattleShipStates
-		{
-			[Description("")]
-			None = 0,
-			[Description("Fired Port")]
-			FiredPort = 1,
-			[Description("Fired Starboard")]
-			FiredStarboard = 2,
-			[Description("Fired Both")]
-			FiredBoth = FiredPort | FiredStarboard,
-			[Description("Adrift")]
-			Adrift = 4,
-			Aground = 8,
-			FullSails = 16,
-			Anchored = 32,
-			InIrons = 64,
-			OnFire = 128,
-			Struck = 256,
-			OutOfCommand = 512,
-			Dismasted = 1024,
-			Captured = 2048,
-			Sunk = 4096,
-			Moved = 8192,
-			Tacked = 16384
-		}
+		//[Flags]
+		//private enum BattleShipStates
+		//{
+		//    [Description("")]
+		//    None = 0,
+		//    [Description("Fired Port")]
+		//    FiredPort = 1,
+		//    [Description("Fired Starboard")]
+		//    FiredStarboard = 2,
+		//    [Description("Fired Both")]
+		//    FiredBoth = FiredPort | FiredStarboard,
+		//    [Description("Adrift")]
+		//    Adrift = 4,
+		//    Aground = 8,
+		//    FullSails = 16,
+		//    Anchored = 32,
+		//    InIrons = 64,
+		//    OnFire = 128,
+		//    Struck = 256,
+		//    OutOfCommand = 512,
+		//    Dismasted = 1024,
+		//    Captured = 2048,
+		//    Sunk = 4096,
+		//    Moved = 8192,
+		//    Tacked = 16384
+		//}
 
-		static class ExtensionMethods
-		{
-			public static string ToDescription(this Enum en) //ext method
-			{
-				Type type = en.GetType();
-				MemberInfo[] memInfo = type.GetMember(en.ToString());
-				if (memInfo != null && memInfo.Length > 0)
-				{
-					object[] attrs =
-						memInfo[0].GetCustomAttributes(typeof(DescriptionAttribute), false);
-					if (attrs != null && attrs.Length > 0)
-					{
-						return ((DescriptionAttribute)attrs[0]).Description;
-					}
-				}
-				return en.ToString();
+		//static class ExtensionMethods
+		//{
+		//    public static string ToDescription(this Enum en) //ext method
+		//    {
+		//        Type type = en.GetType();
+		//        MemberInfo[] memInfo = type.GetMember(en.ToString());
+		//        if (memInfo != null && memInfo.Length > 0)
+		//        {
+		//            object[] attrs =
+		//                memInfo[0].GetCustomAttributes(typeof(DescriptionAttribute), false);
+		//            if (attrs != null && attrs.Length > 0)
+		//            {
+		//                return ((DescriptionAttribute)attrs[0]).Description;
+		//            }
+		//        }
+		//        return en.ToString();
 
-			}
-		}
+		//    }
+		//}
 
 		#endregion
+
+		
 	}
 }

@@ -163,6 +163,11 @@ namespace FlyingColors
 			return DataPortal.CreateChild<BattleShipCommander>(commander);
 		}
 
+		internal static BattleShipCommander GetCommander(BattleShipCommanderData commander)
+		{
+			return DataPortal.FetchChild<BattleShipCommander>(commander);
+		}
+
 		private BattleShipCommander()
 		{
 		}
@@ -192,22 +197,37 @@ namespace FlyingColors
 			LoadProperty<int>(RankProperty, commander.Commander.Rank);
 		}
 
+		private void Child_Fetch(BattleShipCommanderData commander)
+		{
+			_commander = commander;
+			LoadProperty<bool>(WoundedProperty, _commander.Wounded);
+			LoadProperty<bool>(KilledProperty, _commander.Killed);
+			LoadProperty<bool>(CapturedProperty, _commander.Captured);
+			LoadProperty<int>(QualityProperty, _commander.Commander.Quality);
+			LoadProperty<int>(QualityWoundedProperty, _commander.Commander.QualityWounded);
+			LoadProperty<int>(CurrentQualityProperty, Quality);
+			LoadProperty<int>(RangeProperty, _commander.Commander.Range);
+			LoadProperty<int>(RangeWoundedProperty, _commander.Commander.RangeWounded);
+			LoadProperty<int>(CurrentRangeProperty, Range);
+			LoadProperty<string>(NameProperty, _commander.Commander.Name);
+			LoadProperty<Nationality>(NationalityProperty, (Nationality)Enum.Parse(typeof(Nationality), _commander.Commander.Nationality));
+			LoadProperty<int>(VictoryPointsProperty, _commander.Commander.VictoryPoints);
+			LoadProperty<int>(RankProperty, _commander.Commander.Rank);
+		}
+
 		private void Child_Insert(BattleShipData ship)
 		{
-			ToData(ship);
-			ActiveRecordMediator<BattleShipCommanderData>.Create(_commander);
+			LoadProperty<long>(BattleShipCommanderIdProperty, _commander.BattleShipCommanderId);
 		}
 
 		private void Child_Update(BattleShipData ship)
 		{
-			ToData(ship);
-			ActiveRecordMediator<BattleShipCommanderData>.Update(_commander);
+			
 		}
 
 		private void Child_Delete(BattleShipData ship)
 		{
-			ToData(ship);
-			ActiveRecordMediator<BattleShipCommanderData>.Delete(_commander);
+			
 		}
 
 		internal BattleShipCommanderData ToData(BattleShipData ship)
@@ -220,5 +240,7 @@ namespace FlyingColors
 		}
 
 		#endregion
+
+		
 	}
 }

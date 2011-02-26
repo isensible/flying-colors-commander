@@ -16,6 +16,11 @@ namespace FlyingColors
 				new Tuple<BattleShipData, IList<FleetShipCommanderData>>(ship, fleetShipCommanderList));
 		}
 
+		internal static BattleShipCommanderList GetCommanders(IList<BattleShipCommanderData> commanders)
+		{
+			return DataPortal.FetchChild<BattleShipCommanderList>(commanders);
+		}
+
 		#region Data Portal
 
 		private IList<BattleShipCommanderData> _commanders = null;
@@ -27,6 +32,17 @@ namespace FlyingColors
 			foreach (var commander in tuple.Item2)
 			{
 				Add(BattleShipCommander.NewCommander(commander));
+			}
+			RaiseListChangedEvents = true;
+		}
+
+		private void Child_Fetch(IList<BattleShipCommanderData> commanders)
+		{
+			_commanders = commanders;
+			RaiseListChangedEvents = false;
+			foreach (var commander in commanders)
+			{
+				Add(BattleShipCommander.GetCommander(commander));
 			}
 			RaiseListChangedEvents = true;
 		}
@@ -58,5 +74,7 @@ namespace FlyingColors
 		}
 
 		#endregion
+
+		
 	}
 }

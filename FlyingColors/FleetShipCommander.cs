@@ -69,21 +69,21 @@ namespace FlyingColors
 
 		private void Child_Insert(FleetShipData fleetShipData)
 		{
-			ToData(fleetShipData);
-			ActiveRecordMediator<FleetShipData>.Create(_shipCommander);
+			//ToData(fleetShipData);
+			//ActiveRecordMediator<FleetShipData>.Create(_shipCommander);
 			LoadProperty<long>(FleetShipCommanderIdProperty, _shipCommander.FleetShipCommanderId);
 		}
 
 		private void Child_Update(FleetShipData fleetShipData)
 		{
-			ToData(fleetShipData);
-			ActiveRecordMediator<FleetShipData>.Update(_shipCommander);
+			//ToData(fleetShipData);
+			//ActiveRecordMediator<FleetShipData>.Update(_shipCommander);			
 		}
 
 		private void Child_Delete(FleetShipData fleetShipData)
 		{
-			ToData(fleetShipData);
-			ActiveRecordMediator<FleetShipData>.Delete(_shipCommander);
+			//ToData(fleetShipData);
+			//ActiveRecordMediator<FleetShipData>.Delete(_shipCommander);
 		}
 
 		internal FleetShipCommanderData ToData(FleetShipData fleetShipData)

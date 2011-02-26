@@ -2,6 +2,7 @@
 using Castle.ActiveRecord;
 using Csla;
 using FlyingColors.DataModel;
+using System.Diagnostics;
 
 namespace FlyingColors
 {
@@ -131,9 +132,24 @@ namespace FlyingColors
 			return DataPortal.Create<Ship>(name);
 		}
 
+		/// <summary>
+		/// Root fetch
+		/// </summary>
+		/// <param name="shipData"></param>
+		/// <returns></returns>
 		internal static Ship GetShip(ShipData shipData)
 		{
 			return DataPortal.Fetch<Ship>(shipData);
+		}
+
+		/// <summary>
+		/// Child fetch
+		/// </summary>
+		/// <param name="shipData"></param>
+		/// <returns></returns>
+		internal static Ship LoadShip(ShipData shipData)
+		{
+			return DataPortal.FetchChild<Ship>(shipData);
 		}
 
 		private Ship()
@@ -159,6 +175,16 @@ namespace FlyingColors
 		}
 
 		private void DataPortal_Fetch(ShipData shipData)
+		{
+			LoadSelf(shipData);
+		}
+
+		private void Child_Fetch(ShipData shipData)
+		{
+			LoadSelf(shipData);
+		}
+
+		private void LoadSelf(ShipData shipData)
 		{
 			_ship = shipData;
 			LoadProperty<long>(ShipIdProperty, _ship.ShipId);
@@ -186,15 +212,30 @@ namespace FlyingColors
 			LoadProperty<long>(ShipIdProperty, _ship.ShipId);
 		}
 
+		private void Child_Insert()
+		{
+			Debug.Assert(false, "Should never insert a child Ship.");
+		}
+
 		protected override void DataPortal_Update()
 		{
 			ToData();
 			ActiveRecordMediator<ShipData>.Update(_ship);
 		}
 
+		private void Child_Update()
+		{
+			Debug.Assert(false, "Should never update a child Ship.");
+		}
+
 		protected override void DataPortal_DeleteSelf()
 		{
 			ActiveRecordMediator<ShipData>.Delete(ToData());
+		}
+
+		private void Child_Delete()
+		{
+			Debug.Assert(false, "Should never delete a child Ship.");
 		}
 
 		internal ShipData ToData()
@@ -215,5 +256,7 @@ namespace FlyingColors
 			return _ship;
 		}
 		#endregion
+
+		
 	}
 }

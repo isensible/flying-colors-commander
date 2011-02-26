@@ -101,7 +101,7 @@ namespace FlyingColors
 			_fleetShipData = fleetShipData;
 			LoadProperty<long>(FleetShipIdProperty, _fleetShipData.FleetShipId);
 			LoadProperty<Ship>(ShipProperty,
-				Ship.GetShip(fleetShipData.Ship));
+				Ship.LoadShip(fleetShipData.Ship));
 			LoadProperty<FleetShipCommanderList>(CommandersProperty, 
 				FleetShipCommanderList.GetFleetShipCommanderList(fleetShipData.Commanders));
 			LoadProperty<int>(HullHitsAtStartProperty, fleetShipData.HullHitsAtStart);
@@ -110,24 +110,25 @@ namespace FlyingColors
 
 		private void Child_Insert(FleetData fleetData)
 		{
-			ToData(fleetData);
-			FieldManager.UpdateChildren(_fleetShipData);
-			ActiveRecordMediator<FleetShipData>.Create(_fleetShipData);
+			//ToData(fleetData);
+			
+			//ActiveRecordMediator<FleetShipData>.Create(_fleetShipData);
 			LoadProperty<long>(FleetShipIdProperty, _fleetShipData.FleetShipId);
+			FieldManager.UpdateChildren(_fleetShipData);
 		}
 
 		private void Child_Update(FleetData fleetData)
 		{
-			ToData(fleetData);
+			//ToData(fleetData);
 			FieldManager.UpdateChildren(_fleetShipData);
-			ActiveRecordMediator<FleetShipData>.Update(_fleetShipData);
+			//ActiveRecordMediator<FleetShipData>.Update(_fleetShipData);
 		}
 
 		private void Child_Delete(FleetData fleetData)
 		{
-			ToData(fleetData);
+			//ToData(fleetData);
 			FieldManager.UpdateChildren(_fleetShipData);
-			ActiveRecordMediator<FleetShipData>.Delete(_fleetShipData);
+			//ActiveRecordMediator<FleetShipData>.Delete(_fleetShipData);
 		}
 
 		internal FleetShipData ToData(FleetData fleetData)

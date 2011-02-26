@@ -131,6 +131,11 @@ namespace FlyingColors
 			return DataPortal.Create<Battle>(scenario);
 		}
 
+		internal static Battle GetBattle(BattleData battle)
+		{
+			return DataPortal.Fetch<Battle>(battle);
+		}
+
 		#endregion
 
 		#region Data Portal
@@ -168,27 +173,60 @@ namespace FlyingColors
 				BattleGroup.NewBattleGroup(_battle, enumerator.Current.Fleets));
 		}
 
-
+		private void DataPortal_Fetch(BattleData battle)
+		{
+			_battle = battle;
+			LoadSelf();
+		}
 
 		protected override void DataPortal_Insert()
 		{
 			ToData();
-			//FieldManager.UpdateChildren(_battle);
 			ActiveRecordMediator<BattleData>.Create(_battle);
+			FieldManager.UpdateChildren(_battle);
 		}
 
 		protected override void DataPortal_Update()
 		{
 			ToData();
-			//FieldManager.UpdateChildren(_battle);
 			ActiveRecordMediator<BattleData>.Update(_battle);
+			FieldManager.UpdateChildren(_battle);
 		}
 
 		protected override void DataPortal_DeleteSelf()
 		{
 			ToData();
-			//FieldManager.UpdateChildren(_battle);
 			ActiveRecordMediator<BattleData>.Create(_battle);
+			FieldManager.UpdateChildren(_battle);
+		}
+
+		private void LoadSelf()
+		{
+			// Battle properties
+			LoadProperty<string>(SummaryProperty, _battle.Summary);
+			LoadProperty<SmartDate>(StartedProperty, _battle.Started);
+			LoadProperty<SmartDate>(FinishedProperty, _battle.Finished);
+			LoadProperty<int>(TurnProperty, _battle.Turn);
+			LoadProperty<Weather>(WeatherProperty, _battle.Weather);
+			LoadProperty<int>(WindDirectionProperty, _battle.WindDirection);
+			LoadProperty<Nationality>(VictorProperty, (Nationality)Enum.Parse(typeof(Nationality), _battle.Victor));
+			// Scenario properties
+			LoadProperty<long>(ScenarioIdProperty, _battle.Scenario.ScenarioId);
+			LoadProperty<string>(NameProperty, _battle.Scenario.Name);
+			LoadProperty<int>(YearProperty, _battle.Scenario.Year);
+			LoadProperty<string>(MapsProperty, _battle.Scenario.Maps);
+			LoadProperty<int>(TurnsProperty, _battle.Scenario.Turns);
+			// Create the two battle groups
+			var battleGroups = from fleet in _battle.Scenario.Fleets
+							   group fleet by fleet.BattleGroup into g
+							   select new { Nationality = g.Key, Fleets = g };
+			var enumerator = battleGroups.GetEnumerator();
+			enumerator.MoveNext();
+			LoadProperty<BattleGroup>(BattleGroupAProperty,
+				BattleGroup.GetBattleGroup(_battle, enumerator.Current.Fleets));
+			enumerator.MoveNext();
+			LoadProperty<BattleGroup>(BattleGroupBProperty,
+				BattleGroup.GetBattleGroup(_battle, enumerator.Current.Fleets));
 		}
 
 		internal BattleData ToData()
@@ -206,5 +244,7 @@ namespace FlyingColors
 		}
 
 		#endregion
+
+		
 	}
 }
