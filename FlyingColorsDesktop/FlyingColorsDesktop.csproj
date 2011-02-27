@@ -37,6 +37,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Castle.ActiveRecord, Version=3.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Lib\ActiveRecord\net40\Castle.ActiveRecord.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Practices.Prism, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Lib\Prism\Microsoft.Practices.Prism.dll</HintPath>
@@ -55,6 +59,9 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.SQLite">
+      <HintPath>..\Lib\System.Data.SQLite.DLL</HintPath>
+    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -115,6 +122,14 @@
     <ProjectReference Include="..\FlyingColorsDesktop.BattlesModule\FlyingColorsDesktop.BattlesModule.csproj">
       <Project>{4DF13126-4945-4CE9-B058-71C23C219303}</Project>
       <Name>FlyingColorsDesktop.BattlesModule</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\FlyingColors\FlyingColors.csproj">
+      <Project>{FC7F42AE-C952-472D-B970-B1894F28590A}</Project>
+      <Name>FlyingColors</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lib\CSLA\Source\Csla\Csla.csproj">
+      <Project>{9DA591ED-C570-47AC-8E5D-35B039E07973}</Project>
+      <Name>Csla</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

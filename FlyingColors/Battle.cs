@@ -245,6 +245,13 @@ namespace FlyingColors
 
 		#endregion
 
-		
+		#region Object Overrides
+	
+		public override string ToString()
+		{
+			return Name;
+		}
+
+		#endregion
 	}
 }
