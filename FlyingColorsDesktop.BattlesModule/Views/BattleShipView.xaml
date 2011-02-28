@@ -3,8 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             mc:Ignorable="d" 
-             d:DesignHeight="76" d:DesignWidth="539">
+             mc:Ignorable="d" Height="76" Width="617">
 	
 	<Border
 		BorderBrush="Silver"
@@ -13,8 +12,8 @@
 		HorizontalAlignment="Left"
 		Name="border1"
 		VerticalAlignment="Top"
-		Width="539">
-		<Grid>
+		Width="615">
+		<Grid Width="611">
 			<Label
 				Content="{Binding Model.Name}"
 				Height="28"
@@ -23,13 +22,29 @@
 				Name="nameLabel"
 				VerticalAlignment="Top"
 				Width="139"	/>
-			<Expander Header="expander1" Height="100" HorizontalAlignment="Left" Margin="6,40,0,0" Name="expander1" VerticalAlignment="Top">
-				<Grid />
+			<Expander Header="expander1" Height="100" HorizontalAlignment="Left" Margin="6,40,0,0" Name="expander1" VerticalAlignment="Top" Width="596">
+				<Grid>
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition></ColumnDefinition>
+						<ColumnDefinition></ColumnDefinition>
+						<ColumnDefinition></ColumnDefinition>
+						<ColumnDefinition></ColumnDefinition>
+						<ColumnDefinition></ColumnDefinition>
+						<ColumnDefinition></ColumnDefinition>
+						<ColumnDefinition></ColumnDefinition>
+					</Grid.ColumnDefinitions>
+					<CheckBox Grid.Column="0" IsChecked="{Binding Model.Anchored}" Content="Anchored" Height="16" HorizontalAlignment="Left" Margin="39,90,0,0" Name="anchoredCheckBox" VerticalAlignment="Top" />
+					<CheckBox Grid.Column="1" IsChecked="{Binding Model.Anchored}" Content="Full Sails" Height="16" HorizontalAlignment="Left" Margin="39,90,0,0" Name="fullSailsCheckBox" VerticalAlignment="Top" />
+					<CheckBox Grid.Column="2" IsChecked="{Binding Model.Anchored}" Content="Adrift" Height="16" HorizontalAlignment="Left" Margin="39,90,0,0" Name="adriftCheckBox" VerticalAlignment="Top" />
+					<CheckBox Grid.Column="3" IsChecked="{Binding Model.Anchored}" Content="In Irons" Height="16" HorizontalAlignment="Left" Margin="39,90,0,0" Name="inIronsCheckBox" VerticalAlignment="Top" />
+					<CheckBox Grid.Column="4" IsChecked="{Binding Model.Anchored}" Content="On Fire" Height="16" HorizontalAlignment="Left" Margin="39,90,0,0" Name="onFireCheckBox" VerticalAlignment="Top" />
+					<CheckBox Grid.Column="5" IsChecked="{Binding Model.Anchored}" Content="Struck!" Height="16" HorizontalAlignment="Left" Margin="39,90,0,0" Name="struckCheckBox" VerticalAlignment="Top" />
+					<CheckBox Grid.Column="6" IsChecked="{Binding Model.Anchored}" Content="Aground" Height="16" HorizontalAlignment="Left" Margin="39,90,0,0" Name="agroundCheckBox" VerticalAlignment="Top" />
+				</Grid>
 			</Expander>
 			<Label Content="{Binding Model.CurrentRate}" Height="28" HorizontalAlignment="Left" Margin="151,6,0,0" Name="label1" VerticalAlignment="Top" Width="28" />
-			<Slider Height="23" HorizontalAlignment="Left" Margin="225,11,0,0" Name="slider1" VerticalAlignment="Top" Width="100" />
-			<Label Content="Hull" Height="28" HorizontalAlignment="Left" Margin="188,6,0,0" Name="label2" VerticalAlignment="Top" />
-			<ProgressBar Height="10" HorizontalAlignment="Left" Margin="384,38,0,0" Name="progressBar1" VerticalAlignment="Top" Width="100" />
+			<Label Content="Hull Hits" Height="28" HorizontalAlignment="Left" Margin="188,6,0,0" Name="label2" VerticalAlignment="Top" />
+			<TextBox Height="23" HorizontalAlignment="Left" Margin="249,8,0,0" Name="textBox1" VerticalAlignment="Top" Width="26" />
 		</Grid>
 	</Border>	
 	

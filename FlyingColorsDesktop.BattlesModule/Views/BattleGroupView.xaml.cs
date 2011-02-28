@@ -11,25 +11,17 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using FlyingColorsDesktop.ViewModels;
-using Microsoft.Practices.Unity;
 
 namespace FlyingColorsDesktop.Views
 {
 	/// <summary>
-	/// Interaction logic for BattlesView.xaml
+	/// Interaction logic for BattleGroupView.xaml
 	/// </summary>
-	public partial class BattlesView : UserControl
+	public partial class BattleGroupView : UserControl
 	{
-		public BattlesView()
+		public BattleGroupView()
 		{
 			InitializeComponent();
-		}
-
-		[Dependency]
-		public BattlesViewModel ViewModel
-		{
-			set { this.DataContext = value; }
 		}
 	}
 }
