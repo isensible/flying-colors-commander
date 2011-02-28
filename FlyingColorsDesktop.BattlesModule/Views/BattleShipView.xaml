@@ -1,0 +1,36 @@
+﻿<UserControl x:Class="FlyingColorsDesktop.Views.BattleShipView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="76" d:DesignWidth="539">
+	
+	<Border
+		BorderBrush="Silver"
+		BorderThickness="4"
+		Height="76"
+		HorizontalAlignment="Left"
+		Name="border1"
+		VerticalAlignment="Top"
+		Width="539">
+		<Grid>
+			<Label
+				Content="{Binding Model.Name}"
+				Height="28"
+				HorizontalAlignment="Left"
+				Margin="6,6,0,0"
+				Name="nameLabel"
+				VerticalAlignment="Top"
+				Width="139"	/>
+			<Expander Header="expander1" Height="100" HorizontalAlignment="Left" Margin="6,40,0,0" Name="expander1" VerticalAlignment="Top">
+				<Grid />
+			</Expander>
+			<Label Content="{Binding Model.CurrentRate}" Height="28" HorizontalAlignment="Left" Margin="151,6,0,0" Name="label1" VerticalAlignment="Top" Width="28" />
+			<Slider Height="23" HorizontalAlignment="Left" Margin="225,11,0,0" Name="slider1" VerticalAlignment="Top" Width="100" />
+			<Label Content="Hull" Height="28" HorizontalAlignment="Left" Margin="188,6,0,0" Name="label2" VerticalAlignment="Top" />
+			<ProgressBar Height="10" HorizontalAlignment="Left" Margin="384,38,0,0" Name="progressBar1" VerticalAlignment="Top" Width="100" />
+		</Grid>
+	</Border>	
+	
+</UserControl>

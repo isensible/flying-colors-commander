@@ -85,6 +85,9 @@
     <Compile Include="BattlesModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\BattlesViewModel.cs" />
+    <Compile Include="Views\BattleShipView.xaml.cs">
+      <DependentUpon>BattleShipView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\BattlesView.xaml.cs">
       <DependentUpon>BattlesView.xaml</DependentUpon>
     </Compile>
@@ -108,6 +111,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Views\BattleShipView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\BattlesView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
