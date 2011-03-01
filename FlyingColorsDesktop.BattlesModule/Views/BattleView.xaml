@@ -31,7 +31,7 @@
 				CanUserSortColumns="False"
 				IsSynchronizedWithCurrentItem="False"
 				RowHeaderWidth="0"
-				GridLinesVisibility="None"
+				GridLinesVisibility="Horizontal"
 				RowDetailsVisibilityMode="Collapsed">
 				<DataGrid.Columns>
 
@@ -69,7 +69,16 @@
 							BorderThickness="1,1,1,1"
 							Margin="2"
 							Padding="2">
-							<CheckBox IsChecked="{Binding FullSails}" Content="Full Sails" Height="16"/>
+							<StackPanel Orientation="Horizontal" Margin="2">
+								<CheckBox IsChecked="{Binding FullSails}" Content="Full Sails" Height="16" Margin="5"/>
+								<CheckBox IsChecked="{Binding Anchored}" Content="Anchored" Height="16" Margin="5"/>
+								<CheckBox IsChecked="{Binding Adrift}" Content="Adrift" Height="16" Margin="5"/>
+								<CheckBox IsChecked="{Binding Aground}" Content="Aground" Height="16" Margin="5"/>
+								<CheckBox IsChecked="{Binding InIrons}" Content="In Irons" Height="16" Margin="5"/>
+								<CheckBox IsChecked="{Binding OnFire}" Content="On Fire" Height="16" Margin="5"/>
+								<CheckBox IsChecked="{Binding Captured}" Content="Captured" Height="16" Margin="5"/>
+								<CheckBox IsChecked="{Binding Struck}" Content="Struck!" Height="16" Margin="5"/>
+							</StackPanel>
 						</Border>
 					</DataTemplate>
 				</DataGrid.RowDetailsTemplate>
