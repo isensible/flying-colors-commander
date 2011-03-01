@@ -3,7 +3,7 @@ using FlyingColorsDesktop.Common;
 
 namespace FlyingColorsDesktop.ViewModels
 {
-	class BattlesViewModel : ViewModelBase<BattleList>
+	public class BattlesViewModel : ViewModelBase<BattleList>
 	{
 		public BattlesViewModel()
 		{

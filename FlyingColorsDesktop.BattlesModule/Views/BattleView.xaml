@@ -5,7 +5,84 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-    <Grid>
-            
-    </Grid>
+
+	<Grid>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition></ColumnDefinition>
+			<ColumnDefinition></ColumnDefinition>
+		</Grid.ColumnDefinitions>
+		<Border Grid.Column="0"
+			CornerRadius="4,4,4,4"
+			BorderBrush="#193441"
+			Background="#FCFFF5"
+			BorderThickness="2,2,2,2"
+			Margin="5"
+			Padding="5">
+			<DataGrid
+				ItemsSource="{Binding Model.BattleGroupA.Ships}"
+				AutoGenerateColumns="False"
+				SelectionMode="Single"
+				SelectionUnit="FullRow"			
+				CanUserAddRows="False"
+				CanUserDeleteRows="False"
+				CanUserReorderColumns="False"
+				CanUserResizeColumns="False"
+				CanUserResizeRows="False"
+				CanUserSortColumns="False"
+				IsSynchronizedWithCurrentItem="False"
+				RowHeaderWidth="0"
+				GridLinesVisibility="None"
+				RowDetailsVisibilityMode="Collapsed">
+				<DataGrid.Columns>
+
+					<DataGridTemplateColumn>
+						<DataGridTemplateColumn.CellTemplate>
+							<DataTemplate>
+								<Button x:Name="buttonDetails" Content="Hello" ButtonBase.Click="Details_Click"/>
+							</DataTemplate>
+						</DataGridTemplateColumn.CellTemplate>
+					</DataGridTemplateColumn>
+
+
+					<DataGridTextColumn
+						Header="Ship"
+						Binding="{Binding Name}"
+						FontWeight="Bold"
+						MaxWidth="160"
+						MinWidth="160"
+						IsReadOnly="True">						
+					</DataGridTextColumn>
+					<DataGridTextColumn
+						Header="Rate"
+						Binding="{Binding CurrentRate}"
+						MaxWidth="34"
+						MinWidth="34"
+						IsReadOnly="True">						
+					</DataGridTextColumn>
+				</DataGrid.Columns>
+				<DataGrid.RowDetailsTemplate>
+					<DataTemplate>
+						<Border
+							CornerRadius="2,2,2,2"
+							BorderBrush="#193441"
+							Background="#FCFFF5"
+							BorderThickness="1,1,1,1"
+							Margin="2"
+							Padding="2">
+							<CheckBox IsChecked="{Binding FullSails}" Content="Full Sails" Height="16"/>
+						</Border>
+					</DataTemplate>
+				</DataGrid.RowDetailsTemplate>
+			</DataGrid>
+		</Border>
+		<Border Grid.Column="1"
+			CornerRadius="4,4,4,4"
+			BorderBrush="#193441"
+			Background="#FCFFF5"
+			BorderThickness="2,2,2,2"
+			Margin="5"
+			Padding="5">
+			<DataGrid ItemsSource="{Binding Model.BattleGroupB.Ships}" />
+		</Border>
+	</Grid>	
 </UserControl>

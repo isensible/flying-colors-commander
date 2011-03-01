@@ -241,5 +241,14 @@ namespace FlyingColors
 			Shape = tuple.Item3;
 		}
 		#endregion
+
+		#region Object Overrides
+
+		public override string ToString()
+		{
+			return Symbol;
+		}
+
+		#endregion
 	}
 }

@@ -19,8 +19,11 @@ namespace FlyingColorsDesktop
 
 		public void Initialize()
 		{
-			_container.RegisterType<BattlesViewModel>();
-			_regionManager.RegisterViewWithRegion("MainRegion", typeof(BattlesView));
+			_container.RegisterType<BattleViewModel>();
+			_regionManager.RegisterViewWithRegion("MainRegion", typeof(BattleView));
+			
+			//_container.RegisterType<BattlesViewModel>();
+			//_regionManager.RegisterViewWithRegion("MainRegion", typeof(BattlesView));
 		}
 	}
 }
