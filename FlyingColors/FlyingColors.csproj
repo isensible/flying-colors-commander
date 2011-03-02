@@ -63,13 +63,17 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Lib\ActiveRecord\net40\NHibernate.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationCore" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Battle.cs" />
@@ -93,6 +97,11 @@
     <Compile Include="DataModel\ScenarioData.cs" />
     <Compile Include="DataModel\ShipData.cs" />
     <Compile Include="FireAttack.cs" />
+    <Compile Include="Flags\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Fleet.cs" />
     <Compile Include="FleetList.cs" />
     <Compile Include="FleetShip.cs" />
@@ -117,6 +126,26 @@
       <Project>{9DA591ED-C570-47AC-8E5D-35B039E07973}</Project>
       <Name>Csla</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Flags\AmericanFlag.png" />
+    <Content Include="Flags\BritishFlag.png" />
+    <Content Include="Flags\DanishFlag.png" />
+    <Content Include="Flags\dk.png" />
+    <Content Include="Flags\DutchFlag.png" />
+    <Content Include="Flags\es.png" />
+    <Content Include="Flags\fr.png" />
+    <Content Include="Flags\FrenchFlag.png" />
+    <Content Include="Flags\gb.png" />
+    <Content Include="Flags\nl.png" />
+    <Content Include="Flags\SpanishFlag.png" />
+    <Content Include="Flags\us.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Flags\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

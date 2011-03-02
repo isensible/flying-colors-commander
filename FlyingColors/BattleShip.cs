@@ -9,6 +9,10 @@ using FlyingColors.DataModel;
 using Castle.ActiveRecord;
 using System.ComponentModel;
 using System.Reflection;
+using System.Drawing;
+using System.Windows.Media.Imaging;
+using System.IO;
+using System.Drawing.Imaging;
 
 namespace FlyingColors
 {
@@ -61,6 +65,72 @@ namespace FlyingColors
 		{
 			get { return GetProperty(NationalityProperty); }
 			private set { LoadProperty(NationalityProperty, value); }
+		}
+
+		public static readonly PropertyInfo<List<byte>> FlagProperty = RegisterProperty<List<byte>>(c => c.Flag);
+		public List<byte> Flag
+		{
+			get { return GetProperty(FlagProperty); }
+			private set { LoadProperty(FlagProperty, value); }
+		}
+
+		private class SetFlagRule : BusinessRule
+		{
+			public SetFlagRule() : base(NationalityProperty)
+			{
+				AffectedProperties.Add(FlagProperty);
+			}
+
+			protected override void Execute(RuleContext context)
+			{
+				var battleShip = (BattleShip)context.Target;
+				List<Byte> flag = new List<Byte>();
+				try
+				{
+					flag.AddRange(battleShip.GetFlag());
+				}
+				catch
+				{
+					context.AddErrorResult("Failed to load national flag.");
+				}
+				if (flag != null)
+				{
+					context.AddOutValue(FlagProperty, flag);
+					context.AddSuccessResult(false);
+				}
+			}
+		}
+
+		private byte[] GetFlag()
+		{
+			switch (Nationality)
+			{
+				case FlyingColors.Nationality.British:
+					return ConvertBitmapToByteArray(Flags.Resources.gb);
+				case FlyingColors.Nationality.French:
+					return ConvertBitmapToByteArray(Flags.Resources.fr);
+				case FlyingColors.Nationality.Spanish:
+					return ConvertBitmapToByteArray(Flags.Resources.es);
+				case FlyingColors.Nationality.Danish:
+					return ConvertBitmapToByteArray(Flags.Resources.dk);
+				case FlyingColors.Nationality.Dutch:
+					return ConvertBitmapToByteArray(Flags.Resources.nl);
+				case FlyingColors.Nationality.American:
+					return ConvertBitmapToByteArray(Flags.Resources.us);
+				default:
+					return ConvertBitmapToByteArray(Flags.Resources.gb);
+			}
+		}
+
+		private byte[] ConvertBitmapToByteArray(Bitmap bmp)
+		{
+			byte[] img = null;
+			using (MemoryStream ms = new MemoryStream())
+			{
+				bmp.Save(ms, ImageFormat.Png);
+				img = ms.ToArray();
+			}
+			return img;
 		}
 
 		public static PropertyInfo<int> VictoryPointsProperty = RegisterProperty<int>(c => c.VictoryPoints);
@@ -454,6 +524,7 @@ namespace FlyingColors
 			BusinessRules.AddRule(new RiggingHitsRule());
 			BusinessRules.AddRule(new HullHitsRule());
 			BusinessRules.AddRule(new MarineHitsRule());
+			BusinessRules.AddRule(new SetFlagRule());
 		}
 
 		#endregion
