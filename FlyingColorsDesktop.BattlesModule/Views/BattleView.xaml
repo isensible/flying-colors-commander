@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+						 xmlns:toolkit="clr-namespace:Microsoft.Windows.Controls;assembly=WPFToolkit.Extended"
 			 xmlns:local="clr-namespace:FlyingColorsDesktop.Views"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
@@ -62,6 +63,30 @@
 						MinWidth="34"
 						IsReadOnly="True">						
 					</DataGridTextColumn>
+					<DataGridTemplateColumn
+						MaxWidth="50"
+						MinWidth="50">
+						<DataGridTemplateColumn.CellTemplate>
+							<DataTemplate>
+								<toolkit:ButtonSpinner
+									Name="groupAHullHitsSpinner"
+									Spin="HullHitsSpinner_Spin">
+									<Grid>
+										<ProgressBar
+											Name="groupAProgressBar"
+											Value="{Binding HullHits}"
+											Minimum="0"
+											Maximum="{Binding TotalDamageCapacity}">
+										</ProgressBar>
+										<Viewbox>
+											<TextBlock Text="{Binding HullHits}">
+											</TextBlock>
+										</Viewbox>
+									</Grid>
+								</toolkit:ButtonSpinner>
+							</DataTemplate>
+						</DataGridTemplateColumn.CellTemplate>
+					</DataGridTemplateColumn>
 				</DataGrid.Columns>
 				<DataGrid.RowDetailsTemplate>
 					<DataTemplate>
@@ -69,7 +94,7 @@
 							CornerRadius="2,2,2,2"
 							BorderBrush="#193441"
 							Background="#FCFFF5"
-							BorderThickness="1,0,1,1"
+							BorderThickness="0,0,0,1"
 							Margin="10,0,10,5"
 							Padding="5">
 							<StackPanel Orientation="Vertical" Margin="5">
@@ -137,6 +162,30 @@
 						MinWidth="34"
 						IsReadOnly="True">
 					</DataGridTextColumn>
+					<DataGridTemplateColumn
+						MaxWidth="50"
+						MinWidth="50">
+						<DataGridTemplateColumn.CellTemplate>
+							<DataTemplate>
+								<toolkit:ButtonSpinner
+									Name="groupBHullHitsSpinner"
+									Spin="HullHitsSpinner_Spin">
+									<Grid>
+										<ProgressBar
+											Name="groupBHullHitsProgress"
+											Value="{Binding HullHits}"
+											Minimum="0"
+											Maximum="{Binding TotalDamageCapacity}">									
+										</ProgressBar>
+										<Viewbox>
+											<TextBlock Text="{Binding HullHits}">											
+											</TextBlock>
+										</Viewbox>
+									</Grid>
+								</toolkit:ButtonSpinner>	
+							</DataTemplate>
+						</DataGridTemplateColumn.CellTemplate>
+					</DataGridTemplateColumn>
 				</DataGrid.Columns>
 				<DataGrid.RowDetailsTemplate>
 					<DataTemplate>
@@ -144,7 +193,7 @@
 							CornerRadius="2,2,2,2"
 							BorderBrush="#193441"
 							Background="#FCFFF5"
-							BorderThickness="1,0,1,1"
+							BorderThickness="0,0,0,1"
 							Margin="10,0,10,5"
 							Padding="5">
 							<StackPanel Orientation="Vertical" Margin="5">

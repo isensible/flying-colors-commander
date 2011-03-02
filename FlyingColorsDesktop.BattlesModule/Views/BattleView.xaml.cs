@@ -13,6 +13,8 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Microsoft.Practices.Unity;
 using FlyingColorsDesktop.ViewModels;
+using Microsoft.Windows.Controls;
+using FlyingColors;
 
 namespace FlyingColorsDesktop.Views
 {
@@ -66,6 +68,44 @@ namespace FlyingColorsDesktop.Views
 			}
 			catch (System.Exception)
 			{
+			}
+		}
+
+		private void HullHitsSpinner_Spin(object sender, SpinEventArgs e)
+		{
+			ButtonSpinner spinner = (ButtonSpinner)sender;
+			var battleShip = (BattleShip)spinner.DataContext;
+			if (e.Direction == SpinDirection.Increase)
+			{
+				battleShip.HullHits++;
+				if (battleShip.Vunerable)
+				{
+					spinner.Foreground = Brushes.Red;
+				}
+				else if (battleShip.Damaged)
+				{
+					spinner.Foreground = Brushes.Yellow;
+				}
+				else
+				{
+					spinner.Foreground = Brushes.Green;
+				}
+			}
+			else
+			{
+				battleShip.HullHits--;
+				if (battleShip.Vunerable)
+				{
+					spinner.Foreground = Brushes.Red;
+				}
+				else if (battleShip.Damaged)
+				{
+					spinner.Foreground = Brushes.Yellow;					
+				}
+				else
+				{
+					spinner.Foreground = Brushes.Green;
+				}
 			}
 		}
 	}

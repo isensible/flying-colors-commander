@@ -50,6 +50,20 @@ namespace FlyingColors
 			return symbolNode.Next.Value;
 		}
 
+		public static string ShiftUp(string symbol, int shiftCount)
+		{
+			string newSymbol = string.Copy(symbol);
+			for (int shifts = 0; shifts < shiftCount; ++shiftCount)
+			{
+				newSymbol = ShiftUp(newSymbol);
+				if (newSymbol == symbol || newSymbol == NoRate)
+				{
+					return newSymbol;
+				}
+			}
+			return newSymbol;
+		}
+
 		public static string ShiftDown(string symbol)
 		{
 			var symbolNode = Symbols.Find(symbol);
@@ -62,6 +76,20 @@ namespace FlyingColors
 				return symbol;
 			}
 			return symbolNode.Previous.Value;
+		}
+
+		public static string ShiftDown(string symbol, int shiftCount)
+		{
+			string newSymbol = string.Copy(symbol);
+			for (int shifts = 0; shifts < shiftCount; ++shiftCount)
+			{
+				newSymbol = ShiftDown(newSymbol);
+				if (newSymbol == symbol || newSymbol == NoRate)
+				{
+					return newSymbol;
+				}
+			}
+			return newSymbol;
 		}
 	}
 }

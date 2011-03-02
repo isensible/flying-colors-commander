@@ -148,5 +148,15 @@ namespace FlyingColorsDesktop.ViewModels
 			battleOfCapeOrtugal = battleOfCapeOrtugal.Save();
 			return battleOfCapeOrtugal;
 		}
+
+		internal void IncrementHullHits()
+		{
+			throw new System.NotImplementedException();
+		}
+
+		internal void DecrementHullHits()
+		{
+			throw new System.NotImplementedException();
+		}
 	}
 }

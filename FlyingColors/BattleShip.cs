@@ -1,18 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Csla;
-using Csla.Rules;
-using Csla.Core;
-using FlyingColors.DataModel;
-using Castle.ActiveRecord;
-using System.ComponentModel;
-using System.Reflection;
 using System.Drawing;
-using System.Windows.Media.Imaging;
-using System.IO;
 using System.Drawing.Imaging;
+using System.IO;
+using Csla;
+using Csla.Core;
+using Csla.Rules;
+using FlyingColors.DataModel;
 
 namespace FlyingColors
 {
@@ -76,7 +70,8 @@ namespace FlyingColors
 
 		private class SetFlagRule : BusinessRule
 		{
-			public SetFlagRule() : base(NationalityProperty)
+			public SetFlagRule()
+				: base(NationalityProperty)
 			{
 				AffectedProperties.Add(FlagProperty);
 			}
@@ -272,6 +267,7 @@ namespace FlyingColors
 				AffectedProperties.Add(DamagedProperty);
 				AffectedProperties.Add(CurrentRateProperty);
 				AffectedProperties.Add(VunerableProperty);
+				AffectedProperties.Add(HullHitRateShiftsProperty);
 			}
 
 			protected override void Execute(RuleContext context)
@@ -295,8 +291,19 @@ namespace FlyingColors
 				{
 					context.AddOutValue(VunerableProperty, true);
 				}
+				int rem = 0;
+				int hullHitRateShift = Math.DivRem(ship.HullHits, 6, out rem);
+				context.AddOutValue(HullHitRateShiftsProperty, 0 - hullHitRateShift);
 			}
 		}
+
+		public static PropertyInfo<int> HullHitRateShiftsProperty = RegisterProperty<int>(c => c.HullHitRateShifts);
+		public int HullHitRateShifts
+		{
+			get { return GetProperty(HullHitRateShiftsProperty); }
+			private set { LoadProperty(HullHitRateShiftsProperty, value); }
+		}
+				
 		#endregion
 
 		#region Rigging
@@ -472,7 +479,7 @@ namespace FlyingColors
 		}
 		#endregion
 
-		#region Activation
+		#region Movement
 		public static PropertyInfo<bool> MovedProperty = RegisterProperty<bool>(c => c.Moved);
 		public bool Moved
 		{
@@ -480,15 +487,6 @@ namespace FlyingColors
 			set { SetProperty(MovedProperty, value); }
 		}
 
-		public static readonly PropertyInfo<bool> TackedProperty = RegisterProperty<bool>(c => c.Tacked);
-		/// <Summary>
-		/// Gets or sets the Tacked value.
-		/// </Summary>
-		public bool Tacked
-		{
-			get { return GetProperty(TackedProperty); }
-			set { SetProperty(TackedProperty, value); }
-		}
 		#endregion
 
 		#region Status Report
@@ -631,8 +629,7 @@ namespace FlyingColors
 			LoadProperty<bool>(StruckProperty, false);
 			LoadProperty<bool>(CapturedProperty, false);
 			// Activation
-			LoadProperty<bool>(MovedProperty, false);
-			LoadProperty<bool>(TackedProperty, false);
+			LoadProperty<bool>(MovedProperty, false);			
 			// Report
 			LoadProperty<string>(StatusProperty, string.Empty);
 
@@ -698,8 +695,7 @@ namespace FlyingColors
 			LoadProperty<bool>(StruckProperty, _ship.Struck);
 			LoadProperty<bool>(CapturedProperty, _ship.Captured);
 			// Activation
-			LoadProperty<bool>(MovedProperty, _ship.Moved);
-			LoadProperty<bool>(TackedProperty, _ship.Tacked);
+			LoadProperty<bool>(MovedProperty, _ship.Moved);			
 			// Report
 			LoadProperty<string>(StatusProperty, string.Empty);
 
@@ -741,8 +737,7 @@ namespace FlyingColors
 			_ship.OnFire = ReadProperty<bool>(OnFireProperty);
 			_ship.OutOfCommand = ReadProperty<bool>(OutOfCommandProperty);
 			_ship.RiggingHits = ReadProperty<int>(RiggingHitsProperty);
-			_ship.Struck = ReadProperty<bool>(StruckProperty);
-			_ship.Tacked = ReadProperty<bool>(TackedProperty);
+			_ship.Struck = ReadProperty<bool>(StruckProperty);			
 			_ship.Commanders = ReadProperty<BattleShipCommanderList>(CommandersProperty).ToData(_ship);
 			return _ship;
 		}
@@ -770,8 +765,8 @@ namespace FlyingColors
 		//    Dismasted = 1024,
 		//    Captured = 2048,
 		//    Sunk = 4096,
-		//    Moved = 8192,
-		//    Tacked = 16384
+		//    Moved = 8192
+		//    
 		//}
 
 		//static class ExtensionMethods
@@ -796,6 +791,6 @@ namespace FlyingColors
 
 		#endregion
 
-		
+
 	}
 }
