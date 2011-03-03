@@ -422,6 +422,29 @@ namespace FlyingColors
 			set { SetProperty(InIronsProperty, value); }
 		}
 
+		private static readonly string InIronsString = "In Irons";
+
+		private class InIronsRule : BusinessRule
+		{
+			public InIronsRule() : base(InIronsProperty)
+			{
+				AffectedProperties.Add(StatusProperty);
+			}
+
+			protected override void Execute(RuleContext context)
+			{
+				var ship = (BattleShip)context.Target;
+				if (ship.InIrons)
+				{
+
+				}
+				else
+				{
+
+				}
+			}
+		}
+
 		public static PropertyInfo<bool> AdriftProperty = RegisterProperty<bool>(c => c.Adrift);
 		public bool Adrift
 		{
