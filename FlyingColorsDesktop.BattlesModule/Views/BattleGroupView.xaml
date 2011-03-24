@@ -7,7 +7,11 @@
 			 xmlns:local="clr-namespace:FlyingColorsDesktop.Views"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
+	
+	
+	
 	<DataGrid
+		Name="shipGrid"
 		ItemsSource="{Binding Model.Ships}"
 		AutoGenerateColumns="False"
 		SelectionMode="Single"
@@ -23,7 +27,8 @@
 		HeadersVisibility="None"
 		GridLinesVisibility="None"
 		RowDetailsVisibilityMode="Collapsed"
-		BorderThickness="0,0,0,0">
+		BorderThickness="0,0,0,0"
+		SelectionChanged="shipGrid_SelectionChanged">
 		
 		<DataGrid.Columns>
 			

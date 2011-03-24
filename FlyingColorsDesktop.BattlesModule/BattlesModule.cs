@@ -11,6 +11,8 @@ namespace FlyingColorsDesktop
 		private readonly IRegionManager _regionManager;
 		private readonly IUnityContainer _container;
 
+		private MainRegionController _mainRegionController = null;
+
 		public BattlesModule(IRegionManager regionManager, IUnityContainer container)
 		{
 			_regionManager = regionManager;
@@ -19,8 +21,20 @@ namespace FlyingColorsDesktop
 
 		public void Initialize()
 		{
+			_container.RegisterType<BattlesToolBarViewModel>();
+			_regionManager.RegisterViewWithRegion("GlobalCommandsRegion", typeof(BattlesToolBarView));
+
+			_mainRegionController = _container.Resolve<MainRegionController>();
+
+			_container.RegisterType<BattleView>();
 			_container.RegisterType<BattleViewModel>();
-			_regionManager.RegisterViewWithRegion("MainRegion", typeof(BattleView));		
+			//_regionManager.RegisterViewWithRegion("MainRegion", typeof(BattleView));
+			_container.RegisterType<BattleGroupView>();
+			_container.RegisterType<BattleGroupViewModel>();
+			//_regionManager.RegisterViewWithRegion("BattleGroupARegion", typeof(BattleGroupView));
+			//_regionManager.RegisterViewWithRegion("BattleGroupBRegion", typeof(BattleGroupView));
+
+			
 		}
 	}
 }

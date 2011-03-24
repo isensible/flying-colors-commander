@@ -15,6 +15,7 @@ using Microsoft.Practices.Unity;
 using FlyingColorsDesktop.ViewModels;
 using Microsoft.Windows.Controls;
 using FlyingColors;
+using Microsoft.Practices.Prism.Regions;
 
 namespace FlyingColorsDesktop.Views
 {
@@ -23,15 +24,38 @@ namespace FlyingColorsDesktop.Views
 	/// </summary>
 	public partial class BattleView : UserControl
 	{
-		public BattleView()
+		private readonly IUnityContainer _container = null;
+		private readonly IRegionManager _regionManager = null;
+
+		public BattleView(IUnityContainer container, IRegionManager regionManager)
 		{
 			InitializeComponent();
+			_container = container;
+			_regionManager = regionManager;
+			//var groupAView = _container.Resolve<BattleGroupView>();
+			//groupAView.DataContext = ((BattleViewModel)DataContext).GroupAViewModel;
+			//_regionManager.AddToRegion("BattleGroupARegion", groupAView);
+			//var groupBView = _container.Resolve<BattleGroupView>();
+			//groupBView.DataContext = ((BattleViewModel)DataContext).GroupBViewModel;
+			//_regionManager.AddToRegion("BattleGroupBRegion", groupBView);
 		}
 
 		[Dependency]
 		public BattleViewModel ViewModel
 		{
-			set { DataContext = value; }
+			set
+			{
+				DataContext = value;
+				// View injection
+				//IRegion battleGroupARegion = _regionManager.Regions["BattleGroupARegion"];
+				//var battleGroupView = _container.Resolve<BattleGroupView>();
+				//region.Add(ordersView, "OrdersView");
+				//region.Activate(ordersView);
+
+
+				
+
+			}
 		}
 
 		private void Details_Click(object sender, RoutedEventArgs e)

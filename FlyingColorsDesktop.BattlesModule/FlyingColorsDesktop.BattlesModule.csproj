@@ -69,6 +69,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Lib\Prism\Microsoft.Practices.Prism.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Practices.Prism.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Lib\Prism\Microsoft.Practices.Prism.Interactivity.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Practices.Prism.UnityExtensions">
       <HintPath>..\Lib\Prism\Microsoft.Practices.Prism.UnityExtensions.dll</HintPath>
     </Reference>
@@ -93,10 +97,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BattlesModule.cs" />
+    <Compile Include="Controllers\BattleGroupsController.cs" />
+    <Compile Include="Events\BattleSelectedEvent.cs" />
+    <Compile Include="Events\BattleShipSelectedEvent.cs" />
+    <Compile Include="MainRegionController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\BattleGroupViewModel.cs" />
     <Compile Include="ViewModels\BattleShipViewModel.cs" />
-    <Compile Include="ViewModels\BattlesViewModel.cs" />
+    <Compile Include="ViewModels\BattlesToolBarViewModel.cs" />
     <Compile Include="ViewModels\BattleViewModel.cs" />
     <Compile Include="Views\BattleGroupView.xaml.cs">
       <DependentUpon>BattleGroupView.xaml</DependentUpon>
@@ -104,8 +112,8 @@
     <Compile Include="Views\BattleShipView.xaml.cs">
       <DependentUpon>BattleShipView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\BattlesView.xaml.cs">
-      <DependentUpon>BattlesView.xaml</DependentUpon>
+    <Compile Include="Views\BattlesToolBarView.xaml.cs">
+      <DependentUpon>BattlesToolBarView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\BattleView.xaml.cs">
       <DependentUpon>BattleView.xaml</DependentUpon>
@@ -142,7 +150,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\BattlesView.xaml">
+    <Page Include="Views\BattlesToolBarView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

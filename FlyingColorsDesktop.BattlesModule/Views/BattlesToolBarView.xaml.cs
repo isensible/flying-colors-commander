@@ -17,17 +17,17 @@ using Microsoft.Practices.Unity;
 namespace FlyingColorsDesktop.Views
 {
 	/// <summary>
-	/// Interaction logic for BattlesView.xaml
+	/// Interaction logic for BattlesToolBarView.xaml
 	/// </summary>
-	public partial class BattlesView : UserControl
+	public partial class BattlesToolBarView : UserControl
 	{
-		public BattlesView()
+		public BattlesToolBarView()
 		{
 			InitializeComponent();
 		}
 
 		[Dependency]
-		public BattlesViewModel ViewModel
+		public BattlesToolBarViewModel ViewModel
 		{
 			set { this.DataContext = value; }
 		}
