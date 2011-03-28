@@ -48,6 +48,18 @@ namespace FlyingColors
 		}
 		#endregion
 
+		#region Fire Power
+
+		public FirePower GetFirePowerAtRange(int range)
+		{
+			return FirePower.GetBase(this, range);
+		}
+
+		#region Firepower Determination
+		#endregion
+
+		#endregion
+
 		#region Factory Methods
 		/// <summary>
 		/// Returns a new Relative Rate.
@@ -242,6 +254,9 @@ namespace FlyingColors
 		}
 		#endregion
 
+
+		
+
 		#region Object Overrides
 
 		public override string ToString()
@@ -250,5 +265,7 @@ namespace FlyingColors
 		}
 
 		#endregion
+
+
 	}
 }

@@ -70,9 +70,13 @@
     <Reference Include="xunit">
       <HintPath>..\Lib\xunit-1.6.1\xunit.dll</HintPath>
     </Reference>
+    <Reference Include="xunit.extensions">
+      <HintPath>..\Lib\xunit-1.6.1\xunit.extensions.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BattleTests.cs" />
+    <Compile Include="DamageTests.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="ScenarioTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

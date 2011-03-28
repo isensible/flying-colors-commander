@@ -83,6 +83,7 @@
     <Compile Include="BroadsideType.cs" />
     <Compile Include="Commander.cs" />
     <Compile Include="CommanderList.cs" />
+    <Compile Include="Damage.cs" />
     <Compile Include="DataModel\BattleData.cs" />
     <Compile Include="DataModel\BattleGroupData.cs" />
     <Compile Include="DataModel\BattleShipCommanderData.cs" />
@@ -94,6 +95,7 @@
     <Compile Include="DataModel\ScenarioData.cs" />
     <Compile Include="DataModel\ShipData.cs" />
     <Compile Include="FireAttack.cs" />
+    <Compile Include="FirePower.cs" />
     <Compile Include="Flags\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -105,6 +107,7 @@
     <Compile Include="FleetShipCommander.cs" />
     <Compile Include="FleetShipCommanderList.cs" />
     <Compile Include="FleetShipList.cs" />
+    <Compile Include="HitResults.cs" />
     <Compile Include="Nationality.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RakeType.cs" />
@@ -112,10 +115,12 @@
     <Compile Include="RelativeRateColor.cs" />
     <Compile Include="RelativeRateShape.cs" />
     <Compile Include="RelativeRateSymbol.cs" />
+    <Compile Include="WeatherGauge.cs" />
     <Compile Include="Scenario.cs" />
     <Compile Include="ScenarioList.cs" />
     <Compile Include="Ship.cs" />
     <Compile Include="ShipList.cs" />
+    <Compile Include="TargetArea.cs" />
     <Compile Include="Weather.cs" />
   </ItemGroup>
   <ItemGroup>
