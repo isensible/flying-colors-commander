@@ -437,6 +437,9 @@ namespace FlyingColors
 			{
 				AffectedProperties.Add(ModifiedDieRollProperty);
 				AffectedProperties.Add(ModifiedDieRollExcessProperty);
+				AffectedProperties.Add(DamageProperty);
+				AffectedProperties.Add(DamageExcessProperty);
+				AffectedProperties.Add(ChanceOfFireProperty);
 			}
 
 			protected override void Execute(RuleContext context)
@@ -511,6 +514,54 @@ namespace FlyingColors
 				}
 				context.AddOutValue(ModifiedDieRollProperty, modifiedDieRoll);
 				context.AddOutValue(ModifiedDieRollExcessProperty, excessDieRoll);
+
+				Damage damage = new Damage("-");
+				Damage excessDamage = new Damage("-");
+				if (fireAttack.TargetShip.IsSmallVessel)
+				{
+					if (fireAttack.Targetting == TargetArea.Rigging)
+					{
+						damage = HitResults.GetSmallVesselRiggingDamage(
+							fireAttack.ModifiedFirePower, modifiedDieRoll);
+						excessDamage = HitResults.GetSmallVesselHullDamage(
+							fireAttack.ModifiedFirePower, excessDieRoll);
+					}
+					if (fireAttack.Targetting == TargetArea.Hull)
+					{
+						damage = HitResults.GetSmallVesselHullDamage(
+							fireAttack.ModifiedFirePower, fireAttack.ModifiedDieRoll);
+						excessDamage = HitResults.GetSmallVesselRiggingDamage(
+							fireAttack.ModifiedFirePower, excessDieRoll);
+					}
+				}
+				else
+				{
+					if (fireAttack.Targetting == TargetArea.Rigging)
+					{
+						damage = HitResults.GetRiggingDamage(
+							fireAttack.ModifiedFirePower, fireAttack.ModifiedDieRoll);
+						excessDamage = HitResults.GetHullDamage(
+							fireAttack.ModifiedFirePower, excessDieRoll);
+					}
+					if (fireAttack.Targetting == TargetArea.Hull)
+					{
+						damage = HitResults.GetHullDamage(
+							fireAttack.ModifiedFirePower, fireAttack.ModifiedDieRoll);
+						excessDamage = HitResults.GetRiggingDamage(
+							fireAttack.ModifiedFirePower, excessDieRoll);
+					}
+				}
+				context.AddOutValue(DamageProperty, damage);
+				context.AddOutValue(DamageExcessProperty, excessDamage);
+
+				bool chanceOfFire = damage.ChanceOfFire || excessDamage.ChanceOfFire;
+				context.AddOutValue(ChanceOfFireProperty, chanceOfFire);
+				int totalHullDamage = damage.Hull + excessDamage.Hull;
+				int totalRiggingDamage = damage.Rigging + excessDamage.Rigging;
+				int totalDamage = totalHullDamage + totalRiggingDamage;
+				context.AddOutValue(TotalHullDamageProperty, totalHullDamage);
+				context.AddOutValue(TotalRiggingDamageProperty, totalRiggingDamage);
+				context.AddOutValue(TotalDamageProperty, totalDamage);
 			}
 		}
 
@@ -562,49 +613,7 @@ namespace FlyingColors
 		{
 			get { return GetProperty(ModifiedDieRollProperty); }
 			set { SetProperty(ModifiedDieRollProperty, value); }
-		}
-
-		private class ModifiedDieRollRule : BusinessRule
-		{
-			public ModifiedDieRollRule()
-				: base(ModifiedDieRollProperty)
-			{
-				AffectedProperties.Add(DamageProperty);
-			}
-
-			protected override void Execute(RuleContext context)
-			{
-				var fireAttack = (FireAttack)context.Target;
-				Damage damage = new Damage("-");
-				if (fireAttack.TargetShip.IsSmallVessel)
-				{
-					if (fireAttack.Targetting == TargetArea.Rigging)
-					{
-						damage = HitResults.GetSmallVesselRiggingDamage(
-							fireAttack.ModifiedFirePower, fireAttack.ModifiedDieRoll);
-					}
-					if (fireAttack.Targetting == TargetArea.Hull)
-					{
-						damage = HitResults.GetSmallVesselHullDamage(
-							fireAttack.ModifiedFirePower, fireAttack.ModifiedDieRoll);
-					}
-				}
-				else
-				{
-					if (fireAttack.Targetting == TargetArea.Rigging)
-					{
-						damage = HitResults.GetRiggingDamage(
-							fireAttack.ModifiedFirePower, fireAttack.ModifiedDieRoll);
-					}
-					if (fireAttack.Targetting == TargetArea.Hull)
-					{
-						damage = HitResults.GetHullDamage(
-							fireAttack.ModifiedFirePower, fireAttack.ModifiedDieRoll);
-					}
-				}
-				context.AddOutValue(DamageProperty, damage);
-			}
-		}
+		}		
 
 		public static readonly PropertyInfo<Damage> DamageProperty = RegisterProperty<Damage>(c => c.Damage);
 		/// <Summary>
@@ -623,48 +632,6 @@ namespace FlyingColors
 			set { SetProperty(ModifiedDieRollExcessProperty, value); }
 		}
 
-		private class ModifiedDieRollExcessRule : BusinessRule
-		{
-			public ModifiedDieRollExcessRule()
-				: base(ModifiedDieRollExcessProperty)
-			{
-				AffectedProperties.Add(DamageExcessProperty);
-			}
-
-			protected override void Execute(RuleContext context)
-			{
-				var fireAttack = (FireAttack)context.Target;
-				Damage damage = new Damage("-");
-				if (fireAttack.TargetShip.IsSmallVessel)
-				{
-					if (fireAttack.Targetting == TargetArea.Rigging)
-					{
-						damage = HitResults.GetSmallVesselHullDamage(
-							fireAttack.ModifiedFirePower, fireAttack.ModifiedDieRollExcess);
-					}
-					if (fireAttack.Targetting == TargetArea.Hull)
-					{
-						damage = HitResults.GetSmallVesselRiggingDamage(
-							fireAttack.ModifiedFirePower, fireAttack.ModifiedDieRollExcess);
-					}
-				}
-				else
-				{
-					if (fireAttack.Targetting == TargetArea.Rigging)
-					{
-						damage = HitResults.GetHullDamage(
-							fireAttack.ModifiedFirePower, fireAttack.ModifiedDieRollExcess);
-					}
-					if (fireAttack.Targetting == TargetArea.Hull)
-					{
-						damage = HitResults.GetRiggingDamage(
-							fireAttack.ModifiedFirePower, fireAttack.ModifiedDieRollExcess);
-					}
-				}
-				context.AddOutValue(DamageExcessProperty, damage);
-			}
-		}
-
 		public static PropertyInfo<Damage> DamageExcessProperty = RegisterProperty<Damage>(c => c.DamageExcess);
 		public Damage DamageExcess
 		{
@@ -672,36 +639,34 @@ namespace FlyingColors
 			set { SetProperty(DamageExcessProperty, value); }
 		}
 
-		private class DamageRule : BusinessRule
+		public static readonly PropertyInfo<int> TotalHullDamageProperty = RegisterProperty<int>(c => c.TotalHullDamage);
+		/// <Summary>
+		/// Gets or sets the TotalHullDamage value.
+		/// </Summary>
+		public int TotalHullDamage
 		{
-			public DamageRule()
-				: base(DamageProperty)
-			{
-				AffectedProperties.Add(ChanceOfFireProperty);
-			}
-
-			protected override void Execute(RuleContext context)
-			{
-				var fireAttack = (FireAttack)context.Target;
-				bool chanceOfFire = fireAttack.Damage.ChanceOfFire || fireAttack.DamageExcess.ChanceOfFire;
-				context.AddOutValue(ChanceOfFireProperty, chanceOfFire);
-			}
+			get { return GetProperty(TotalHullDamageProperty); }
+			set { SetProperty(TotalHullDamageProperty, value); }
 		}
 
-		private class DamageExcessRule : BusinessRule
+		public static readonly PropertyInfo<int> TotalRiggingDamageProperty = RegisterProperty<int>(c => c.TotalRiggingDamage);
+		/// <Summary>
+		/// Gets or sets the TotalRiggingDamage value.
+		/// </Summary>
+		public int TotalRiggingDamage
 		{
-			public DamageExcessRule()
-				: base(DamageExcessProperty)
-			{
-				AffectedProperties.Add(ChanceOfFireProperty);
-			}
+			get { return GetProperty(TotalRiggingDamageProperty); }
+			set { SetProperty(TotalRiggingDamageProperty, value); }
+		}
 
-			protected override void Execute(RuleContext context)
-			{
-				var fireAttack = (FireAttack)context.Target;
-				bool chanceOfFire = fireAttack.Damage.ChanceOfFire || fireAttack.DamageExcess.ChanceOfFire;
-				context.AddOutValue(ChanceOfFireProperty, chanceOfFire);
-			}
+		public static readonly PropertyInfo<int> TotalDamageProperty = RegisterProperty<int>(c => c.TotalDamage);
+		/// <Summary>
+		/// Gets or sets the TotalDamage value.
+		/// </Summary>
+		public int TotalDamage
+		{
+			get { return GetProperty(TotalDamageProperty); }
+			set { SetProperty(TotalDamageProperty, value); }
 		}
 
 		public void ApplyDamage()
