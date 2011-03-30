@@ -254,6 +254,13 @@ namespace FlyingColors
 
 		#region Hits Taken
 
+		internal void ApplyDamage(Damage damage)
+		{
+			HullHits += damage.Hull;
+			RiggingHits += damage.Rigging;
+			MarineHits += damage.Marines;
+		}
+
 		#region Hull
 		public static PropertyInfo<int> HullHitsProperty = RegisterProperty<int>(c => c.HullHits);
 		public int HullHits
@@ -839,6 +846,8 @@ namespace FlyingColors
 		//}
 
 		#endregion
+
+
 
 
 	}

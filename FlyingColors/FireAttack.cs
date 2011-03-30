@@ -111,28 +111,20 @@ namespace FlyingColors
 		}
 
 
-		#region Business Methods
-
-		// TODO: add public properties and methods
-
-		#endregion
-
 		#region Validation Rules
 
 		protected override void AddBusinessRules()
 		{
 			base.AddBusinessRules();
 
-			// TODO: add validation rules
-		}
-
-		#endregion
-
-		#region Authorization Rules
-
-		private static void AddObjectAuthorizationRules()
-		{
-			// TODO: add object-level authorization rules
+			BusinessRules.AddRule(new RangeRule());
+			BusinessRules.AddRule(new IsPointBlankRule());
+			BusinessRules.AddRule(new ModifiedRateRule());
+			BusinessRules.AddRule(new PartialBroadsideRule());
+			BusinessRules.AddRule(new DuringTackRule());
+			BusinessRules.AddRule(new BaseFirePowerRule());
+			BusinessRules.AddRule(new DieRollRule());
+			BusinessRules.AddRule(new ModifiedDieRollRule());
 		}
 
 		#endregion
@@ -422,26 +414,6 @@ namespace FlyingColors
 			set { SetProperty(ModifiedFirePowerProperty, value); }
 		}
 
-		public static readonly PropertyInfo<WeatherGauge> WeatherGaugeProperty = RegisterProperty<WeatherGauge>(c => c.WeatherGauge);
-		/// <Summary>
-		/// Gets or sets the WeatherGauge value.
-		/// </Summary>
-		public WeatherGauge WeatherGauge
-		{
-			get { return GetProperty(WeatherGaugeProperty); }
-			set { SetProperty(WeatherGaugeProperty, value); }
-		}
-
-		public static readonly PropertyInfo<TargetArea> TargettingProperty = RegisterProperty<TargetArea>(c => c.Targetting);
-		/// <Summary>
-		/// Gets or sets the Targetting value.
-		/// </Summary>
-		public TargetArea Targetting
-		{
-			get { return GetProperty(TargettingProperty); }
-			set { SetProperty(TargettingProperty, value); }
-		}
-
 		#endregion
 
 		#region Damage Results
@@ -461,7 +433,8 @@ namespace FlyingColors
 			public DieRollRule()
 				: base(DieRollProperty)
 			{
-				AffectedProperties.Add(ModifiedDieRollProperty);				
+				AffectedProperties.Add(ModifiedDieRollProperty);
+				AffectedProperties.Add(ModifiedDieRollExcessProperty);
 			}
 
 			protected override void Execute(RuleContext context)
@@ -524,8 +497,39 @@ namespace FlyingColors
 					modifier = 5;
 				}
 				int modifiedDieRoll = fireAttack.DieRoll + modifier;
-				context.AddOutValue(ModifiedDieRollProperty, modifiedDieRoll);				
+				int excessDieRoll = 0;
+				if (modifiedDieRoll > 12)
+				{
+					int div = Math.DivRem(modifiedDieRoll, 12, out excessDieRoll);
+					modifiedDieRoll = 12;
+				}
+				else if (modifiedDieRoll < -1)
+				{
+					modifiedDieRoll = -1;
+				}
+				context.AddOutValue(ModifiedDieRollProperty, modifiedDieRoll);
+				context.AddOutValue(ModifiedDieRollExcessProperty, excessDieRoll);
 			}
+		}
+
+		public static readonly PropertyInfo<WeatherGauge> WeatherGaugeProperty = RegisterProperty<WeatherGauge>(c => c.WeatherGauge);
+		/// <Summary>
+		/// Gets or sets the WeatherGauge value.
+		/// </Summary>
+		public WeatherGauge WeatherGauge
+		{
+			get { return GetProperty(WeatherGaugeProperty); }
+			set { SetProperty(WeatherGaugeProperty, value); }
+		}
+
+		public static readonly PropertyInfo<TargetArea> TargettingProperty = RegisterProperty<TargetArea>(c => c.Targetting);
+		/// <Summary>
+		/// Gets or sets the Targetting value.
+		/// </Summary>
+		public TargetArea Targetting
+		{
+			get { return GetProperty(TargettingProperty); }
+			set { SetProperty(TargettingProperty, value); }
 		}
 
 		public static readonly PropertyInfo<bool> OutsideBroadsideArcProperty = RegisterProperty<bool>(c => c.OutsideBroadsideArc);
@@ -596,7 +600,7 @@ namespace FlyingColors
 							fireAttack.ModifiedFirePower, fireAttack.ModifiedDieRoll);
 					}
 				}
-				context.AddOutValue(DamageProperty, damage);				
+				context.AddOutValue(DamageProperty, damage);
 			}
 		}
 
@@ -609,6 +613,69 @@ namespace FlyingColors
 			get { return GetProperty(DamageProperty); }
 			set { SetProperty(DamageProperty, value); }
 		}
+
+		public static PropertyInfo<int> ModifiedDieRollExcessProperty = RegisterProperty<int>(c => c.ModifiedDieRollExcess);
+		public int ModifiedDieRollExcess
+		{
+			get { return GetProperty(ModifiedDieRollExcessProperty); }
+			set { SetProperty(ModifiedDieRollExcessProperty, value); }
+		}
+
+		private class ModifiedDieRollExcessRule : BusinessRule
+		{
+			public ModifiedDieRollExcessRule()
+				: base(ModifiedDieRollExcessProperty)
+			{
+				AffectedProperties.Add(DamageExcessProperty);
+			}
+
+			protected override void Execute(RuleContext context)
+			{
+				var fireAttack = (FireAttack)context.Target;
+				Damage damage = new Damage("-");
+				if (fireAttack.TargetShip.IsSmallVessel)
+				{
+					if (fireAttack.Targetting == TargetArea.Rigging)
+					{
+						damage = HitResults.GetSmallVesselHullDamage(
+							fireAttack.ModifiedFirePower, fireAttack.ModifiedDieRollExcess);
+					}
+					if (fireAttack.Targetting == TargetArea.Hull)
+					{
+						damage = HitResults.GetSmallVesselRiggingDamage(
+							fireAttack.ModifiedFirePower, fireAttack.ModifiedDieRollExcess);
+					}
+				}
+				else
+				{
+					if (fireAttack.Targetting == TargetArea.Rigging)
+					{
+						damage = HitResults.GetHullDamage(
+							fireAttack.ModifiedFirePower, fireAttack.ModifiedDieRollExcess);
+					}
+					if (fireAttack.Targetting == TargetArea.Hull)
+					{
+						damage = HitResults.GetRiggingDamage(
+							fireAttack.ModifiedFirePower, fireAttack.ModifiedDieRollExcess);
+					}
+				}
+				context.AddOutValue(DamageExcessProperty, damage);
+			}
+		}
+
+		public static PropertyInfo<Damage> DamageExcessProperty = RegisterProperty<Damage>(c => c.DamageExcess);
+		public Damage DamageExcess
+		{
+			get { return GetProperty(DamageExcessProperty); }
+			set { SetProperty(DamageExcessProperty, value); }
+		}
+
+		public void ApplyDamage()
+		{
+			FiringShip.ApplyDamage(Damage);
+			FiringShip.ApplyDamage(DamageExcess);
+		}
+
 
 		#endregion
 
@@ -633,12 +700,14 @@ namespace FlyingColors
 			LoadProperty<BattleShip>(FiringShipProperty, firing);
 			LoadProperty<bool>(CanDefensiveFireProperty, true);
 			LoadProperty<FireAttack>(DefensiveFireAttackProperty, FireAttack.NewDefensiveFireAttack(firing));
+			CalculateModifiedRate();
 		}
 
 		private void Child_Create(BattleShip target)
 		{
 			LoadProperty<BattleShip>(TargetShipProperty, target);
 			LoadProperty<bool>(CanDefensiveFireProperty, false);
+			CalculateModifiedRate();
 		}
 
 
