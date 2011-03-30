@@ -80,6 +80,7 @@
     <Compile Include="BattleShipCommander.cs" />
     <Compile Include="BattleShipCommanderList.cs" />
     <Compile Include="BattleShipList.cs" />
+    <Compile Include="Broadside.cs" />
     <Compile Include="BroadsideType.cs" />
     <Compile Include="Commander.cs" />
     <Compile Include="CommanderList.cs" />

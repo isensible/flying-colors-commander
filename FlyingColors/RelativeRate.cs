@@ -34,6 +34,11 @@ namespace FlyingColors
 			get { return GetProperty(ColorProperty); }
 			private set { LoadProperty(ColorProperty, value); }
 		}
+
+		public bool IsWhite { get { return Color == RelativeRateColor.White; } }
+
+		public bool IsBlack { get { return Color == RelativeRateColor.Black; } }
+
 		#endregion
 
 		#region Shape
@@ -46,6 +51,10 @@ namespace FlyingColors
 			get { return GetProperty(ShapeProperty); }
 			private set { LoadProperty(ShapeProperty, value); }
 		}
+
+		public bool IsHexagonal { get { return Shape == RelativeRateShape.Hexagon; } }
+
+		public bool IsSquare { get { return Shape == RelativeRateShape.Square; } }
 		#endregion
 
 		#region Fire Power
@@ -56,6 +65,17 @@ namespace FlyingColors
 		}
 
 		#region Firepower Determination
+
+		internal RelativeRate ShiftUp()
+		{
+			return RelativeRate.NewRate(RelativeRateSymbol.ShiftUp(this.Symbol), this.Color, this.Shape);
+		}
+
+		internal object ShiftDown()
+		{
+			return RelativeRate.NewRate(RelativeRateSymbol.ShiftDown(this.Symbol), this.Color, this.Shape);
+		}
+
 		#endregion
 
 		#endregion
@@ -254,9 +274,6 @@ namespace FlyingColors
 		}
 		#endregion
 
-
-		
-
 		#region Object Overrides
 
 		public override string ToString()
@@ -265,7 +282,5 @@ namespace FlyingColors
 		}
 
 		#endregion
-
-
 	}
 }

@@ -30,6 +30,16 @@ namespace FlyingColors
 			set { SetProperty(TargetShipProperty, value); }
 		}
 
+		public static PropertyInfo<Broadside> FiringFromProperty = RegisterProperty<Broadside>(c => c.FiringFrom);
+		/// <summary>
+		/// The broadside from which the FiringShip is firing.
+		/// </summary>
+		public Broadside FiringFrom
+		{
+			get { return GetProperty(FiringFromProperty); }
+			set { SetProperty(FiringFromProperty, value); }
+		}
+
 		public static readonly PropertyInfo<int> RangeProperty = RegisterProperty<int>(c => c.Range);
 		/// <Summary>
 		/// Gets or sets the Range value.
@@ -52,21 +62,28 @@ namespace FlyingColors
 
 		private class RangeRule : BusinessRule
 		{
-			public RangeRule() : base(RangeProperty)
+			public RangeRule()
+				: base(RangeProperty)
 			{
 				AffectedProperties.Add(IsPointBlankProperty);
+				AffectedProperties.Add(BaseFirePowerProperty);
 			}
 
 			protected override void Execute(RuleContext context)
 			{
 				var fireAttack = (FireAttack)context.Target;
-				if (fireAttack.Range < 0)
+				if (fireAttack.Range < 0 || fireAttack.Range > 10)
 				{
-					context.AddErrorResult("Range must be positive integer.");
+					context.AddErrorResult("Range must be integer between 0 and 10.");
 				}
 				else if (fireAttack.Range == 0)
 				{
 					context.OutputPropertyValues.Add(IsPointBlankProperty, true);
+				}
+				if (fireAttack.Range >= 0 && fireAttack.Range <= 10)
+				{
+					context.AddOutValue(BaseFirePowerProperty,
+						FirePower.GetBase(fireAttack.ModifiedRate, fireAttack.Range));
 				}
 			}
 		}
@@ -93,7 +110,7 @@ namespace FlyingColors
 			}
 		}
 
-		
+
 		#region Business Methods
 
 		// TODO: add public properties and methods
@@ -166,6 +183,32 @@ namespace FlyingColors
 
 		#region Rate
 
+		/// <summary>
+		/// Calculates the modified rate of the firing ship, excluding shifts for
+		/// partial broadside and tacking which are handled by business rules.
+		/// </summary>
+		private void CalculateModifiedRate()
+		{
+			RelativeRate rate = FiringShip.CurrentRate;
+			for (int shifts = 0; shifts < FiringShip.HullHitRateShifts; ++shifts)
+			{
+				rate = rate.ShiftUp();
+			}
+			if (FiringShip.FullSails)
+			{
+				rate = rate.ShiftUp();
+			}
+			if (FiringShip.Dismasted)
+			{
+				rate = rate.ShiftUp();
+			}
+			if (FiringShip.OnFire)
+			{
+				rate = rate.ShiftUp();
+			}
+			ModifiedRate = rate;
+		}
+
 		public static readonly PropertyInfo<RelativeRate> ModifiedRateProperty = RegisterProperty<RelativeRate>(c => c.ModifiedRate);
 		/// <Summary>
 		/// Gets or sets the ModifiedRate value.
@@ -174,6 +217,22 @@ namespace FlyingColors
 		{
 			get { return GetProperty(ModifiedRateProperty); }
 			set { SetProperty(ModifiedRateProperty, value); }
+		}
+
+		private class ModifiedRateRule : BusinessRule
+		{
+			public ModifiedRateRule()
+				: base(ModifiedRateProperty)
+			{
+				AffectedProperties.Add(BaseFirePowerProperty);
+			}
+
+			protected override void Execute(RuleContext context)
+			{
+				var fireAttack = (FireAttack)context.Target;
+				var baseFirePower = FirePower.GetBase(fireAttack.ModifiedRate, fireAttack.Range);
+				context.AddOutValue(BaseFirePowerProperty, baseFirePower);
+			}
 		}
 
 		public static readonly PropertyInfo<bool> PartialBroadsideProperty = RegisterProperty<bool>(c => c.PartialBroadside);
@@ -186,6 +245,28 @@ namespace FlyingColors
 			set { SetProperty(PartialBroadsideProperty, value); }
 		}
 
+		private class PartialBroadsideRule : BusinessRule
+		{
+			public PartialBroadsideRule()
+				: base(PartialBroadsideProperty)
+			{
+				AffectedProperties.Add(ModifiedRateProperty);
+			}
+
+			protected override void Execute(RuleContext context)
+			{
+				var fireAttack = (FireAttack)context.Target;
+				if (fireAttack.PartialBroadside)
+				{
+					context.AddOutValue(ModifiedRateProperty, fireAttack.ModifiedRate.ShiftUp());
+				}
+				else
+				{
+					context.AddOutValue(ModifiedRateProperty, fireAttack.ModifiedRate.ShiftDown());
+				}
+			}
+		}
+
 		public static readonly PropertyInfo<bool> DuringTackProperty = RegisterProperty<bool>(c => c.DuringTack);
 		/// <Summary>
 		/// Gets or sets the DuringTack value.
@@ -194,6 +275,28 @@ namespace FlyingColors
 		{
 			get { return GetProperty(DuringTackProperty); }
 			set { SetProperty(DuringTackProperty, value); }
+		}
+
+		private class DuringTackRule : BusinessRule
+		{
+			public DuringTackRule()
+				: base(DuringTackProperty)
+			{
+				AffectedProperties.Add(ModifiedRateProperty);
+			}
+
+			protected override void Execute(RuleContext context)
+			{
+				var fireAttack = (FireAttack)context.Target;
+				if (fireAttack.DuringTack)
+				{
+					context.AddOutValue(ModifiedRateProperty, fireAttack.ModifiedRate.ShiftUp());
+				}
+				else
+				{
+					context.AddOutValue(ModifiedRateProperty, fireAttack.ModifiedRate.ShiftDown());
+				}
+			}
 		}
 
 		#endregion
@@ -208,6 +311,105 @@ namespace FlyingColors
 		{
 			get { return GetProperty(BaseFirePowerProperty); }
 			set { SetProperty(BaseFirePowerProperty, value); }
+		}
+
+		private class BaseFirePowerRule : BusinessRule
+		{
+			public BaseFirePowerRule()
+				: base(BaseFirePowerProperty)
+			{
+				AffectedProperties.Add(ModifiedFirePowerProperty);
+			}
+
+			protected override void Execute(RuleContext context)
+			{
+				var fireAttack = (FireAttack)context.Target;
+				FirePower modifiedFirePower = fireAttack.BaseFirePower.CopySelf();
+				if (fireAttack.ModifiedRate.IsWhite &&
+					fireAttack.BaseFirePower.IsShaded)
+				{
+					modifiedFirePower = modifiedFirePower.Increment();
+				}
+				if (fireAttack.ModifiedRate.IsBlack &&
+					fireAttack.BaseFirePower.IsShaded)
+				{
+					modifiedFirePower = modifiedFirePower.Decrement();
+				}
+				modifiedFirePower = modifiedFirePower.IncrementBy(fireAttack.FiringShip.Audacity);
+				if (fireAttack.IsPointBlank)
+				{
+					modifiedFirePower = modifiedFirePower.IncrementBy(2);
+				}
+				if (fireAttack.FiringFrom == Broadside.Port &&
+					!fireAttack.FiringShip.FirstPortFired)
+				{
+					modifiedFirePower = modifiedFirePower.IncrementBy(2);
+				}
+				else if (fireAttack.FiringFrom == Broadside.Starboard &&
+					!fireAttack.FiringShip.FirstStarboardFired)
+				{
+					modifiedFirePower = modifiedFirePower.IncrementBy(2);
+				}
+				modifiedFirePower = CalculateCarronadeBonus(fireAttack, modifiedFirePower);
+				context.AddOutValue(ModifiedFirePowerProperty, modifiedFirePower);
+			}
+
+			private FirePower CalculateCarronadeBonus(FireAttack fireAttack, FirePower modifiedFirePower)
+			{
+				bool earlyYears = (fireAttack.FiringShip.Year >= 1779) && (fireAttack.FiringShip.Year <= 1786);
+				bool laterYears = (fireAttack.FiringShip.Year >= 1787) && (fireAttack.FiringShip.Year <= 1826);
+				bool rangeLessThanOrEqualThree = (fireAttack.Range <= 3);
+				bool rangeLessThanOrEqualOne = (fireAttack.Range <= 1);
+				switch (fireAttack.FiringShip.Nationality)
+				{
+					case Nationality.British:
+						{
+							if (rangeLessThanOrEqualThree)
+							{
+								modifiedFirePower = modifiedFirePower.Increment();
+							}
+							break;
+						}
+					case Nationality.American:
+						{
+							if ((rangeLessThanOrEqualThree && laterYears) || rangeLessThanOrEqualOne)
+							{
+								modifiedFirePower = modifiedFirePower.Increment();
+							}
+							break;
+						}
+					case Nationality.French:
+					case Nationality.Dutch:
+						{
+							if (rangeLessThanOrEqualThree && laterYears)
+							{
+								modifiedFirePower = modifiedFirePower.Increment();
+							}
+							break;
+						}
+					case Nationality.Spanish:
+						{
+							if (rangeLessThanOrEqualOne && laterYears)
+							{
+								modifiedFirePower = modifiedFirePower.Increment();
+							}
+							break;
+						}
+					default:
+						{
+							break;
+						}
+				}
+				if (fireAttack.ModifiedRate.IsHexagonal && rangeLessThanOrEqualThree)
+				{
+					modifiedFirePower = modifiedFirePower.Increment();
+				}
+				if (fireAttack.ModifiedRate.IsSquare && rangeLessThanOrEqualThree)
+				{
+					modifiedFirePower = modifiedFirePower.IncrementBy(2);
+				}
+				return modifiedFirePower;
+			}
 		}
 
 		public static readonly PropertyInfo<FirePower> ModifiedFirePowerProperty = RegisterProperty<FirePower>(c => c.ModifiedFirePower);
@@ -254,6 +456,78 @@ namespace FlyingColors
 			set { SetProperty(DieRollProperty, value); }
 		}
 
+		private class DieRollRule : BusinessRule
+		{
+			public DieRollRule()
+				: base(DieRollProperty)
+			{
+				AffectedProperties.Add(ModifiedDieRollProperty);				
+			}
+
+			protected override void Execute(RuleContext context)
+			{
+				var fireAttack = (FireAttack)context.Target;
+				int modifier = 0;
+				if (fireAttack.Targetting == TargetArea.Rigging)
+				{
+					if (fireAttack.FiringShip.Nationality == Nationality.French)
+					{
+						modifier++;
+					}
+					if (fireAttack.WeatherGauge == WeatherGauge.Windward)
+					{
+						modifier++;
+					}
+					if (fireAttack.WeatherGauge == WeatherGauge.Leeward)
+					{
+						modifier--;
+					}
+					if (fireAttack.TargetShip.FullSails)
+					{
+						modifier += 2;
+					}
+					if (fireAttack.TargetShip.Weather == Weather.Calm)
+					{
+						modifier -= 2;
+					}
+				}
+				if (fireAttack.Targetting == TargetArea.Hull)
+				{
+					if (fireAttack.FiringShip.Nationality == Nationality.British)
+					{
+						modifier++;
+					}
+					if (fireAttack.WeatherGauge == WeatherGauge.Leeward)
+					{
+						modifier++;
+					}
+					if (fireAttack.WeatherGauge == WeatherGauge.Windward)
+					{
+						modifier--;
+					}
+				}
+				if (fireAttack.FiringShip.Anchored)
+				{
+					modifier += 2;
+				}
+				// TODO: battery firing!
+				if (fireAttack.OutsideBroadsideArc)
+				{
+					modifier--;
+				}
+				if (fireAttack.DownOwnRakeLine)
+				{
+					modifier -= 3;
+				}
+				if (modifier > 5)
+				{
+					modifier = 5;
+				}
+				int modifiedDieRoll = fireAttack.DieRoll + modifier;
+				context.AddOutValue(ModifiedDieRollProperty, modifiedDieRoll);				
+			}
+		}
+
 		public static readonly PropertyInfo<bool> OutsideBroadsideArcProperty = RegisterProperty<bool>(c => c.OutsideBroadsideArc);
 		/// <Summary>
 		/// Gets or sets the OutsideBroadsideArc value.
@@ -282,6 +556,48 @@ namespace FlyingColors
 		{
 			get { return GetProperty(ModifiedDieRollProperty); }
 			set { SetProperty(ModifiedDieRollProperty, value); }
+		}
+
+		private class ModifiedDieRollRule : BusinessRule
+		{
+			public ModifiedDieRollRule()
+				: base(ModifiedDieRollProperty)
+			{
+				AffectedProperties.Add(DamageProperty);
+			}
+
+			protected override void Execute(RuleContext context)
+			{
+				var fireAttack = (FireAttack)context.Target;
+				Damage damage = new Damage("-");
+				if (fireAttack.TargetShip.IsSmallVessel)
+				{
+					if (fireAttack.Targetting == TargetArea.Rigging)
+					{
+						damage = HitResults.GetSmallVesselRiggingDamage(
+							fireAttack.ModifiedFirePower, fireAttack.ModifiedDieRoll);
+					}
+					if (fireAttack.Targetting == TargetArea.Hull)
+					{
+						damage = HitResults.GetSmallVesselHullDamage(
+							fireAttack.ModifiedFirePower, fireAttack.ModifiedDieRoll);
+					}
+				}
+				else
+				{
+					if (fireAttack.Targetting == TargetArea.Rigging)
+					{
+						damage = HitResults.GetRiggingDamage(
+							fireAttack.ModifiedFirePower, fireAttack.ModifiedDieRoll);
+					}
+					if (fireAttack.Targetting == TargetArea.Hull)
+					{
+						damage = HitResults.GetHullDamage(
+							fireAttack.ModifiedFirePower, fireAttack.ModifiedDieRoll);
+					}
+				}
+				context.AddOutValue(DamageProperty, damage);				
+			}
 		}
 
 		public static readonly PropertyInfo<Damage> DamageProperty = RegisterProperty<Damage>(c => c.Damage);
@@ -324,7 +640,7 @@ namespace FlyingColors
 			LoadProperty<BattleShip>(TargetShipProperty, target);
 			LoadProperty<bool>(CanDefensiveFireProperty, false);
 		}
-		
+
 
 		#endregion
 	}

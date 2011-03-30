@@ -24,7 +24,7 @@ namespace FlyingColors.Test
 			{
 				yield return new object[] { new TestDamageExpected()
 				{
-					Result = "",
+					Result = "-",
 					Hull = 0,
 					Rigging = 0,
 					Marines = 0,

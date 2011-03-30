@@ -19,7 +19,7 @@ namespace FlyingColors
 			Rigging = new Dictionary<int, string[]>(23);
 			Hull = new Dictionary<int, string[]>(23);
 			SmallVesselRigging = new Dictionary<int, string[]>(23);
-			SmallVesselHull = new Dictionary<int, string[]>(23);			
+			SmallVesselHull = new Dictionary<int, string[]>(23);
 
 			PopulateTable(Rigging, riggingResults);
 		}
@@ -27,9 +27,9 @@ namespace FlyingColors
 		private readonly static string riggingResults =
 			// Die Roll
 			//  0,   1,   2,   3,   4,   5,   6,   7,   8,   9,  10,  11,  12;    // Fire Power
-			"    ,    ,    ,    ,    ,    ,    ,   R,   R,   H,   R,   M,  2R;" + // <0
-			"    ,    ,    ,    ,    ,    ,   R,   R,   H,  2R,   M,  2R,  R*;" + //  0
-			"    ,    ,    ,    ,    ,   R,   R,   H,   R,   M,  2R,  R*,  RH;";  //  1
+			"   -,   -,   -,   -,   -,   -,   -,   R,   R,   H,   R,   M,  2R;" + // <0
+			"   -,   -,   -,   -,   -,   -,   R,   R,   H,  2R,   M,  2R,  R*;" + //  0
+			"   -,   -,   -,   -,   -,   R,   R,   H,   R,   M,  2R,  R*,  RH;";  //  1
 
 
 		private static void PopulateTable(Dictionary<int, string[]> table, string resultString)
@@ -44,9 +44,24 @@ namespace FlyingColors
 			}
 		}
 
-		public Damage GetRiggingDamage(int firePower, int dieRoll)
+		public static Damage GetRiggingDamage(FirePower firePower, int dieRoll)
 		{
-			return new Damage(Rigging[firePower][dieRoll].Trim());
+			return new Damage(Rigging[firePower.Value][dieRoll].Trim());
+		}
+
+		public static Damage GetHullDamage(FirePower firePower, int dieRoll)
+		{
+			return new Damage(Hull[firePower.Value][dieRoll].Trim());
+		}
+
+		public static Damage GetSmallVesselRiggingDamage(FirePower firePower, int dieRoll)
+		{
+			return new Damage(SmallVesselRigging[firePower.Value][dieRoll].Trim());
+		}
+
+		public static Damage GetSmallVesselHullDamage(FirePower firePower, int dieRoll)
+		{
+			return new Damage(SmallVesselHull[firePower.Value][dieRoll].Trim());
 		}
 	}
 }

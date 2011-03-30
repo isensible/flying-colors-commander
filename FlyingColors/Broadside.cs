@@ -5,10 +5,9 @@ using System.Text;
 
 namespace FlyingColors
 {
-	public enum WeatherGauge
+	public enum Broadside
 	{
-		None,
-		Windward,
-		Leeward
+		Port,
+		Starboard
 	}
 }

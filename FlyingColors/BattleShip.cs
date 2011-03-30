@@ -31,6 +31,20 @@ namespace FlyingColors
 			private set { LoadProperty(AudacityProperty, value); }
 		}
 
+		public static PropertyInfo<int> YearProperty = RegisterProperty<int>(c => c.Year);
+		public int Year
+		{
+			get { return GetProperty(YearProperty); }
+			private set { LoadProperty(YearProperty, value); }
+		}
+
+		public static PropertyInfo<Weather> WeatherProperty = RegisterProperty<Weather>(c => c.Weather);
+		public Weather Weather
+		{
+			get { return GetProperty(WeatherProperty); }
+			private set { LoadProperty(WeatherProperty, value); }
+		}
+
 		#endregion
 
 		#region Commanders
@@ -142,6 +156,14 @@ namespace FlyingColors
 		{
 			get { return GetProperty(RateProperty); }
 			private set { LoadProperty(RateProperty, value); }
+		}
+
+		public bool IsSmallVessel
+		{
+			get
+			{
+				return (Rate.Symbol == RelativeRateSymbol.Gunboat || Rate.Symbol == RelativeRateSymbol.GunBrig);
+			}
 		}
 
 		public static PropertyInfo<RelativeRate> RateDamagedProperty = RegisterProperty<RelativeRate>(c => c.RateDamaged);
@@ -303,7 +325,7 @@ namespace FlyingColors
 			get { return GetProperty(HullHitRateShiftsProperty); }
 			private set { LoadProperty(HullHitRateShiftsProperty, value); }
 		}
-				
+
 		#endregion
 
 		#region Rigging
@@ -426,7 +448,8 @@ namespace FlyingColors
 
 		private class InIronsRule : BusinessRule
 		{
-			public InIronsRule() : base(InIronsProperty)
+			public InIronsRule()
+				: base(InIronsProperty)
 			{
 				AffectedProperties.Add(StatusProperty);
 			}
@@ -598,7 +621,8 @@ namespace FlyingColors
 			_ship.FleetShip = battleShipTuple.Item2;
 			// Fleet
 			LoadProperty<int>(AudacityProperty, battleShipTuple.Item1.Audacity);
-
+			LoadProperty<int>(YearProperty, battleShipTuple.Item1.Scenario.Year);
+			LoadProperty<Weather>(WeatherProperty, battleShipTuple.Item1.Scenario.WeatherEffects);
 			// Commanders
 			LoadProperty<BattleShipCommanderList>(CommandersProperty,
 				BattleShipCommanderList.New(_ship, battleShipTuple.Item2.Commanders));
@@ -652,7 +676,7 @@ namespace FlyingColors
 			LoadProperty<bool>(StruckProperty, false);
 			LoadProperty<bool>(CapturedProperty, false);
 			// Activation
-			LoadProperty<bool>(MovedProperty, false);			
+			LoadProperty<bool>(MovedProperty, false);
 			// Report
 			LoadProperty<string>(StatusProperty, string.Empty);
 
@@ -664,6 +688,8 @@ namespace FlyingColors
 			_ship = ship;
 			// Fleet
 			LoadProperty<int>(AudacityProperty, _ship.FleetShip.Fleet.Audacity);
+			LoadProperty<int>(YearProperty, _ship.FleetShip.Fleet.Scenario.Year);
+			LoadProperty<Weather>(WeatherProperty, _ship.FleetShip.Fleet.Scenario.WeatherEffects);
 
 			// Commanders
 			LoadProperty<BattleShipCommanderList>(CommandersProperty,
@@ -718,7 +744,7 @@ namespace FlyingColors
 			LoadProperty<bool>(StruckProperty, _ship.Struck);
 			LoadProperty<bool>(CapturedProperty, _ship.Captured);
 			// Activation
-			LoadProperty<bool>(MovedProperty, _ship.Moved);			
+			LoadProperty<bool>(MovedProperty, _ship.Moved);
 			// Report
 			LoadProperty<string>(StatusProperty, string.Empty);
 
@@ -760,7 +786,7 @@ namespace FlyingColors
 			_ship.OnFire = ReadProperty<bool>(OnFireProperty);
 			_ship.OutOfCommand = ReadProperty<bool>(OutOfCommandProperty);
 			_ship.RiggingHits = ReadProperty<int>(RiggingHitsProperty);
-			_ship.Struck = ReadProperty<bool>(StruckProperty);			
+			_ship.Struck = ReadProperty<bool>(StruckProperty);
 			_ship.Commanders = ReadProperty<BattleShipCommanderList>(CommandersProperty).ToData(_ship);
 			return _ship;
 		}
