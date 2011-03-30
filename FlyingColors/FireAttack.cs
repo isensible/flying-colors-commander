@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Csla;
 using Csla.Rules;
+using Csla.Core;
 
 namespace FlyingColors
 {
@@ -125,6 +126,7 @@ namespace FlyingColors
 			BusinessRules.AddRule(new BaseFirePowerRule());
 			BusinessRules.AddRule(new DieRollRule());
 			BusinessRules.AddRule(new ModifiedDieRollRule());
+			BusinessRules.AddRule(new ModifiedDieRollExcessRule());
 		}
 
 		#endregion
@@ -670,12 +672,64 @@ namespace FlyingColors
 			set { SetProperty(DamageExcessProperty, value); }
 		}
 
+		private class DamageRule : BusinessRule
+		{
+			public DamageRule()
+				: base(DamageProperty)
+			{
+				AffectedProperties.Add(ChanceOfFireProperty);
+			}
+
+			protected override void Execute(RuleContext context)
+			{
+				var fireAttack = (FireAttack)context.Target;
+				bool chanceOfFire = fireAttack.Damage.ChanceOfFire || fireAttack.DamageExcess.ChanceOfFire;
+				context.AddOutValue(ChanceOfFireProperty, chanceOfFire);
+			}
+		}
+
+		private class DamageExcessRule : BusinessRule
+		{
+			public DamageExcessRule()
+				: base(DamageExcessProperty)
+			{
+				AffectedProperties.Add(ChanceOfFireProperty);
+			}
+
+			protected override void Execute(RuleContext context)
+			{
+				var fireAttack = (FireAttack)context.Target;
+				bool chanceOfFire = fireAttack.Damage.ChanceOfFire || fireAttack.DamageExcess.ChanceOfFire;
+				context.AddOutValue(ChanceOfFireProperty, chanceOfFire);
+			}
+		}
+
 		public void ApplyDamage()
 		{
 			FiringShip.ApplyDamage(Damage);
 			FiringShip.ApplyDamage(DamageExcess);
 		}
 
+		public static PropertyInfo<bool> ChanceOfFireProperty = RegisterProperty<bool>(c => c.ChanceOfFire);
+		public bool ChanceOfFire
+		{
+			get { return GetProperty(ChanceOfFireProperty); }
+			set { SetProperty(ChanceOfFireProperty, value); }
+		}
+
+		public static PropertyInfo<int> ChanceOfFireDieRollProperty = RegisterProperty<int>(c => c.ChanceOfFireDieRoll);
+		public int ChanceOfFireDieRoll
+		{
+			get { return GetProperty(ChanceOfFireDieRollProperty); }
+			set { SetProperty(ChanceOfFireDieRollProperty, value); }
+		}
+
+		public static PropertyInfo<bool> SetTargetShipOnFireProperty = RegisterProperty<bool>(c => c.SetTargetShipOnFire);
+		public bool SetTargetShipOnFire
+		{
+			get { return GetProperty(SetTargetShipOnFireProperty); }
+			set { SetProperty(SetTargetShipOnFireProperty, value); }
+		}
 
 		#endregion
 
