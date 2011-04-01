@@ -41,6 +41,20 @@ namespace FlyingColors
 			set { SetProperty(FiringFromProperty, value); }
 		}
 
+		public static PropertyInfo<RakeType> RakeTypeProperty = RegisterProperty<RakeType>(c => c.RakeType);
+		public RakeType RakeType
+		{
+			get { return GetProperty(RakeTypeProperty); }
+			set { SetProperty(RakeTypeProperty, value); }
+		}
+
+		public static PropertyInfo<bool> IsRakeProperty = RegisterProperty<bool>(c => c.IsRake);
+		public bool IsRake
+		{
+			get { return GetProperty(IsRakeProperty); }
+			set { SetProperty(IsRakeProperty, value); }
+		}
+
 		public static readonly PropertyInfo<int> RangeProperty = RegisterProperty<int>(c => c.Range);
 		/// <Summary>
 		/// Gets or sets the Range value.
@@ -125,8 +139,7 @@ namespace FlyingColors
 			BusinessRules.AddRule(new DuringTackRule());
 			BusinessRules.AddRule(new BaseFirePowerRule());
 			BusinessRules.AddRule(new DieRollRule());
-			BusinessRules.AddRule(new ModifiedDieRollRule());
-			BusinessRules.AddRule(new ModifiedDieRollExcessRule());
+
 		}
 
 		#endregion
@@ -440,6 +453,10 @@ namespace FlyingColors
 				AffectedProperties.Add(DamageProperty);
 				AffectedProperties.Add(DamageExcessProperty);
 				AffectedProperties.Add(ChanceOfFireProperty);
+				AffectedProperties.Add(TotalHullDamageProperty);
+				AffectedProperties.Add(TotalRiggingDamageProperty);
+				AffectedProperties.Add(TotalMarineDamageProperty);
+				AffectedProperties.Add(TotalDamageProperty);
 			}
 
 			protected override void Execute(RuleContext context)
@@ -556,11 +573,21 @@ namespace FlyingColors
 
 				bool chanceOfFire = damage.ChanceOfFire || excessDamage.ChanceOfFire;
 				context.AddOutValue(ChanceOfFireProperty, chanceOfFire);
-				int totalHullDamage = damage.Hull + excessDamage.Hull;
+
+				decimal rakeMultiplier = 1m;
+				if (fireAttack.IsRake) 
+				{
+					rakeMultiplier = fireAttack.RakeType == RakeType.Bow ? 1.5m : 2m;
+				}
+				int pointBlankMarineDamageModifier = fireAttack.IsPointBlank ? 2 : 1;
+
+				int totalHullDamage = (int)((decimal)(damage.Hull + excessDamage.Hull) * rakeMultiplier);
 				int totalRiggingDamage = damage.Rigging + excessDamage.Rigging;
+				int totalMarineDamage = (damage.Marines + excessDamage.Marines) * pointBlankMarineDamageModifier;
 				int totalDamage = totalHullDamage + totalRiggingDamage;
 				context.AddOutValue(TotalHullDamageProperty, totalHullDamage);
 				context.AddOutValue(TotalRiggingDamageProperty, totalRiggingDamage);
+				context.AddOutValue(TotalMarineDamageProperty, totalMarineDamage);
 				context.AddOutValue(TotalDamageProperty, totalDamage);
 			}
 		}
@@ -613,7 +640,7 @@ namespace FlyingColors
 		{
 			get { return GetProperty(ModifiedDieRollProperty); }
 			set { SetProperty(ModifiedDieRollProperty, value); }
-		}		
+		}
 
 		public static readonly PropertyInfo<Damage> DamageProperty = RegisterProperty<Damage>(c => c.Damage);
 		/// <Summary>
@@ -657,6 +684,13 @@ namespace FlyingColors
 		{
 			get { return GetProperty(TotalRiggingDamageProperty); }
 			set { SetProperty(TotalRiggingDamageProperty, value); }
+		}
+
+		public static PropertyInfo<int> TotalMarineDamageProperty = RegisterProperty<int>(c => c.TotalMarineDamage);
+		public int TotalMarineDamage
+		{
+			get { return GetProperty(TotalMarineDamageProperty); }
+			set { SetProperty(TotalMarineDamageProperty, value); }
 		}
 
 		public static readonly PropertyInfo<int> TotalDamageProperty = RegisterProperty<int>(c => c.TotalDamage);
