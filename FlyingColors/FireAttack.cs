@@ -153,7 +153,7 @@ namespace FlyingColors
 		public bool CanDefensiveFire
 		{
 			get { return GetProperty(CanDefensiveFireProperty); }
-			set { SetProperty(CanDefensiveFireProperty, value); }
+			private set { LoadProperty(CanDefensiveFireProperty, value); }
 		}
 
 		public static readonly PropertyInfo<bool> DefensiveFireProperty = RegisterProperty<bool>(c => c.DefensiveFire);
@@ -166,14 +166,14 @@ namespace FlyingColors
 			set { SetProperty(DefensiveFireProperty, value); }
 		}
 
-		public static readonly PropertyInfo<bool> SimultaneousDefensiveFireProperty = RegisterProperty<bool>(c => c.SimultaneousDefensiveFire);
+		public static readonly PropertyInfo<bool> SimultaneousDefensiveFireProperty = RegisterProperty<bool>(c => c.DefensiveFireSimultaneousDamage);
 		/// <Summary>
-		/// Gets or sets the SimultaneousDefensiveFire value.
+		/// Gets or sets the DefensiveFireSimultaneousDamage value.
 		/// </Summary>
-		public bool SimultaneousDefensiveFire
+		public bool DefensiveFireSimultaneousDamage
 		{
 			get { return GetProperty(SimultaneousDefensiveFireProperty); }
-			set { SetProperty(SimultaneousDefensiveFireProperty, value); }
+			private set { SetProperty(SimultaneousDefensiveFireProperty, value); }
 		}
 
 		public static readonly PropertyInfo<FireAttack> DefensiveFireAttackProperty = RegisterProperty<FireAttack>(c => c.DefensiveFireAttack);
@@ -575,7 +575,7 @@ namespace FlyingColors
 				context.AddOutValue(ChanceOfFireProperty, chanceOfFire);
 
 				decimal rakeMultiplier = 1m;
-				if (fireAttack.IsRake) 
+				if (fireAttack.IsRake)
 				{
 					rakeMultiplier = fireAttack.RakeType == RakeType.Bow ? 1.5m : 2m;
 				}
@@ -759,6 +759,7 @@ namespace FlyingColors
 		private void Child_Create(BattleShip target)
 		{
 			LoadProperty<BattleShip>(TargetShipProperty, target);
+			LoadProperty<FireAttack>(DefensiveFireAttackProperty, null);
 			LoadProperty<bool>(CanDefensiveFireProperty, false);
 			CalculateModifiedRate();
 		}
