@@ -463,77 +463,49 @@ namespace FlyingColors
 			{
 				var fireAttack = (FireAttack)context.Target;
 				int modifier = 0;
-				if (fireAttack.Targetting == TargetArea.Rigging)
-				{
-					if (fireAttack.FiringShip.Nationality == Nationality.French)
-					{
-						modifier++;
-					}
-					if (fireAttack.WeatherGauge == WeatherGauge.Windward)
-					{
-						modifier++;
-					}
-					if (fireAttack.WeatherGauge == WeatherGauge.Leeward)
-					{
-						modifier--;
-					}
-					if (fireAttack.TargetShip.FullSails)
-					{
-						modifier += 2;
-					}
-					if (fireAttack.TargetShip.Weather == Weather.Calm)
-					{
-						modifier -= 2;
-					}
-				}
-				if (fireAttack.Targetting == TargetArea.Hull)
-				{
-					if (fireAttack.FiringShip.Nationality == Nationality.British)
-					{
-						modifier++;
-					}
-					if (fireAttack.WeatherGauge == WeatherGauge.Leeward)
-					{
-						modifier++;
-					}
-					if (fireAttack.WeatherGauge == WeatherGauge.Windward)
-					{
-						modifier--;
-					}
-				}
-				if (fireAttack.FiringShip.Anchored)
-				{
-					modifier += 2;
-				}
+				modifier = ApplyRiggingModifiers(fireAttack, modifier);
+				modifier = ApplyHullModifiers(fireAttack, modifier);
+				modifier = ApplyAnchoredModifier(fireAttack, modifier);
 				// TODO: battery firing!
-				if (fireAttack.OutsideBroadsideArc)
-				{
-					modifier--;
-				}
-				if (fireAttack.DownOwnRakeLine)
-				{
-					modifier -= 3;
-				}
-				if (modifier > 5)
-				{
-					modifier = 5;
-				}
-				int modifiedDieRoll = fireAttack.DieRoll + modifier;
-				int excessDieRoll = 0;
-				if (modifiedDieRoll > 12)
-				{
-					int div = Math.DivRem(modifiedDieRoll, 12, out excessDieRoll);
-					modifiedDieRoll = 12;
-				}
-				else if (modifiedDieRoll < -1)
-				{
-					modifiedDieRoll = -1;
-				}
+				modifier = ApplyFiringArcModifiers(fireAttack, modifier);
+				modifier = EnsureModifierLessThanOrEqualToFive(modifier);
+
+				int modifiedDieRoll;
+				int excessDieRoll;
+				CalculateModifiedDieRoll(fireAttack, modifier, out modifiedDieRoll, out excessDieRoll);
 				context.AddOutValue(ModifiedDieRollProperty, modifiedDieRoll);
 				context.AddOutValue(ModifiedDieRollExcessProperty, excessDieRoll);
 
-				Damage damage = new Damage("-");
-				Damage excessDamage = new Damage("-");
+				Damage damage;
+				Damage excessDamage;
+				CalculateDamage(fireAttack, modifiedDieRoll, excessDieRoll, out damage, out excessDamage);
+				context.AddOutValue(DamageProperty, damage);
+				context.AddOutValue(DamageExcessProperty, excessDamage);
+
+				bool chanceOfFire = damage.ChanceOfFire || excessDamage.ChanceOfFire;
+				context.AddOutValue(ChanceOfFireProperty, chanceOfFire);
+
+				decimal rakeMultiplier = 1m;
+				if (fireAttack.IsRake)
+				{
+					rakeMultiplier = fireAttack.RakeType == RakeType.Bow ? 1.5m : 2m;
+				}
+				int pointBlankMarineDamageModifier = fireAttack.IsPointBlank ? 2 : 1;
+
+				int totalHullDamage = (int)((decimal)(damage.Hull + excessDamage.Hull) * rakeMultiplier);
+				int totalRiggingDamage = damage.Rigging + excessDamage.Rigging;
+				int totalMarineDamage = (damage.Marines + excessDamage.Marines) * pointBlankMarineDamageModifier;
+				int totalDamage = totalHullDamage + totalRiggingDamage;
+				context.AddOutValue(TotalHullDamageProperty, totalHullDamage);
+				context.AddOutValue(TotalRiggingDamageProperty, totalRiggingDamage);
+				context.AddOutValue(TotalMarineDamageProperty, totalMarineDamage);
+				context.AddOutValue(TotalDamageProperty, totalDamage);
+			}
+
+			private static void CalculateDamage(FireAttack fireAttack, int modifiedDieRoll, int excessDieRoll, out Damage damage, out Damage excessDamage)
+			{
+				damage = new Damage("-");
+				excessDamage = new Damage("-");
 				if (fireAttack.TargetShip.IsSmallVessel)
 				{
 					if (fireAttack.Targetting == TargetArea.Rigging)
@@ -568,27 +540,100 @@ namespace FlyingColors
 							fireAttack.ModifiedFirePower, excessDieRoll);
 					}
 				}
-				context.AddOutValue(DamageProperty, damage);
-				context.AddOutValue(DamageExcessProperty, excessDamage);
+			}
 
-				bool chanceOfFire = damage.ChanceOfFire || excessDamage.ChanceOfFire;
-				context.AddOutValue(ChanceOfFireProperty, chanceOfFire);
-
-				decimal rakeMultiplier = 1m;
-				if (fireAttack.IsRake)
+			private static void CalculateModifiedDieRoll(FireAttack fireAttack, int modifier, out int modifiedDieRoll, out int excessDieRoll)
+			{
+				modifiedDieRoll = fireAttack.DieRoll + modifier;
+				excessDieRoll = -1;
+				if (modifiedDieRoll > 12)
 				{
-					rakeMultiplier = fireAttack.RakeType == RakeType.Bow ? 1.5m : 2m;
+					int div = Math.DivRem(modifiedDieRoll, 12, out excessDieRoll);
+					modifiedDieRoll = 12;
 				}
-				int pointBlankMarineDamageModifier = fireAttack.IsPointBlank ? 2 : 1;
+				else if (modifiedDieRoll < -1)
+				{
+					modifiedDieRoll = -1;
+				}
+			}
 
-				int totalHullDamage = (int)((decimal)(damage.Hull + excessDamage.Hull) * rakeMultiplier);
-				int totalRiggingDamage = damage.Rigging + excessDamage.Rigging;
-				int totalMarineDamage = (damage.Marines + excessDamage.Marines) * pointBlankMarineDamageModifier;
-				int totalDamage = totalHullDamage + totalRiggingDamage;
-				context.AddOutValue(TotalHullDamageProperty, totalHullDamage);
-				context.AddOutValue(TotalRiggingDamageProperty, totalRiggingDamage);
-				context.AddOutValue(TotalMarineDamageProperty, totalMarineDamage);
-				context.AddOutValue(TotalDamageProperty, totalDamage);
+			private static int EnsureModifierLessThanOrEqualToFive(int modifier)
+			{
+				if (modifier > 5)
+				{
+					modifier = 5;
+				}
+				return modifier;
+			}
+
+			private static int ApplyFiringArcModifiers(FireAttack fireAttack, int modifier)
+			{
+				if (fireAttack.OutsideBroadsideArc)
+				{
+					modifier--;
+				}
+				if (fireAttack.DownOwnRakeLine)
+				{
+					modifier -= 3;
+				}
+				return modifier;
+			}
+
+			private static int ApplyAnchoredModifier(FireAttack fireAttack, int modifier)
+			{
+				if (fireAttack.FiringShip.Anchored)
+				{
+					modifier += 2;
+				}
+				return modifier;
+			}
+
+			private static int ApplyHullModifiers(FireAttack fireAttack, int modifier)
+			{
+				if (fireAttack.Targetting == TargetArea.Hull)
+				{
+					if (fireAttack.FiringShip.Nationality == Nationality.British)
+					{
+						modifier++;
+					}
+					if (fireAttack.WeatherGauge == WeatherGauge.Leeward)
+					{
+						modifier++;
+					}
+					if (fireAttack.WeatherGauge == WeatherGauge.Windward)
+					{
+						modifier--;
+					}
+				}
+				return modifier;
+			}
+
+			private static int ApplyRiggingModifiers(FireAttack fireAttack, int modifier)
+			{
+				if (fireAttack.Targetting == TargetArea.Rigging)
+				{
+					if (fireAttack.FiringShip.Nationality == Nationality.French)
+					{
+						modifier++;
+					}
+					if (fireAttack.WeatherGauge == WeatherGauge.Windward)
+					{
+						modifier++;
+					}
+					if (fireAttack.WeatherGauge == WeatherGauge.Leeward)
+					{
+						modifier--;
+					}
+					if (fireAttack.TargetShip.FullSails)
+					{
+						modifier += 2;
+					}
+					if (fireAttack.TargetShip.Weather == Weather.Calm)
+					{
+						modifier -= 2;
+					}
+				}
+				return modifier;
 			}
 		}
 
