@@ -10,35 +10,47 @@
              d:DesignHeight="300" d:DesignWidth="300">
 
 	<Grid>
-		<Grid.ColumnDefinitions>
+		<!--<Grid.ColumnDefinitions>
 			<ColumnDefinition></ColumnDefinition>
 			<ColumnDefinition></ColumnDefinition>
-		</Grid.ColumnDefinitions>
-		<Border Grid.Column="0"
+		</Grid.ColumnDefinitions>-->
+		<Grid.RowDefinitions>
+			<RowDefinition></RowDefinition>
+			<RowDefinition></RowDefinition>
+			<RowDefinition></RowDefinition>
+		</Grid.RowDefinitions>
+		<Border
+			Grid.Column="0"
+			Grid.Row="0"
 			CornerRadius="4,4,4,4"
-			BorderBrush="#193441"
-			Background="#FCFFF5"
+			BorderBrush="Black"
+			Background="White"
 			BorderThickness="0,0,0,0"
 			Margin="5"
 			Padding="5">
-			<StackPanel>
-				<ItemsControl
+			<ItemsControl
 					prism:RegionManager.RegionName="BattleGroupARegion"/>
 					<!--prism:RegionManager.RegionContext="{Binding Path=GroupAViewModel}" />-->
-			</StackPanel>
+			
 		</Border>
-		<Border Grid.Column="1"
+		<GridSplitter 
+			Grid.Column="0"
+			Grid.Row="1"
+			Height="10"
+			Width="10">			
+		</GridSplitter>
+		<Border
+			Grid.Column="0"
+			Grid.Row="2"
 			CornerRadius="4,4,4,4"
-			BorderBrush="#193441"
-			Background="#FCFFF5"
+			BorderBrush="Black"
+			Background="White"
 			BorderThickness="0,0,0,0"
 			Margin="5"
 			Padding="5">
-			<StackPanel>
-				<ItemsControl
-					prism:RegionManager.RegionName="BattleGroupBRegion"/>
-					<!--prism:RegionManager.RegionContext="{Binding Path=GroupBViewModel}"/>-->
-			</StackPanel>
+			<ItemsControl
+				prism:RegionManager.RegionName="BattleGroupBRegion"/>
+					<!--prism:RegionManager.RegionContext="{Binding Path=GroupBViewModel}"/>-->			
 		</Border>
 	</Grid>	
 </UserControl>
