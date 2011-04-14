@@ -27,8 +27,8 @@
 		<Border
 			Grid.Row="2"
 			CornerRadius="4,4,4,4"
-			BorderBrush="#193441"
-			Background="#FCFFF5"
+			BorderBrush="Black"
+			Background="White"
 			BorderThickness="2,2,2,2"
 			Margin="10,0,10,10"
 			Padding="5">
