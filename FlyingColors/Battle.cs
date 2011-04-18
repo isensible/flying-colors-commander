@@ -122,6 +122,16 @@ namespace FlyingColors
 			set { SetProperty(BattleGroupBProperty, value); }
 		}
 
+		public BattleShip GetShip(string name)
+		{
+			var ship = BattleGroupA.GetShip(name);
+			if (ship == null)
+			{
+				ship = BattleGroupB.GetShip(name);
+			}
+			return ship;
+		}
+
 		#endregion
 
 		#region Factory Methods

@@ -223,6 +223,11 @@ namespace FlyingColors
 		#endregion
 
 		#region Broadsides Fired
+		public bool CanFirePort
+		{
+			get { return !FiredPort; }
+		}
+
 		public static PropertyInfo<bool> FiredPortProperty = RegisterProperty<bool>(c => c.FiredPort);
 		public bool FiredPort
 		{
@@ -235,6 +240,29 @@ namespace FlyingColors
 		{
 			get { return GetProperty(FirstPortFiredProperty); }
 			set { SetProperty(FirstPortFiredProperty, value); }
+		}
+
+		public FireAttack FirePort()
+		{
+			if (CanFirePort)
+			{
+				return FireAttack.NewFireAttack(this);
+			}
+			throw new InvalidOperationException("Cannot fire port. Already fired port this turn.");
+		}
+
+		public bool CanFireStarboard
+		{
+			get { return !FiredStarboard; }
+		}
+
+		public FireAttack FireStarboard()
+		{
+			if (CanFireStarboard)
+			{
+				return FireAttack.NewFireAttack(this);
+			}
+			throw new InvalidOperationException("Cannot fire starboard. Already fired starboard this turn.");
 		}
 
 		public static PropertyInfo<bool> FiredStarboardProperty = RegisterProperty<bool>(c => c.FiredStarboard);

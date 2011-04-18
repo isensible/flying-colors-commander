@@ -66,12 +66,12 @@ namespace FlyingColors
 
 		#region Firepower Determination
 
-		internal RelativeRate ShiftUp()
+		public RelativeRate ShiftUp()
 		{
 			return RelativeRate.NewRate(RelativeRateSymbol.ShiftUp(this.Symbol), this.Color, this.Shape);
 		}
 
-		internal object ShiftDown()
+		public RelativeRate ShiftDown()
 		{
 			return RelativeRate.NewRate(RelativeRateSymbol.ShiftDown(this.Symbol), this.Color, this.Shape);
 		}

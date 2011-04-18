@@ -151,7 +151,7 @@ namespace FlyingColors
 			rate1Heavy.Add(8, new FirePower(4));
 			rate1Heavy.Add(9, new FirePower(3));
 			rate1Heavy.Add(10, new FirePower(2));
-			firePowerTable.Add(RelativeRateSymbol.GunBrig, rate1Heavy);
+			firePowerTable.Add(RelativeRateSymbol.FirstRateHeavy, rate1Heavy);
 		}
 
 		private FirePower(int value, bool isShaded)
@@ -176,29 +176,25 @@ namespace FlyingColors
 			return Value.ToString();
 		}
 
-		internal FirePower Increment()
+		public FirePower Increment()
 		{
-			return new FirePower(this.Value++, this.IsShaded);
+			return new FirePower(this.Value + 1, this.IsShaded);
 		}
 
-		internal FirePower CopySelf()
+		public FirePower CopySelf()
 		{
 			return new FirePower(this.Value, this.IsShaded);
 		}
 
-		internal FirePower Decrement()
+		public FirePower Decrement()
 		{
-			return new FirePower(this.Value--, this.IsShaded);
+			return new FirePower(this.Value - 1, this.IsShaded);
 		}
 
-		internal FirePower IncrementBy(int p)
+		public FirePower IncrementBy(int p)
 		{
-			var fp = CopySelf();
-			for (int i = 0; i < p; ++i)
-			{
-				fp = Increment();
-			}
-			return fp;
+			int fp = this.Value + p;
+			return new FirePower(fp, this.IsShaded);
 		}
 	}
 }

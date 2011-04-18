@@ -33,6 +33,11 @@ namespace FlyingColors
 			set { SetProperty(ShipsProperty, value); }
 		}
 
+		public BattleShip GetShip(string name)
+		{
+			return Ships.FirstOrDefault<BattleShip>(x => x.Name == name);
+		}
+
 		/// <summary>
 		/// Creates a new BattleGroup from a grouping of fleets.
 		/// </summary>

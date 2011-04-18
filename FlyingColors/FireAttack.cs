@@ -93,12 +93,16 @@ namespace FlyingColors
 				}
 				else if (fireAttack.Range == 0)
 				{
-					context.OutputPropertyValues.Add(IsPointBlankProperty, true);
+					context.AddOutValue(IsPointBlankProperty, true);
+				}
+				else
+				{
+					context.AddOutValue(IsPointBlankProperty, false);
 				}
 				if (fireAttack.Range >= 0 && fireAttack.Range <= 10)
 				{
 					context.AddOutValue(BaseFirePowerProperty,
-						FirePower.GetBase(fireAttack.ModifiedRate, fireAttack.Range));
+						FirePower.GetBase(fireAttack.ModifiedRate, fireAttack.Range));					
 				}
 			}
 		}
@@ -476,8 +480,8 @@ namespace FlyingColors
 				context.AddOutValue(ModifiedDieRollProperty, modifiedDieRoll);
 				context.AddOutValue(ModifiedDieRollExcessProperty, excessDieRoll);
 
-				Damage damage;
-				Damage excessDamage;
+				Damage damage = new Damage("-");
+				Damage excessDamage = new Damage("-");
 				CalculateDamage(fireAttack, modifiedDieRoll, excessDieRoll, out damage, out excessDamage);
 				context.AddOutValue(DamageProperty, damage);
 				context.AddOutValue(DamageExcessProperty, excessDamage);
@@ -512,15 +516,21 @@ namespace FlyingColors
 					{
 						damage = HitResults.GetSmallVesselRiggingDamage(
 							fireAttack.ModifiedFirePower, modifiedDieRoll);
-						excessDamage = HitResults.GetSmallVesselHullDamage(
-							fireAttack.ModifiedFirePower, excessDieRoll);
+						if (excessDieRoll >= 0)
+						{
+							excessDamage = HitResults.GetSmallVesselHullDamage(
+								fireAttack.ModifiedFirePower, excessDieRoll);
+						}
 					}
 					if (fireAttack.Targetting == TargetArea.Hull)
 					{
 						damage = HitResults.GetSmallVesselHullDamage(
-							fireAttack.ModifiedFirePower, fireAttack.ModifiedDieRoll);
-						excessDamage = HitResults.GetSmallVesselRiggingDamage(
-							fireAttack.ModifiedFirePower, excessDieRoll);
+							fireAttack.ModifiedFirePower, modifiedDieRoll);
+						if (excessDieRoll >= 0)
+						{
+							excessDamage = HitResults.GetSmallVesselRiggingDamage(
+								fireAttack.ModifiedFirePower, excessDieRoll);
+						}					
 					}
 				}
 				else
@@ -528,16 +538,22 @@ namespace FlyingColors
 					if (fireAttack.Targetting == TargetArea.Rigging)
 					{
 						damage = HitResults.GetRiggingDamage(
-							fireAttack.ModifiedFirePower, fireAttack.ModifiedDieRoll);
-						excessDamage = HitResults.GetHullDamage(
-							fireAttack.ModifiedFirePower, excessDieRoll);
+							fireAttack.ModifiedFirePower, modifiedDieRoll);
+						if (excessDieRoll >= 0)
+						{
+							excessDamage = HitResults.GetHullDamage(
+								fireAttack.ModifiedFirePower, excessDieRoll);
+						}
 					}
 					if (fireAttack.Targetting == TargetArea.Hull)
 					{
 						damage = HitResults.GetHullDamage(
-							fireAttack.ModifiedFirePower, fireAttack.ModifiedDieRoll);
-						excessDamage = HitResults.GetRiggingDamage(
-							fireAttack.ModifiedFirePower, excessDieRoll);
+							fireAttack.ModifiedFirePower, modifiedDieRoll);
+						if (excessDieRoll >= 0)
+						{
+							excessDamage = HitResults.GetRiggingDamage(
+								fireAttack.ModifiedFirePower, excessDieRoll);
+						}
 					}
 				}
 			}
@@ -784,11 +800,6 @@ namespace FlyingColors
 			return DataPortal.Create<FireAttack>(firing);
 		}
 
-		private static FireAttack NewDefensiveFireAttack(BattleShip target)
-		{
-			return DataPortal.CreateChild<FireAttack>(target);
-		}
-
 		#endregion
 
 		#region Data Portal
@@ -796,19 +807,8 @@ namespace FlyingColors
 		private void DataPortal_Create(BattleShip firing)
 		{
 			LoadProperty<BattleShip>(FiringShipProperty, firing);
-			LoadProperty<bool>(CanDefensiveFireProperty, true);
-			LoadProperty<FireAttack>(DefensiveFireAttackProperty, FireAttack.NewDefensiveFireAttack(firing));
 			CalculateModifiedRate();
 		}
-
-		private void Child_Create(BattleShip target)
-		{
-			LoadProperty<BattleShip>(TargetShipProperty, target);
-			LoadProperty<FireAttack>(DefensiveFireAttackProperty, null);
-			LoadProperty<bool>(CanDefensiveFireProperty, false);
-			CalculateModifiedRate();
-		}
-
 
 		#endregion
 	}
