@@ -45,7 +45,7 @@
 		AutoGenerateColumns="False"
 		ClipToBounds="True"
 		SelectionMode="Single"
-		SelectionUnit="CellOrRowHeader"
+		SelectionUnit="FullRow"
 		SelectionChanged="shipGrid_SelectionChanged"
 		SelectedCellsChanged="shipGrid_SelectedCellsChanged"
 		CanUserAddRows="False"
@@ -65,8 +65,7 @@
 		ScrollViewer.HorizontalScrollBarVisibility="Auto"
 		Background="White"
 		Foreground="Black"
-		Style="{DynamicResource PrettierDataGridStyle}">
-		<!-- RowBackground="White"-->
+		Style="{DynamicResource PrettierDataGridStyle}">		
 
 		<DataGrid.Resources>
 			<!--<SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="RoyalBlue" />
@@ -84,7 +83,8 @@
 							<Style.Triggers>
 								<!-- Highlight a grid row as the mouse passes over -->
 								<Trigger Property="IsMouseOver" Value="True">
-									<Setter Property="Background" Value="Lavender" />
+									<Setter Property="Background" Value="SandyBrown" />
+									<Setter Property="BorderBrush" Value="SandyBrown" />
 								</Trigger>
 							</Style.Triggers>
 						</Style>
@@ -98,8 +98,8 @@
 							<Style.Triggers>
 								<!-- Highlight selected rows -->
 								<Trigger Property="IsSelected" Value="True">
-									<Setter Property="Background" Value="Lavender" />
-									<Setter Property="BorderBrush" Value="Lavender" />
+									<Setter Property="Background" Value="LightGreen" />
+									<Setter Property="BorderBrush" Value="LightGreen" />
 									<Setter Property="Foreground" Value="Black" />
 								</Trigger>
 							</Style.Triggers>
@@ -141,7 +141,7 @@
 				MaxWidth="160"
 				MinWidth="160"
 				IsReadOnly="True">
-				<DataGridTextColumn.ElementStyle>
+				<!--<DataGridTextColumn.ElementStyle>
 					<Style TargetType="{x:Type TextBlock}">
 						<Setter Property="ToolTip" Value="The ship's name" />
 						<Setter Property="Background" Value="White" />
@@ -149,7 +149,7 @@
 						<Setter Property="TextAlignment" Value="Left" />
 						<Setter Property="Foreground" Value="Black" />
 					</Style>
-				</DataGridTextColumn.ElementStyle>
+				</DataGridTextColumn.ElementStyle>-->
 			</DataGridTextColumn>
 			
 			<DataGridTextColumn
@@ -158,7 +158,7 @@
 				MaxWidth="34"
 				MinWidth="34"
 				IsReadOnly="True">
-				<DataGridTextColumn.ElementStyle>
+				<!--<DataGridTextColumn.ElementStyle>
 					<Style TargetType="{x:Type TextBlock}">
 						<Setter Property="ToolTip" Value="The current rate" />
 						<Setter Property="Background" Value="Yellow" />
@@ -166,7 +166,7 @@
 						<Setter Property="TextAlignment" Value="Center" />
 						<Setter Property="Foreground" Value="Black" />
 					</Style>
-				</DataGridTextColumn.ElementStyle>
+				</DataGridTextColumn.ElementStyle>-->
 			</DataGridTextColumn>
 			
 			<DataGridTemplateColumn
