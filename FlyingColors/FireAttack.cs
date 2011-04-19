@@ -102,7 +102,7 @@ namespace FlyingColors
 				if (fireAttack.Range >= 0 && fireAttack.Range <= 10)
 				{
 					context.AddOutValue(BaseFirePowerProperty,
-						FirePower.GetBase(fireAttack.ModifiedRate, fireAttack.Range));					
+						FirePower.GetBase(fireAttack.ModifiedRate, fireAttack.Range));
 				}
 			}
 		}
@@ -530,7 +530,7 @@ namespace FlyingColors
 						{
 							excessDamage = HitResults.GetSmallVesselRiggingDamage(
 								fireAttack.ModifiedFirePower, excessDieRoll);
-						}					
+						}
 					}
 				}
 				else
@@ -766,8 +766,10 @@ namespace FlyingColors
 
 		public void ApplyDamage()
 		{
-			FiringShip.ApplyDamage(Damage);
-			FiringShip.ApplyDamage(DamageExcess);
+			TargetShip.HullHits += TotalHullDamage;
+			TargetShip.RiggingHits += TotalRiggingDamage;
+			TargetShip.MarineHits += TotalMarineDamage;
+			TargetShip.OnFire = TargetShip.OnFire ? true : SetTargetShipOnFire;
 		}
 
 		public static PropertyInfo<bool> ChanceOfFireProperty = RegisterProperty<bool>(c => c.ChanceOfFire);

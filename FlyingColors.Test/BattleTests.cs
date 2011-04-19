@@ -23,7 +23,7 @@ namespace FlyingColors.Test
 
 			var fireAttack = ceasar.FirePort();
 			Assert.NotNull(fireAttack);
-			
+
 			// check modified rate 
 			RelativeRate expectedModifiedRate = RelativeRate.ThirdRate;
 			Assert.Equal<string>(expectedModifiedRate.Symbol, fireAttack.ModifiedRate.Symbol);
@@ -32,7 +32,7 @@ namespace FlyingColors.Test
 			var formidable = battle.GetShip("Formidable");
 			Assert.NotNull(formidable);
 			fireAttack.TargetShip = formidable;
-			Assert.Same(formidable, fireAttack.TargetShip);			
+			Assert.Same(formidable, fireAttack.TargetShip);
 
 			// enter range
 			int range = 4;
@@ -63,7 +63,7 @@ namespace FlyingColors.Test
 
 			// select wind
 			fireAttack.WeatherGauge = WeatherGauge.Leeward;
-			
+
 			// rake?
 			fireAttack.IsRake = false;
 			Assert.Equal<RakeType>(RakeType.None, fireAttack.RakeType);
@@ -80,7 +80,9 @@ namespace FlyingColors.Test
 			Assert.Equal<int>(0, fireAttack.TotalRiggingDamage);
 			Assert.Equal<int>(0, fireAttack.TotalMarineDamage);
 			Assert.Equal<bool>(false, fireAttack.ChanceOfFire);
-						
+
+			fireAttack.ApplyDamage();
+
 		}
 	}
 }

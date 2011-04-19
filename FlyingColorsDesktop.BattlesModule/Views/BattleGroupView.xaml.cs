@@ -35,9 +35,33 @@ namespace FlyingColorsDesktop.Views
 
 		private void shipGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
 		{
-			var viewModel = (BattleGroupViewModel)DataContext;
-			viewModel.SelectedShip = (BattleShip)e.AddedItems[0];	
+			if (e.AddedItems.Count > 0)
+			{
+				var viewModel = (BattleGroupViewModel)DataContext;
+				viewModel.SelectedShip = (BattleShip)e.AddedItems[0];
+			}
 		}
+
+		private void shipGrid_SelectedCellsChanged(object sender, SelectedCellsChangedEventArgs e)
+		{
+			//Get the newly selected cells
+			IList<DataGridCellInfo> selectedcells = e.AddedCells;
+
+			var viewModel = (BattleGroupViewModel)DataContext;
+
+			//Get the value of each newly selected cell
+			//foreach (DataGridCellInfo di in selectedcells)
+			//{
+				//Cast the DataGridCellInfo.Item to the source object type
+				//In this case the ItemsSource is a DataTable and individual items are DataRows
+			if (selectedcells.Count > 0)
+			{
+				var ship = (BattleShip)selectedcells[0].Item;
+				viewModel.SelectedShip = ship;
+			}
+			//}
+		}
+
 
 		private void Details_Click(object sender, RoutedEventArgs e)
 		{
@@ -74,6 +98,11 @@ namespace FlyingColorsDesktop.Views
 			catch (System.Exception)
 			{
 			}
+		}
+
+		private void Fire_Click(object sender, RoutedEventArgs e)
+		{
+			MessageBox.Show("Fire!");
 		}
 	}
 }
