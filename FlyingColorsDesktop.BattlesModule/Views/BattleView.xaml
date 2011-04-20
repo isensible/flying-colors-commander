@@ -11,17 +11,17 @@
 
 	<Grid>
 		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width="*"></ColumnDefinition>
-			<!--<ColumnDefinition></ColumnDefinition>-->
+			<ColumnDefinition Width="Auto"></ColumnDefinition>			
 		</Grid.ColumnDefinitions>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="32"></RowDefinition>
 			<RowDefinition Height="Auto"></RowDefinition>
 			<RowDefinition Height="Auto"></RowDefinition>
-			<RowDefinition Height="*"></RowDefinition>
+			<RowDefinition Height="Auto"></RowDefinition>			
 		</Grid.RowDefinitions>
 		<Border
 			Grid.Column="0"
+			Grid.ColumnSpan="1"
 			Grid.Row="0"
 			CornerRadius="4,4,4,4"
 			BorderBrush="Black"
@@ -48,14 +48,14 @@
 			BorderThickness="0,0,0,0"
 			Margin="5"
 			Padding="5">
-			<ContentControl ClipToBounds="True"
-					prism:RegionManager.RegionName="BattleGroupARegion"/>
-					<!--prism:RegionManager.RegionContext="{Binding Path=GroupAViewModel}" />-->
-			
+			<ContentControl
+				ClipToBounds="True"
+				prism:RegionManager.RegionName="BattleGroupARegion"/>
 		</Border>
 		<GridSplitter 
 			Grid.Column="0"
-			Grid.Row="2"
+			Grid.ColumnSpan="1"
+			Grid.Row="2"			
 			Height="10"
 			Width="Auto"
 			ResizeDirection="Rows"
@@ -73,9 +73,9 @@
 			BorderThickness="0,0,0,0"
 			Margin="5"
 			Padding="5">
-			<ContentControl ClipToBounds="True"
-				prism:RegionManager.RegionName="BattleGroupBRegion"/>
-					<!--prism:RegionManager.RegionContext="{Binding Path=GroupBViewModel}"/>-->			
-		</Border>
+			<ContentControl
+				ClipToBounds="True"
+				prism:RegionManager.RegionName="BattleGroupBRegion"/>				
+		</Border>		
 	</Grid>	
 </UserControl>

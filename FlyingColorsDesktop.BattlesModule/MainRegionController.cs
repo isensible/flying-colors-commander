@@ -51,7 +51,6 @@ namespace FlyingColorsDesktop
 				BattleGroupViewModel groupBModel = (BattleGroupViewModel)battleGroupBView.DataContext;
 				groupBModel.Model = battle.BattleGroupB;
 				scopedRegionManager.AddToRegion("BattleGroupBRegion", battleGroupBView); 
-
 			}
 			else
 			{

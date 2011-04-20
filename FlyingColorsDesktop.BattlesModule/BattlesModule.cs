@@ -33,6 +33,8 @@ namespace FlyingColorsDesktop
 			_container.RegisterType<BattleGroupViewModel>();
 			//_regionManager.RegisterViewWithRegion("BattleGroupARegion", typeof(BattleGroupView));
 			//_regionManager.RegisterViewWithRegion("BattleGroupBRegion", typeof(BattleGroupView));
+			_container.RegisterType<FireAttackView>();
+			_container.RegisterType<FireAttackViewModel>();
 
 			
 		}
