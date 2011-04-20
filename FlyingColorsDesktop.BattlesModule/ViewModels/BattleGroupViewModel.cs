@@ -22,18 +22,12 @@ namespace FlyingColorsDesktop.ViewModels
 			_container = container;
 			_regionManager = regionManager;
 			_eventAggregator = eventAggregator;
-			ManageObjectLifetime = false;
-
-			
-			
+			ManageObjectLifetime = false;			
 		}
 
 		protected override void OnModelChanged(BattleGroup oldValue, BattleGroup newValue)
 		{
-			base.OnModelChanged(oldValue, newValue);
-			var fireAttackRegion = _regionManager.Regions["FireAttackRegion"];
-			var fireAttackView = _container.Resolve<FireAttackView>();
-			var scopedRegionManager = fireAttackRegion.Add(fireAttackView, "FireAttack", true);
+			base.OnModelChanged(oldValue, newValue);			
 		}
 
 		private BattleShip _selectedShip = null;
@@ -42,10 +36,27 @@ namespace FlyingColorsDesktop.ViewModels
 			get { return _selectedShip; }
 			set
 			{
-				if (_selectedShip.Name != value.Name)
+				if (_selectedShip == null ||
+					_selectedShip.Name != value.Name)
 				{
 					_selectedShip = value;
 
+					if (ScopedRegionManager != null)
+					{
+						var fireAttackRegion = ScopedRegionManager.Regions["FireAttackRegion"];
+						var fireAttackView = (FireAttackView)fireAttackRegion.GetView(_selectedShip.Name);
+						if (fireAttackView == null)
+						{
+							fireAttackView = _container.Resolve<FireAttackView>();
+							var fireAttackViewModel = (FireAttackViewModel)fireAttackView.DataContext;
+							fireAttackViewModel.Model = FireAttack.NewFireAttack(_selectedShip);
+							var scopedRegionManager = fireAttackRegion.Add(fireAttackView, _selectedShip.Name, true);
+						}
+						else
+						{
+							fireAttackRegion.Activate(fireAttackView);
+						}
+					}
 					_eventAggregator.GetEvent<BattleShipSelectedEvent>().Publish(value);
 				}
 			}
@@ -56,5 +67,7 @@ namespace FlyingColorsDesktop.ViewModels
 			get;
 			set;
 		}
+
+		public IRegionManager ScopedRegionManager { get; set; }
 	}
 }

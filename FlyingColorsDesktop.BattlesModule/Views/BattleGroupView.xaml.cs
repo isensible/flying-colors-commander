@@ -104,5 +104,7 @@ namespace FlyingColorsDesktop.Views
 		{
 			MessageBox.Show("Fire!");
 		}
+
+		public Microsoft.Practices.Prism.Regions.IRegionManager ScopedRegionManager { get; set; }
 	}
 }

@@ -5,6 +5,7 @@ using System.Text;
 using Csla;
 using Csla.Rules;
 using Csla.Core;
+using System.ComponentModel;
 
 namespace FlyingColors
 {
@@ -15,6 +16,9 @@ namespace FlyingColors
 		/// <Summary>
 		/// Gets or sets the FiringShip value.
 		/// </Summary>
+		[Category("Attacker")]
+		[ReadOnly(true)]
+		[Browsable(true)]
 		public BattleShip FiringShip
 		{
 			get { return GetProperty(FiringShipProperty); }
@@ -25,6 +29,9 @@ namespace FlyingColors
 		/// <Summary>
 		/// Gets or sets the TargetShip value.
 		/// </Summary>
+		[Category("Defender")]
+		[ReadOnly(false)]
+		[Browsable(true)]
 		public BattleShip TargetShip
 		{
 			get { return GetProperty(TargetShipProperty); }
@@ -35,6 +42,9 @@ namespace FlyingColors
 		/// <summary>
 		/// The broadside from which the FiringShip is firing.
 		/// </summary>
+		[Category("Broadside")]
+		[ReadOnly(false)]
+		[Browsable(true)]
 		public Broadside FiringFrom
 		{
 			get { return GetProperty(FiringFromProperty); }
@@ -42,6 +52,9 @@ namespace FlyingColors
 		}
 
 		public static PropertyInfo<RakeType> RakeTypeProperty = RegisterProperty<RakeType>(c => c.RakeType);
+		[Category("Broadside")]
+		[ReadOnly(false)]
+		[Browsable(true)]
 		public RakeType RakeType
 		{
 			get { return GetProperty(RakeTypeProperty); }
@@ -49,6 +62,9 @@ namespace FlyingColors
 		}
 
 		public static PropertyInfo<bool> IsRakeProperty = RegisterProperty<bool>(c => c.IsRake);
+		[Category("Broadside")]
+		[ReadOnly(false)]
+		[Browsable(false)]
 		public bool IsRake
 		{
 			get { return GetProperty(IsRakeProperty); }
@@ -59,6 +75,9 @@ namespace FlyingColors
 		/// <Summary>
 		/// Gets or sets the Range value.
 		/// </Summary>
+		[Category("Defender")]
+		[ReadOnly(false)]
+		[Browsable(true)]
 		public int Range
 		{
 			get { return GetProperty(RangeProperty); }
@@ -69,6 +88,9 @@ namespace FlyingColors
 		/// <Summary>
 		/// Gets or sets the IsPointBlank value.
 		/// </Summary>
+		[Category("Defender")]
+		[ReadOnly(true)]	
+		[Browsable(false)]
 		public bool IsPointBlank
 		{
 			get { return GetProperty(IsPointBlankProperty); }
@@ -154,6 +176,7 @@ namespace FlyingColors
 		/// <Summary>
 		/// Gets or sets the CanDefensiveFire value.
 		/// </Summary>
+		[Browsable(false)]
 		public bool CanDefensiveFire
 		{
 			get { return GetProperty(CanDefensiveFireProperty); }
@@ -164,6 +187,7 @@ namespace FlyingColors
 		/// <Summary>
 		/// Gets or sets the DefensiveFire value.
 		/// </Summary>
+		[Browsable(false)]
 		public bool DefensiveFire
 		{
 			get { return GetProperty(DefensiveFireProperty); }
@@ -174,6 +198,7 @@ namespace FlyingColors
 		/// <Summary>
 		/// Gets or sets the DefensiveFireSimultaneousDamage value.
 		/// </Summary>
+		[Browsable(false)]
 		public bool DefensiveFireSimultaneousDamage
 		{
 			get { return GetProperty(SimultaneousDefensiveFireProperty); }
@@ -184,6 +209,7 @@ namespace FlyingColors
 		/// <Summary>
 		/// Gets or sets the DefensiveFireAttack value.
 		/// </Summary>
+		[Browsable(false)]
 		public FireAttack DefensiveFireAttack
 		{
 			get { return GetProperty(DefensiveFireAttackProperty); }
@@ -224,6 +250,9 @@ namespace FlyingColors
 		/// <Summary>
 		/// Gets or sets the ModifiedRate value.
 		/// </Summary>
+		[Category("Rate")]
+		[ReadOnly(true)]
+		[Browsable(true)]
 		public RelativeRate ModifiedRate
 		{
 			get { return GetProperty(ModifiedRateProperty); }
@@ -250,6 +279,9 @@ namespace FlyingColors
 		/// <Summary>
 		/// Gets or sets the PartialBroadside value.
 		/// </Summary>
+		[Category("Broadside")]
+		[ReadOnly(false)]
+		[Browsable(true)]
 		public bool PartialBroadside
 		{
 			get { return GetProperty(PartialBroadsideProperty); }
@@ -282,6 +314,9 @@ namespace FlyingColors
 		/// <Summary>
 		/// Gets or sets the DuringTack value.
 		/// </Summary>
+		[Category("Attacker")]
+		[ReadOnly(false)]
+		[Browsable(true)]
 		public bool DuringTack
 		{
 			get { return GetProperty(DuringTackProperty); }
@@ -318,6 +353,9 @@ namespace FlyingColors
 		/// <Summary>
 		/// Gets or sets the BaseFirePower value.
 		/// </Summary>
+		[Category("Fire Power")]
+		[ReadOnly(true)]
+		[Browsable(true)]
 		public FirePower BaseFirePower
 		{
 			get { return GetProperty(BaseFirePowerProperty); }
@@ -427,6 +465,9 @@ namespace FlyingColors
 		/// <Summary>
 		/// Gets or sets the ModifiedFirePower value.
 		/// </Summary>
+		[Category("Fire Power")]
+		[ReadOnly(true)]
+		[Browsable(true)]
 		public FirePower ModifiedFirePower
 		{
 			get { return GetProperty(ModifiedFirePowerProperty); }
@@ -441,6 +482,9 @@ namespace FlyingColors
 		/// <Summary>
 		/// Gets or sets the DieRoll value.
 		/// </Summary>
+		[Category("Hit Results")]
+		[ReadOnly(false)]
+		[Browsable(true)]
 		public int DieRoll
 		{
 			get { return GetProperty(DieRollProperty); }
@@ -657,6 +701,9 @@ namespace FlyingColors
 		/// <Summary>
 		/// Gets or sets the WeatherGauge value.
 		/// </Summary>
+		[Category("Defender")]
+		[ReadOnly(false)]
+		[Browsable(true)]
 		public WeatherGauge WeatherGauge
 		{
 			get { return GetProperty(WeatherGaugeProperty); }
@@ -667,6 +714,9 @@ namespace FlyingColors
 		/// <Summary>
 		/// Gets or sets the Targetting value.
 		/// </Summary>
+		[Category("Defender")]
+		[ReadOnly(false)]
+		[Browsable(true)]
 		public TargetArea Targetting
 		{
 			get { return GetProperty(TargettingProperty); }
@@ -677,6 +727,7 @@ namespace FlyingColors
 		/// <Summary>
 		/// Gets or sets the OutsideBroadsideArc value.
 		/// </Summary>
+		[Browsable(false)] // until small vessel support
 		public bool OutsideBroadsideArc
 		{
 			get { return GetProperty(OutsideBroadsideArcProperty); }
@@ -687,6 +738,7 @@ namespace FlyingColors
 		/// <Summary>
 		/// Gets or sets the DownOwnRakeLine value.
 		/// </Summary>
+		[Browsable(false)]
 		public bool DownOwnRakeLine
 		{
 			get { return GetProperty(DownOwnRakeLineProperty); }
@@ -697,6 +749,9 @@ namespace FlyingColors
 		/// <Summary>
 		/// Gets or sets the ModifiedDieRoll value.
 		/// </Summary>
+		[Category("Hit Results")]
+		[ReadOnly(true)]
+		[Browsable(true)]
 		public int ModifiedDieRoll
 		{
 			get { return GetProperty(ModifiedDieRollProperty); }
@@ -707,6 +762,9 @@ namespace FlyingColors
 		/// <Summary>
 		/// Gets or sets the Damage value.
 		/// </Summary>
+		[Category("Hit Results")]
+		[ReadOnly(true)]
+		[Browsable(true)]
 		public Damage Damage
 		{
 			get { return GetProperty(DamageProperty); }
@@ -714,6 +772,7 @@ namespace FlyingColors
 		}
 
 		public static PropertyInfo<int> ModifiedDieRollExcessProperty = RegisterProperty<int>(c => c.ModifiedDieRollExcess);
+		[Browsable(false)]
 		public int ModifiedDieRollExcess
 		{
 			get { return GetProperty(ModifiedDieRollExcessProperty); }
@@ -721,6 +780,9 @@ namespace FlyingColors
 		}
 
 		public static PropertyInfo<Damage> DamageExcessProperty = RegisterProperty<Damage>(c => c.DamageExcess);
+		[Category("Hit Results")]
+		[ReadOnly(true)]
+		[Browsable(true)]
 		public Damage DamageExcess
 		{
 			get { return GetProperty(DamageExcessProperty); }
@@ -731,6 +793,7 @@ namespace FlyingColors
 		/// <Summary>
 		/// Gets or sets the TotalHullDamage value.
 		/// </Summary>
+		[Browsable(false)]
 		public int TotalHullDamage
 		{
 			get { return GetProperty(TotalHullDamageProperty); }
@@ -741,6 +804,7 @@ namespace FlyingColors
 		/// <Summary>
 		/// Gets or sets the TotalRiggingDamage value.
 		/// </Summary>
+		[Browsable(false)]
 		public int TotalRiggingDamage
 		{
 			get { return GetProperty(TotalRiggingDamageProperty); }
@@ -748,6 +812,7 @@ namespace FlyingColors
 		}
 
 		public static PropertyInfo<int> TotalMarineDamageProperty = RegisterProperty<int>(c => c.TotalMarineDamage);
+		[Browsable(false)]
 		public int TotalMarineDamage
 		{
 			get { return GetProperty(TotalMarineDamageProperty); }
@@ -758,6 +823,7 @@ namespace FlyingColors
 		/// <Summary>
 		/// Gets or sets the TotalDamage value.
 		/// </Summary>
+		[Browsable(false)]
 		public int TotalDamage
 		{
 			get { return GetProperty(TotalDamageProperty); }
@@ -773,6 +839,7 @@ namespace FlyingColors
 		}
 
 		public static PropertyInfo<bool> ChanceOfFireProperty = RegisterProperty<bool>(c => c.ChanceOfFire);
+		[Browsable(false)]
 		public bool ChanceOfFire
 		{
 			get { return GetProperty(ChanceOfFireProperty); }
@@ -780,6 +847,7 @@ namespace FlyingColors
 		}
 
 		public static PropertyInfo<int> ChanceOfFireDieRollProperty = RegisterProperty<int>(c => c.ChanceOfFireDieRoll);
+		[Browsable(false)]
 		public int ChanceOfFireDieRoll
 		{
 			get { return GetProperty(ChanceOfFireDieRollProperty); }
@@ -787,6 +855,9 @@ namespace FlyingColors
 		}
 
 		public static PropertyInfo<bool> SetTargetShipOnFireProperty = RegisterProperty<bool>(c => c.SetTargetShipOnFire);
+		[Category("Hit Results")]
+		[ReadOnly(false)]
+		[Browsable(true)]
 		public bool SetTargetShipOnFire
 		{
 			get { return GetProperty(SetTargetShipOnFireProperty); }

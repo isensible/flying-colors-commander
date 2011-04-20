@@ -41,14 +41,17 @@
 
 	<Grid>
 		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width="Auto"></ColumnDefinition>
-			<ColumnDefinition Width="Auto"></ColumnDefinition>
+			<ColumnDefinition Width="*"></ColumnDefinition>
+			<ColumnDefinition Width="10"></ColumnDefinition>
+			<ColumnDefinition Width="*"></ColumnDefinition>
 		</Grid.ColumnDefinitions>
 		<Grid.RowDefinitions>
-			<RowDefinition Height="Auto"></RowDefinition>			
+			<RowDefinition Height="*"></RowDefinition>			
 		</Grid.RowDefinitions>
 
-		<DataGrid
+	<DataGrid
+			Grid.Column="0"
+			DockPanel.Dock="Left"
 			Name="shipGrid"
 			ItemsSource="{Binding Model.Ships}"
 			AutoGenerateColumns="False"
@@ -263,12 +266,31 @@
 		
 		</DataGrid>
 
+		<GridSplitter
+			Grid.Column="1"
+			Height="Auto"
+			Width="Auto"
+			ResizeDirection="Columns"
+			Margin="0"
+			HorizontalAlignment="Stretch"
+			VerticalAlignment="Stretch"
+			Foreground="RoyalBlue">
+		</GridSplitter>
+		
 		<ContentControl
+			Grid.Column="2"
 			ClipToBounds="True"
-			prism:RegionManager.RegionName="FireAttackRegion">
-			
+			Width="Auto"
+			Height="Auto"
+			HorizontalAlignment="Stretch"
+			VerticalAlignment="Stretch"
+			prism:RegionManager.RegionName="FireAttackRegion"
+			DockPanel.Dock="Right">			
 		</ContentControl>
 
+		
+
+	
 	</Grid>	
 		
 </UserControl>

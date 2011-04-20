@@ -41,16 +41,28 @@ namespace FlyingColorsDesktop
 			{
 				battleView = _container.Resolve<BattleView>();
 				var scopedRegionManager = mainRegion.Add(battleView, battle.Name, true);
-				
+
 				var battleGroupAView = _container.Resolve<BattleGroupView>();
 				BattleGroupViewModel groupAModel = (BattleGroupViewModel)battleGroupAView.DataContext;
 				groupAModel.Model = battle.BattleGroupA;
-				scopedRegionManager.AddToRegion("BattleGroupARegion", battleGroupAView);
+
+				var groupARegion = scopedRegionManager.Regions["BattleGroupARegion"];
+				var scopedGroupARegionManager =
+					groupARegion.Add(battleGroupAView, battle.BattleGroupA.BattleGroupId.ToString(), true);
+				battleGroupAView.ScopedRegionManager = scopedGroupARegionManager;
+				groupAModel.ScopedRegionManager = scopedGroupARegionManager;
+				//scopedRegionManager.AddToRegion("BattleGroupARegion", battleGroupAView);
 
 				var battleGroupBView = _container.Resolve<BattleGroupView>();
 				BattleGroupViewModel groupBModel = (BattleGroupViewModel)battleGroupBView.DataContext;
 				groupBModel.Model = battle.BattleGroupB;
-				scopedRegionManager.AddToRegion("BattleGroupBRegion", battleGroupBView); 
+
+				var groupBRegion = scopedRegionManager.Regions["BattleGroupBRegion"];
+				var scopedGroupBRegionManager =
+					groupBRegion.Add(battleGroupBView, battle.BattleGroupB.BattleGroupId.ToString(), true);
+				battleGroupBView.ScopedRegionManager = scopedGroupBRegionManager;
+				groupBModel.ScopedRegionManager = scopedGroupBRegionManager;
+				//scopedRegionManager.AddToRegion("BattleGroupBRegion", battleGroupBView); 
 			}
 			else
 			{

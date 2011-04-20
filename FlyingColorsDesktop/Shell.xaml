@@ -31,10 +31,11 @@
 			Background="White"
 			BorderThickness="2,2,2,2"
 			Margin="10,0,10,10"
-			Padding="5">
-			<StackPanel>
-				<ItemsControl prism:RegionManager.RegionName="MainRegion" />
-			</StackPanel>
+			Padding="5"
+			ClipToBounds="True">
+			<ContentControl
+				ClipToBounds="True"
+				prism:RegionManager.RegionName="MainRegion" />			
 		</Border>
 		<Label 
 			HorizontalAlignment="Left"

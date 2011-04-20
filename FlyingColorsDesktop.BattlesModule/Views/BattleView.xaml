@@ -11,13 +11,13 @@
 
 	<Grid>
 		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width="Auto"></ColumnDefinition>			
+			<ColumnDefinition Width="*"></ColumnDefinition>			
 		</Grid.ColumnDefinitions>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="32"></RowDefinition>
-			<RowDefinition Height="Auto"></RowDefinition>
-			<RowDefinition Height="Auto"></RowDefinition>
-			<RowDefinition Height="Auto"></RowDefinition>			
+			<RowDefinition Height="*"></RowDefinition>
+			<RowDefinition Height="10"></RowDefinition>
+			<RowDefinition Height="*"></RowDefinition>			
 		</Grid.RowDefinitions>
 		<Border
 			Grid.Column="0"
@@ -32,7 +32,6 @@
 			<Label 
 				HorizontalAlignment="Left"
 				Margin="2,2,0,0"
-				Width="Auto"
 				Content="{Binding Model.Name}"
 				FontWeight="Bold"
 				Foreground="Black"
@@ -50,19 +49,22 @@
 			Padding="5">
 			<ContentControl
 				ClipToBounds="True"
+				Width="Auto"
+				Height="Auto"
+				HorizontalAlignment="Stretch"
+				VerticalAlignment="Stretch"
 				prism:RegionManager.RegionName="BattleGroupARegion"/>
 		</Border>
 		<GridSplitter 
 			Grid.Column="0"
 			Grid.ColumnSpan="1"
 			Grid.Row="2"			
-			Height="10"
-			Width="Auto"
+			Height="10"			
 			ResizeDirection="Rows"
 			Margin="0"
 			HorizontalAlignment="Stretch"
 			VerticalAlignment="Stretch"
-			Foreground="LightBlue">			
+			Foreground="RoyalBlue">			
 		</GridSplitter>
 		<Border
 			Grid.Column="0"
@@ -75,6 +77,10 @@
 			Padding="5">
 			<ContentControl
 				ClipToBounds="True"
+				Width="Auto"
+				Height="Auto"
+				HorizontalAlignment="Stretch"
+				VerticalAlignment="Stretch"
 				prism:RegionManager.RegionName="BattleGroupBRegion"/>				
 		</Border>		
 	</Grid>	

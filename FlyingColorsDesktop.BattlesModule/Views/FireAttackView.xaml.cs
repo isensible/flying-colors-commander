@@ -11,6 +11,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using FlyingColorsDesktop.ViewModels;
+using Microsoft.Practices.Unity;
 
 namespace FlyingColorsDesktop.Views
 {
@@ -22,6 +24,12 @@ namespace FlyingColorsDesktop.Views
 		public FireAttackView()
 		{
 			InitializeComponent();
+		}
+
+		[Dependency]
+		public FireAttackViewModel ViewModel
+		{
+			set { DataContext = value; }
 		}
 	}
 }
