@@ -23,7 +23,7 @@ namespace FlyingColors.Test
 				DatabaseType.SQLite,
 				"Data Source=flyingcolors.db;Version=3;");
 			ActiveRecordStarter.Initialize(Assembly.LoadFrom("FlyingColors.dll"), config);
-			//ActiveRecordStarter.CreateSchema();
+			ActiveRecordStarter.CreateSchema();
 			ActiveRecordStarter.UpdateSchema();
 			
 		}

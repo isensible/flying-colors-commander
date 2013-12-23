@@ -32,14 +32,14 @@ namespace FlyingColorsDesktop
 				DatabaseType.SQLite,
 				"Data Source=flyingcolors.db;Version=3;");
 			ActiveRecordStarter.Initialize(Assembly.LoadFrom("FlyingColors.dll"), config);
-			//ActiveRecordStarter.CreateSchema();
+			ActiveRecordStarter.CreateSchema();
 			ActiveRecordStarter.UpdateSchema();
 		}
 
 		protected override void ConfigureModuleCatalog()
 		{
 			base.ConfigureModuleCatalog();
-			ModuleCatalog moduleCatalog = (ModuleCatalog)this.ModuleCatalog;
+			var moduleCatalog = (ModuleCatalog)ModuleCatalog;
 			moduleCatalog.AddModule(typeof(BattlesModule));
 		}
 	}
